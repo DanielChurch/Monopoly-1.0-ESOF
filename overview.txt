@@ -1,0 +1,7 @@
+Names Of Team: Daniel Church, Dieter Grosswiler, Dylan Wickham, Will Brensdal
+Interesting class relationships, design approaches, things that gave you trouble, etc. // TODO:
+Contributions by each team member:
+(1) Daniel Church: Basic class structure
+(2) Dieter Grosswiler:
+(3) Dylan Wickham:
+(4) Will Brensdal:
