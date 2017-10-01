@@ -20,6 +20,10 @@ public final class Vector3D {
 
     public double dot(Vector3D other) {return 0d;}
 
+    /**
+     * Returns the magnitude (length) of the vector.
+     * @return
+     */
     public double magnitude() {
         return Math.sqrt(dot(this));
     }
@@ -27,12 +31,21 @@ public final class Vector3D {
     @Override
     public String toString() {return "";}
 
+    /**
+     * Compares two [Vector3D]s and returns true if they match, or false if they don't.
+     * If an Object other than another [Vector3D] is passed in, throws an [IllegalArgumentException].
+     * @param other The other [Vector3D] to compare
+     * @return True if the two [Vector3D]s match, False if they don't.
+     */
     @Override
     public boolean equals(Object other) {
+        // Only compare if both objects are [Vector3D]
         if(other instanceof Vector3D) {
             Vector3D otherVector = (Vector3D) other;
-            return subtract(otherVector).magnitude() <= 0.1d; // TODO: Consider refining tolerance
+            // Compare the length of the difference of the two [Vector3D]s to check equality
+            return subtract(otherVector).magnitude() <= 0.00001d;
         } else {
+            // Throw an error if they aren't both [Vector3D]
             throw new IllegalArgumentException("You can only compare a vector to another vector.");
         }
     }
