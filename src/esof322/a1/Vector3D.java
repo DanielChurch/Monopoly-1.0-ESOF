@@ -11,10 +11,10 @@ public final class Vector3D {
     }
 
     /**
-     * Returns the added x,y,z values of two Vector3D's
-     * @param other
-     * @return
-     */
+     * Calculates the sum of two [Vector3D]'s
+     * @param other the [Vector3D] we will add this [Vector3D] to
+     * @return the summed value of [Vector3D]'s
+     **/
     public Vector3D add(Vector3D other) {
         return new Vector3D(x + other.x, y + other.y, z + other.z);
     }
@@ -26,8 +26,8 @@ public final class Vector3D {
     }
 
     /**
-     * Returns the vectors x,y,z values multiplied by the common factor -1
-     * @return
+     * Calculates the negation(Components multiplied by -1) of the given [Vector3D]
+     * @return the negation of [Vector3D]
      */
     public Vector3D negate() {
         return scale(-1);
