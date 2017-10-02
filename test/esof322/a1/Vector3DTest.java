@@ -30,9 +30,24 @@ public class Vector3DTest {
 
     @Test
     public void testAdd() throws Exception {}
-
+    
+    /**
+     * Tests the subtract method in [Vector3D]
+     * @throws Exception
+     */
     @Test
-    public void testSubtract() throws Exception {}
+    public void testSubtract() throws Exception {
+    	assertTrue(vector101.subtract(vector101).equals(new Vector3D(0,0,0)));
+    	assertTrue(vector101.subtract(vector010).equals(new Vector3D(1,-1,1)));
+    	assertTrue(vector010.subtract(vector101).equals(new Vector3D(-1, 1, -1)));
+    	
+    	assertTrue(vector541.subtract(vector236).equals(new Vector3D(3,1,-5)));
+    	
+    	assertFalse(new Vector3D(0,0,1).subtract(new Vector3D(0,0,0)).equals(new Vector3D(0,0,0)));
+    	assertFalse(new Vector3D(0,1,0).subtract(new Vector3D(0,0,0)).equals(new Vector3D(0,0,0)));
+    	assertFalse(new Vector3D(1,0,0).subtract(new Vector3D(0,0,0)).equals(new Vector3D(0,0,0)));
+    	
+    }
 
     @Test
     public void testScale() throws Exception {}
@@ -40,8 +55,15 @@ public class Vector3DTest {
     @Test
     public void testNegate() throws Exception {}
 
+    /**
+     * Tests the dot method of [Vector3D]
+     * @throws Exception
+     */
     @Test
-    public void testDot() throws Exception {}
+    public void testDot() throws Exception {
+    	assertTrue(Math.abs(vector010.dot(vector101)) < .00001);
+    	assertTrue(Math.abs(new Vector3D(1, 2, 3).dot(new Vector3D(4,5,6)) - 32) < .00001);
+    }
 
     @Test
     public void testMagnitude() throws Exception {

@@ -11,14 +11,23 @@ public final class Vector3D {
     }
 
     public Vector3D add(Vector3D other) {return null;}
-
-    public Vector3D subtract(Vector3D other) {return null;}
+    /**
+     * Subtracts the input vector from this vector
+     * @param other the vector to subtract
+     * @return the resulting vector of the subtraction
+     */
+    public Vector3D subtract(Vector3D other) {return new Vector3D(this.x - other.x, this.y - other.y, this.z - other.z);}
 
     public Vector3D scale(double scalar) {return null;}
 
     public Vector3D negate() {return null;}
 
-    public double dot(Vector3D other) {return 0d;}
+    /**
+     * Perform dot product with other vector
+     * @param other vector to perform dot product with
+     * @return the resulting scalar from dot product
+     */
+    public double dot(Vector3D other) {return this.x * other.x + this.y * other.y + this.z * other.z;}
 
     public double magnitude() {
         return Math.sqrt(dot(this));
