@@ -39,7 +39,7 @@ public class Vector3DTest {
         assertEquals(vector010.scale(2), new Vector3D(0,2,0));
         assertEquals(vector101.scale(10), new Vector3D(10,0,10));
         assertEquals(vector541.scale(0), new Vector3D(0,0,0));
-        assertEquals(vector236.scale(11), new Vector3D(11,33,66));
+        assertEquals(vector236.scale(11), new Vector3D(22,33,66));
     }
 
     @Test
