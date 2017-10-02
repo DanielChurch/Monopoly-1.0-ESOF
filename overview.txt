@@ -2,6 +2,6 @@ Names Of Team: Daniel Church, Dieter Grosswiler, Dylan Wickham, Will Brensdal
 Interesting class relationships, design approaches, things that gave you trouble, etc. // TODO:
 Contributions by each team member:
  - Daniel Church: Basic class structure, magnitude(), equals() functions & tests
- - Dieter Grosswiler:
- - Dylan Wickham:
- - Will Brensdal:
+ - Dieter Grosswiler: scale(), toString() functions & tests
+ - Dylan Wickham: dot(), subtract() functions & tests
+ - Will Brensdal: add(), negate() functions & tests

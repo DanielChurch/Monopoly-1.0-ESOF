@@ -19,9 +19,11 @@ public final class Vector3D {
         return new Vector3D(x + other.x, y + other.y, z + other.z);
     }
 
-    public Vector3D subtract(Vector3D other) {return new Vector3D(x - other.x, y - other.y, z - other.z);}
+    public Vector3D subtract(Vector3D other) {return null;}
 
-    public Vector3D scale(double scalar) {return null;}
+    public Vector3D scale(double scalar) {
+        return new Vector3D(x * scalar, y * scalar, z * scalar);
+    }
 
     /**
      * Returns the vectors x,y,z values multiplied by the common factor -1
@@ -42,7 +44,9 @@ public final class Vector3D {
     }
 
     @Override
-    public String toString() {return "";}
+    public String toString() {
+        return "[X: " + x + ", Y: " +  y + ", Z: " + z + "]";
+    }
 
     /**
      * Compares two [Vector3D]s and returns true if they match, or false if they don't.
