@@ -10,13 +10,26 @@ public final class Vector3D {
         this.z = z;
     }
 
-    public Vector3D add(Vector3D other) {return null;}
+    /**
+     * Returns the added x,y,z values of two Vector3D's
+     * @param other
+     * @return
+     */
+    public Vector3D add(Vector3D other) {
+        return new Vector3D(x + other.x, y + other.y, z + other.z);
+    }
 
-    public Vector3D subtract(Vector3D other) {return null;}
+    public Vector3D subtract(Vector3D other) {return new Vector3D(x - other.x, y - other.y, z - other.z);}
 
     public Vector3D scale(double scalar) {return null;}
 
-    public Vector3D negate() {return null;}
+    /**
+     * Returns the vectors x,y,z values multiplied by the common factor -1
+     * @return
+     */
+    public Vector3D negate() {
+        return scale(-1);
+    }
 
     public double dot(Vector3D other) {return 0d;}
 
