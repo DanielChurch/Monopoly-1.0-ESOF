@@ -35,7 +35,12 @@ public class Vector3DTest {
     public void testSubtract() throws Exception {}
 
     @Test
-    public void testScale() throws Exception {}
+    public void testScale() throws Exception {
+        assertEquals(vector010.scale(2), new Vector3D(0,2,0));
+        assertEquals(vector101.scale(10), new Vector3D(10,0,10));
+        assertEquals(vector541.scale(0), new Vector3D(0,0,0));
+        assertEquals(vector236.scale(11), new Vector3D(11,33,66));
+    }
 
     @Test
     public void testNegate() throws Exception {}
@@ -52,7 +57,13 @@ public class Vector3DTest {
     }
 
     @Test
-    public void testToString() throws Exception {}
+    public void testToString() throws Exception {
+        assertEquals(vector010.toString(), "[X: 0.0, Y: 1.0, Z: 0.0]");
+        assertEquals(vector101.toString(), "[X: 1.0, Y: 0.0, Z: 1.0]");
+        assertEquals(vector541.toString(), "[X: 5.0, Y: 4.0, Z: 1.0]");
+        assertEquals(vector236.toString(), "[X: 2.0, Y: 3.0, Z: 6.0]");
+    }
+
 
     @Test
     public void testEquals() throws Exception {
