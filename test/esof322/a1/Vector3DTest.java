@@ -42,7 +42,6 @@ public class Vector3DTest {
         assertEquals(vector236.scale(11), new Vector3D(22,33,66));
         assertEquals(vector541.scale(1), new Vector3D(5, 4, 1));
         assertEquals(new Vector3D(1/3d, 1/3d, 1/3d).scale(2), new Vector3D(2/3d, 2/3d, 2/3d));
-
     }
 
     @Test
@@ -65,7 +64,7 @@ public class Vector3DTest {
         assertEquals(vector101.toString(), "[X: 1.0, Y: 0.0, Z: 1.0]");
         assertEquals(vector541.toString(), "[X: 5.0, Y: 4.0, Z: 1.0]");
         assertEquals(vector236.toString(), "[X: 2.0, Y: 3.0, Z: 6.0]");
-        assertEquals(new Vector3D(1/3d, 1/3d, 1/3d), "[X: " + 1/3d + "Y: " + 1/3d + "Z: " + 1/3d + "]");
+        assertEquals(new Vector3D(1/3d, 1/3d, 1/3d), "[X: " + 1/3d + ", Y: " + 1/3d + ", Z: " + 1/3d + "]");
     }
 
 

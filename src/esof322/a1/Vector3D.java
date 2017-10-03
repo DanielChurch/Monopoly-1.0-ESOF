@@ -16,8 +16,8 @@ public final class Vector3D {
 
     /**
      * Calculates and returns a scalar multiple of the [Vector3D]
-     * @param scalar the scalar to multiple to multiply [Vector3D] by
-     * @return scaled [Vector3D]
+     * @param scalar The scalar to multiply [Vector3D]
+     * @return The scaled [Vector3D]
      */
     public Vector3D scale(double scalar) {
         return new Vector3D(x * scalar, y * scalar, z * scalar);
@@ -37,7 +37,7 @@ public final class Vector3D {
 
     /**
      * Prints out a [String] representation of [Vector3D]
-      * @return the [String] representation of [Vector3D]
+     * @return The [String] representation of [Vector3D]
      */
     @Override
     public String toString() {
