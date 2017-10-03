@@ -10,7 +10,14 @@ public final class Vector3D {
         this.z = z;
     }
 
-    public Vector3D add(Vector3D other) {return null;}
+    /**
+     * Calculates the sum of two [Vector3D]s
+     * @param other The [Vector3D] that will be added to this [Vector3D]
+     * @return The summed value of the [Vector3D]s
+     **/
+    public Vector3D add(Vector3D other) {
+        return new Vector3D(x + other.x, y + other.y, z + other.z);
+    }
 
     public Vector3D subtract(Vector3D other) {return null;}
 
@@ -23,13 +30,19 @@ public final class Vector3D {
         return new Vector3D(x * scalar, y * scalar, z * scalar);
     }
 
-    public Vector3D negate() {return null;}
+    /**
+     * Calculates the negation of the (Components multiplied by -1) of the given [Vector3D]
+     * @return The negation of [Vector3D]
+     */
+    public Vector3D negate() {
+        return scale(-1);
+    }
 
     public double dot(Vector3D other) {return 0d;}
 
     /**
      * Calculates and returns the magnitude (length) of the [Vector3D].
-     * @return the magnitude (length) of the [Vector3D]
+     * @return The magnitude (length) of the [Vector3D]
      */
     public double magnitude() {
         return Math.sqrt(dot(this));
