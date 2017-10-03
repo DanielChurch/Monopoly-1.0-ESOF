@@ -4,7 +4,7 @@ public final class Vector3D {
 
     private double x, y, z;
 
-    public Vector3D (double x, double y, double z) {
+    public Vector3D(double x, double y, double z) {
         this.x = x;
         this.y = y;
         this.z = z;
@@ -13,7 +13,7 @@ public final class Vector3D {
     /**
      * Calculates the sum of two [Vector3D]s
      * @param other The [Vector3D] that will be added to this [Vector3D]
-     * @return The summed value of the [Vector3D]s
+     * @return The sum of the two [Vector3D]s
      **/
     public Vector3D add(Vector3D other) {
         return new Vector3D(x + other.x, y + other.y, z + other.z);
@@ -31,8 +31,8 @@ public final class Vector3D {
     }
 
     /**
-     * Calculates the negation of the (Components multiplied by -1) of the given [Vector3D]
-     * @return The negation of [Vector3D]
+     * Calculates the negation (Components multiplied by -1) of the given [Vector3D]
+     * @return The negation of the [Vector3D]
      */
     public Vector3D negate() {
         return scale(-1);
@@ -49,7 +49,7 @@ public final class Vector3D {
     }
 
     /**
-     * Prints out a [String] representation of the [Vector3D]
+     * Creates a [String] representation of the [Vector3D]
      * @return The [String] representation of the [Vector3D]
      */
     @Override
