@@ -14,6 +14,11 @@ public final class Vector3D {
 
     public Vector3D subtract(Vector3D other) {return null;}
 
+    /**
+     * Calculates and returns a scalar multiple of the [Vector3D]
+     * @param scalar The scalar to multiply the [Vector3D] by
+     * @return The scaled [Vector3D]
+     */
     public Vector3D scale(double scalar) {
         return new Vector3D(x * scalar, y * scalar, z * scalar);
     }
@@ -30,6 +35,10 @@ public final class Vector3D {
         return Math.sqrt(dot(this));
     }
 
+    /**
+     * Prints out a [String] representation of the [Vector3D]
+     * @return The [String] representation of the [Vector3D]
+     */
     @Override
     public String toString() {
         return "[X: " + x + ", Y: " +  y + ", Z: " + z + "]";
