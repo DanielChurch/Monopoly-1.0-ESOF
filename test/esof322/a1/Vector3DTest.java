@@ -18,6 +18,8 @@ public class Vector3DTest {
     Vector3D vector541;
     Vector3D vector236;
 
+    Vector3D vectorOneThird;
+
     @Before
     public void setUp() throws Exception {
         vector101 = new Vector3D(1, 0, 1);
@@ -25,13 +27,15 @@ public class Vector3DTest {
 
         vector541 = new Vector3D(5, 4, 1);
         vector236 = new Vector3D(2, 3, 6);
+
+        vectorOneThird = new Vector3D(1/3d, 1/3d, 1/3d);
     }
 
     @Test
     public void testAdd() throws Exception {
-        assertEquals(vector010.add(vector101), new Vector3D(1, 1, 1));
-        assertEquals(vector236.add(vector541), new Vector3D(7, 7, 7));
-        assertEquals(new Vector3D(1/3d, 1/3d, 1/3d).add(new Vector3D(1/3d, 1/3d, 1/3d)), new Vector3D(2/3d, 2/3d, 2/3d));
+        assertEquals(new Vector3D(1, 1, 1), vector010.add(vector101));
+        assertEquals(new Vector3D(7, 7, 7), vector236.add(vector541));
+        assertEquals(new Vector3D(2/3d, 2/3d, 2/3d), vectorOneThird.add(vectorOneThird));
     }
 
     @Test
@@ -45,33 +49,32 @@ public class Vector3DTest {
     	assertNotEquals(new Vector3D(0, 0, 0), new Vector3D(0, 0, 1).subtract(new Vector3D(0, 0, 0)));
     	assertNotEquals(new Vector3D(0, 0, 0), new Vector3D(0, 1, 0).subtract(new Vector3D(0, 0, 0)));
     	assertNotEquals(new Vector3D(0, 0, 0), new Vector3D(1, 0, 0).subtract(new Vector3D(0, 0, 0)));
-    	
     }
 
     @Test
     public void testScale() throws Exception {
-        assertEquals(vector010.scale(2), new Vector3D(0, 2, 0));
-        assertEquals(vector101.scale(10), new Vector3D(10, 0, 10));
-        assertEquals(vector541.scale(0), new Vector3D(0, 0, 0));
-        assertEquals(vector236.scale(11), new Vector3D(22, 33, 66));
-        assertEquals(vector541.scale(1), new Vector3D(5, 4, 1));
-        assertEquals(new Vector3D(1/3d, 1/3d, 1/3d).scale(2), new Vector3D(2/3d, 2/3d, 2/3d));
+        assertEquals(new Vector3D(0, 2, 0), vector010.scale(2));
+        assertEquals(new Vector3D(10, 0, 10), vector101.scale(10));
+        assertEquals(new Vector3D(0, 0, 0), vector541.scale(0));
+        assertEquals(new Vector3D(22, 33, 66), vector236.scale(11));
+        assertEquals(new Vector3D(5, 4, 1), vector541.scale(1));
+        assertEquals(new Vector3D(2/3d, 2/3d, 2/3d), vectorOneThird.scale(2));
     }
 
     @Test
     public void testNegate() throws Exception {
-        assertEquals(vector010.negate(), new Vector3D(0, -1, 0));
-        assertEquals(vector101.negate(), new Vector3D(-1, 0, -1));
-        assertEquals(vector236.negate(), new Vector3D(-2, -3, -6));
-        assertEquals(vector541.negate(), new Vector3D(-5, -4, -1));
-        assertEquals(new Vector3D(1/3d, 1/3d, 1/3d).negate(), new Vector3D(-1/3d, -1/3d, -1/3d));
+        assertEquals(new Vector3D(0, -1, 0), vector010.negate());
+        assertEquals(new Vector3D(-1, 0, -1), vector101.negate());
+        assertEquals(new Vector3D(-2, -3, -6), vector236.negate());
+        assertEquals(new Vector3D(-5, -4, -1), vector541.negate());
+        assertEquals(new Vector3D(-1/3d, -1/3d, -1/3d), vectorOneThird.negate());
     }
 
     @Test
     public void testDot() throws Exception {
-    	assertEquals(Math.abs(vector010.dot(vector101)), 0, 0);
-    	assertEquals(Math.abs(new Vector3D(1, 2, 3).dot(new Vector3D(4, 5, 6))), 32, 0);
-    	assertEquals(new Vector3D(1d, 1/2d, 1/3d).dot(new Vector3D(1/3d, 1/2d, 1d)), 11/12d, 0.0001);
+    	assertEquals(0, vector010.dot(vector101), 0);
+    	assertEquals(32, new Vector3D(1, 2, 3).dot(new Vector3D(4, 5, 6)), 0);
+    	assertEquals(11/12d, new Vector3D(1d, 1/2d, 1/3d).dot(new Vector3D(1/3d, 1/2d, 1d)), 0.000000000001d);
     }
 
     @Test
@@ -84,37 +87,37 @@ public class Vector3DTest {
 
     @Test
     public void testToString() throws Exception {
-        assertEquals(vector010.toString(), "[X: 0.0, Y: 1.0, Z: 0.0]");
-        assertEquals(vector101.toString(), "[X: 1.0, Y: 0.0, Z: 1.0]");
-        assertEquals(vector541.toString(), "[X: 5.0, Y: 4.0, Z: 1.0]");
-        assertEquals(vector236.toString(), "[X: 2.0, Y: 3.0, Z: 6.0]");
-        assertEquals(new Vector3D(1/3d, 1/3d, 1/3d), "[X: " + 1/3d + ", Y: " + 1/3d + ", Z: " + 1/3d + "]");
+        assertEquals("[X: 0.0, Y: 1.0, Z: 0.0]", vector010.toString());
+        assertEquals("[X: 1.0, Y: 0.0, Z: 1.0]", vector101.toString());
+        assertEquals("[X: 5.0, Y: 4.0, Z: 1.0]", vector541.toString());
+        assertEquals("[X: 2.0, Y: 3.0, Z: 6.0]", vector236.toString());
+        assertEquals("[X: " + 1/3d + ", Y: " + 1/3d + ", Z: " + 1/3d + "]", vectorOneThird.toString());
     }
 
 
     @Test
     public void testEquals() throws Exception {
         // Verify .equals() works on a few basic cases
-        assertTrue(new Vector3D(1, 0, 1).equals(new Vector3D(1, 0, 1)));
-        assertTrue(vector010.equals(vector010));
-        assertFalse(vector010.equals(vector541));
+        assertEquals(new Vector3D(1, 0, 1), new Vector3D(1, 0, 1));
+        assertEquals(vector010, vector010);
+        assertNotEquals(vector010, vector541);
 
         // Verify .equals() has a tolerance
-        assertTrue(new Vector3D(0.33333d, 0, 0).equals(new Vector3D(1/3d, 0, 0)));
-        assertFalse(new Vector3D(0.333d, 0, 0).equals(new Vector3D(1/3d, 0, 0)));
+        assertEquals(   new Vector3D(0.333333333333d, 0, 0), new Vector3D(1/3d, 0, 0));
+        assertNotEquals(new Vector3D(0.33333333333d, 0, 0), new Vector3D(1/3d, 0, 0));
 
         // Check for each axis - x, y, z
         // X
-        assertTrue(new Vector3D(1, 0, 0).equals(new Vector3D(1, 0, 0)));
-        assertFalse(new Vector3D(1, 0, 0).equals(new Vector3D(0, 0, 0)));
+        assertEquals(new Vector3D(1, 0, 0), new Vector3D(1, 0, 0));
+        assertNotEquals(new Vector3D(1, 0, 0), new Vector3D(0, 0, 0));
 
         // Y
-        assertTrue(new Vector3D(0, 1, 0).equals(new Vector3D(0, 1, 0)));
-        assertFalse(new Vector3D(0, 1, 0).equals(new Vector3D(0, 0, 0)));
+        assertEquals(new Vector3D(0, 1, 0), new Vector3D(0, 1, 0));
+        assertNotEquals(new Vector3D(0, 1, 0), new Vector3D(0, 0, 0));
 
         // Z
-        assertTrue(new Vector3D(0, 0, 1).equals(new Vector3D(0, 0, 1)));
-        assertFalse(new Vector3D(0, 0, 1).equals(new Vector3D(0, 0, 0)));
+        assertEquals(new Vector3D(0, 0, 1), new Vector3D(0, 0, 1));
+        assertNotEquals(new Vector3D(0, 0, 1), new Vector3D(0, 0, 0));
 
         // Try with an object that isn't a [Vector3D] and verify it throws an error
         expectedException.expect(IllegalArgumentException.class);

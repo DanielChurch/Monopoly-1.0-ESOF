@@ -83,7 +83,7 @@ public final class Vector3D {
         if(other instanceof Vector3D) {
             Vector3D otherVector = (Vector3D) other;
             // Compare the length of the difference of the two [Vector3D]s to check equality
-            return subtract(otherVector).magnitude() <= 0.00001d;
+            return subtract(otherVector).magnitude() <= 0.000000000001d;
         } else {
             // Throw an error if they aren't both [Vector3D]
             throw new IllegalArgumentException("You can only compare a vector to another vector.");
