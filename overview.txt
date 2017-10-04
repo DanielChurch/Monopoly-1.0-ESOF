@@ -3,5 +3,5 @@ Interesting class relationships, design approaches, things that gave you trouble
 Contributions by each team member:
  - Daniel Church: Basic class structure, magnitude(), equals() functions & tests
  - Dieter Grosswiler: scale(), toString() functions & tests
- - Dylan Wickham: dot(), subtract() functions & tests
+ - Dylan Wickham: dot(), subtract() functions & tests 73 minutes
  - Will Brensdal: add(), negate() functions & tests
