@@ -25,7 +25,7 @@ public final class Vector3D {
      * @return The resulting [Vector3D] of the subtraction
      */
     public Vector3D subtract(Vector3D other) {
-    	return new Vector3D(this.x - other.x, this.y - other.y, this.z - other.z);
+    	return new Vector3D(x - other.x, y - other.y, z - other.z);
     }
 
     /**
@@ -46,12 +46,12 @@ public final class Vector3D {
     }
 
     /**
-     * Perform dot product with other [Vector3D]
-     * @param other [Vector3D] to perform dot product with
+     * Calculates the dot product of two [Vector3D]s
+     * @param other The [Vector3D] to perform dot product with
      * @return The resulting scalar from dot product
      */
     public double dot(Vector3D other) {
-    	return this.x * other.x + this.y * other.y + this.z * other.z;
+    	return x * other.x + y * other.y + z * other.z;
     }
 
     /**

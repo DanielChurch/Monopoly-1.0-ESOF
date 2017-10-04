@@ -33,11 +33,7 @@ public class Vector3DTest {
         assertEquals(vector236.add(vector541), new Vector3D(7, 7, 7));
         assertEquals(new Vector3D(1/3d, 1/3d, 1/3d).add(new Vector3D(1/3d, 1/3d, 1/3d)), new Vector3D(2/3d, 2/3d, 2/3d));
     }
-    
-    /**
-     * Tests the subtract method in [Vector3D]
-     * @throws Exception
-     */
+
     @Test
     public void testSubtract() throws Exception {
     	assertEquals(new Vector3D(0, 0, 0), vector101.subtract(vector101));
@@ -71,10 +67,6 @@ public class Vector3DTest {
         assertEquals(new Vector3D(1/3d, 1/3d, 1/3d).negate(), new Vector3D(-1/3d, -1/3d, -1/3d));
     }
 
-    /**
-     * Tests the dot method of [Vector3D]
-     * @throws Exception
-     */
     @Test
     public void testDot() throws Exception {
     	assertEquals(Math.abs(vector010.dot(vector101)), 0, 0);
