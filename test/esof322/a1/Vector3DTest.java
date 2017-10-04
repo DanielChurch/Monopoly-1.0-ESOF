@@ -1,7 +1,6 @@
 package esof322.a1;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -24,12 +23,16 @@ public class Vector3DTest {
         vector101 = new Vector3D(1, 0, 1);
         vector010 = new Vector3D(0, 1, 0);
 
-        vector541 = new Vector3D(5,4,1);
-        vector236 = new Vector3D(2,3,6);
+        vector541 = new Vector3D(5, 4, 1);
+        vector236 = new Vector3D(2, 3, 6);
     }
 
     @Test
-    public void testAdd() throws Exception {}
+    public void testAdd() throws Exception {
+        assertEquals(vector010.add(vector101), new Vector3D(1, 1, 1));
+        assertEquals(vector236.add(vector541), new Vector3D(7, 7, 7));
+        assertEquals(new Vector3D(1/3d, 1/3d, 1/3d).add(new Vector3D(1/3d, 1/3d, 1/3d)), new Vector3D(2/3d, 2/3d, 2/3d));
+    }
     
     /**
      * Tests the subtract method in [Vector3D]
@@ -51,14 +54,22 @@ public class Vector3DTest {
 
     @Test
     public void testScale() throws Exception {
-        assertEquals(vector010.scale(2), new Vector3D(0,2,0));
-        assertEquals(vector101.scale(10), new Vector3D(10,0,10));
-        assertEquals(vector541.scale(0), new Vector3D(0,0,0));
-        assertEquals(vector236.scale(11), new Vector3D(22,33,66));
+        assertEquals(vector010.scale(2), new Vector3D(0, 2, 0));
+        assertEquals(vector101.scale(10), new Vector3D(10, 0, 10));
+        assertEquals(vector541.scale(0), new Vector3D(0, 0, 0));
+        assertEquals(vector236.scale(11), new Vector3D(22, 33, 66));
+        assertEquals(vector541.scale(1), new Vector3D(5, 4, 1));
+        assertEquals(new Vector3D(1/3d, 1/3d, 1/3d).scale(2), new Vector3D(2/3d, 2/3d, 2/3d));
     }
 
     @Test
-    public void testNegate() throws Exception {}
+    public void testNegate() throws Exception {
+        assertEquals(vector010.negate(), new Vector3D(0, -1, 0));
+        assertEquals(vector101.negate(), new Vector3D(-1, 0, -1));
+        assertEquals(vector236.negate(), new Vector3D(-2, -3, -6));
+        assertEquals(vector541.negate(), new Vector3D(-5, -4, -1));
+        assertEquals(new Vector3D(1/3d, 1/3d, 1/3d).negate(), new Vector3D(-1/3d, -1/3d, -1/3d));
+    }
 
     /**
      * Tests the dot method of [Vector3D]
@@ -85,13 +96,14 @@ public class Vector3DTest {
         assertEquals(vector101.toString(), "[X: 1.0, Y: 0.0, Z: 1.0]");
         assertEquals(vector541.toString(), "[X: 5.0, Y: 4.0, Z: 1.0]");
         assertEquals(vector236.toString(), "[X: 2.0, Y: 3.0, Z: 6.0]");
+        assertEquals(new Vector3D(1/3d, 1/3d, 1/3d), "[X: " + 1/3d + ", Y: " + 1/3d + ", Z: " + 1/3d + "]");
     }
 
 
     @Test
     public void testEquals() throws Exception {
         // Verify .equals() works on a few basic cases
-        assertTrue(new Vector3D(1,0,1).equals(new Vector3D(1,0,1)));
+        assertTrue(new Vector3D(1, 0, 1).equals(new Vector3D(1, 0, 1)));
         assertTrue(vector010.equals(vector010));
         assertFalse(vector010.equals(vector541));
 
@@ -101,16 +113,16 @@ public class Vector3DTest {
 
         // Check for each axis - x, y, z
         // X
-        assertTrue(new Vector3D(1,0,0).equals(new Vector3D(1,0,0)));
-        assertFalse(new Vector3D(1,0,0).equals(new Vector3D(0,0,0)));
+        assertTrue(new Vector3D(1, 0, 0).equals(new Vector3D(1, 0, 0)));
+        assertFalse(new Vector3D(1, 0, 0).equals(new Vector3D(0, 0, 0)));
 
         // Y
-        assertTrue(new Vector3D(0,1,0).equals(new Vector3D(0,1,0)));
-        assertFalse(new Vector3D(0,1,0).equals(new Vector3D(0,0,0)));
+        assertTrue(new Vector3D(0, 1, 0).equals(new Vector3D(0, 1, 0)));
+        assertFalse(new Vector3D(0, 1, 0).equals(new Vector3D(0, 0, 0)));
 
         // Z
-        assertTrue(new Vector3D(0,0,1).equals(new Vector3D(0,0,1)));
-        assertFalse(new Vector3D(0,0,1).equals(new Vector3D(0,0,0)));
+        assertTrue(new Vector3D(0, 0, 1).equals(new Vector3D(0, 0, 1)));
+        assertFalse(new Vector3D(0, 0, 1).equals(new Vector3D(0, 0, 0)));
 
         // Try with an object that isn't a [Vector3D] and verify it throws an error
         expectedException.expect(IllegalArgumentException.class);
