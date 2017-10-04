@@ -20,6 +20,6 @@ This made it difficult for each team member to test their functions.
 
 Contributions by each team member:
  - Daniel Church: Basic class structure, magnitude(), equals() functions & tests 120 minutes
- - Dieter Grosswiler: scale(), toString() functions & tests
+ - Dieter Grosswiler: scale(), toString() functions & tests 115 minutes
  - Dylan Wickham: dot(), subtract() functions & tests 73 minutes
- - Will Brensdal: add(), negate() functions & tests
+ - Will Brensdal: add(), negate() functions & tests 42 minutes
