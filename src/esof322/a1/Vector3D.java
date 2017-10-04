@@ -18,8 +18,15 @@ public final class Vector3D {
     public Vector3D add(Vector3D other) {
         return new Vector3D(x + other.x, y + other.y, z + other.z);
     }
-
-    public Vector3D subtract(Vector3D other) {return null;}
+    
+    /**
+     * Subtracts the input [Vector3D] from this [Vector3D]
+     * @param other The [Vector3D] to subtract
+     * @return The resulting [Vector3D] of the subtraction
+     */
+    public Vector3D subtract(Vector3D other) {
+    	return new Vector3D(x - other.x, y - other.y, z - other.z);
+    }
 
     /**
      * Calculates and returns a scalar multiple of the [Vector3D]
@@ -38,7 +45,14 @@ public final class Vector3D {
         return scale(-1);
     }
 
-    public double dot(Vector3D other) {return 0d;}
+    /**
+     * Calculates the dot product of two [Vector3D]s
+     * @param other The [Vector3D] to perform dot product with
+     * @return The resulting scalar from dot product
+     */
+    public double dot(Vector3D other) {
+    	return x * other.x + y * other.y + z * other.z;
+    }
 
     /**
      * Calculates and returns the magnitude (length) of the [Vector3D].
