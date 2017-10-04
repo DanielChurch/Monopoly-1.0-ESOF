@@ -37,15 +37,15 @@ public class Vector3DTest {
      */
     @Test
     public void testSubtract() throws Exception {
-    	assertTrue(vector101.subtract(vector101).equals(new Vector3D(0,0,0)));
-    	assertTrue(vector101.subtract(vector010).equals(new Vector3D(1,-1,1)));
-    	assertTrue(vector010.subtract(vector101).equals(new Vector3D(-1, 1, -1)));
+    	assertEquals(new Vector3D(0, 0, 0), vector101.subtract(vector101));
+    	assertEquals(new Vector3D(1, -1, 1), vector101.subtract(vector010));
+    	assertEquals(new Vector3D(-1, 1, -1), vector010.subtract(vector101));
     	
-    	assertTrue(vector541.subtract(vector236).equals(new Vector3D(3,1,-5)));
-    	
-    	assertFalse(new Vector3D(0,0,1).subtract(new Vector3D(0,0,0)).equals(new Vector3D(0,0,0)));
-    	assertFalse(new Vector3D(0,1,0).subtract(new Vector3D(0,0,0)).equals(new Vector3D(0,0,0)));
-    	assertFalse(new Vector3D(1,0,0).subtract(new Vector3D(0,0,0)).equals(new Vector3D(0,0,0)));
+    	assertEquals(new Vector3D(3, 1, -5), vector541.subtract(vector236));
+    
+    	assertNotEquals(new Vector3D(0, 0, 0), new Vector3D(0, 0, 1).subtract(new Vector3D(0, 0, 0)));
+    	assertNotEquals(new Vector3D(0, 0, 0), new Vector3D(0, 1, 0).subtract(new Vector3D(0, 0, 0)));
+    	assertNotEquals(new Vector3D(0, 0, 0), new Vector3D(1, 0, 0).subtract(new Vector3D(0, 0, 0)));
     	
     }
 
@@ -66,8 +66,9 @@ public class Vector3DTest {
      */
     @Test
     public void testDot() throws Exception {
-    	assertTrue(Math.abs(vector010.dot(vector101)) < .00001);
-    	assertTrue(Math.abs(new Vector3D(1, 2, 3).dot(new Vector3D(4,5,6)) - 32) < .00001);
+    	assertEquals(Math.abs(vector010.dot(vector101)), 0, 0);
+    	assertEquals(Math.abs(new Vector3D(1, 2, 3).dot(new Vector3D(4, 5, 6))), 32, 0);
+    	assertEquals(new Vector3D(1d, 1/2d, 1/3d).dot(new Vector3D(1/3d, 1/2d, 1d)), 11/12d, 0.0001);
     }
 
     @Test
