@@ -1,0 +1,14 @@
+name: Monopoly
+version: 0.0.1-dev
+description: Monopoly
+homepage: danielchurch.github.io/Dart/Monopoly/build
+environment:
+  sdk: '>=0.6.17'
+dev_dependencies:
+  coverage: ^0.8.0 # dart_dev is currently untested with coverage ^0.9.0
+  dart_dev: ^1.7.8
+  dart_style: ^1.0.7
+  dartdoc: ^0.13.0
+  test: ^0.12.24
+dependencies:
+  browser: any

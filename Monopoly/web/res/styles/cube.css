@@ -1,0 +1,69 @@
+.cube {
+    width: var(--cubeSize);
+    height: var(--cubeSize);
+}
+
+/* Cube */
+.cubeContainer {
+    --cubeSize: 100px;
+    position: fixed;
+	width: var(--cubeSize);
+	height: var(--cubeSize);
+	perspective: 1000px;
+	margin: 0 auto;
+}
+
+#cube {
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	transform-style: preserve-3d;
+	transform: translateZ(-200px);
+	transition: transform 0.2s;
+}
+
+#cube figure {
+	text-align: center;
+    --transparency: 0.85;
+	-webkit-user-select: none;
+	font-size: var(--cubeSize);
+	margin: 0;
+	width: var(--cubeSize);
+	height: var(--cubeSize);
+	display: block;
+	position: absolute;
+	border: 1px solid black;
+	opacity: 100%;
+	font-weight: bold;
+	color: white;
+}
+
+#cube .one {
+	background: hsla( 000, 100%, 50%, var(--transparency));
+	transform: rotateY(0deg) translateZ(calc(var(--cubeSize) / 2));
+}
+
+#cube .two {
+	background: hsla( 160, 100%, 50%, var(--transparency));
+	transform: rotateY(180deg) translateZ(calc(var(--cubeSize) / 2));
+}
+
+#cube .three {
+	background: hsla( 270, 100%, 50%, var(--transparency));
+	transform: rotateY(90deg) translateZ(calc(var(--cubeSize) / 2));
+}
+
+#cube .four {
+	background: hsla( 270, 100%, 75%, var(--transparency));
+	transform: rotateY(-90deg) translateZ(calc(var(--cubeSize) / 2));
+}
+
+#cube .five {
+	background: hsla( 60, 100%, 50%, var(--transparency));
+	transform: rotateX(90deg) translateZ(calc(var(--cubeSize) / 2));
+}
+
+#cube .six {
+	background: hsla( 320, 100%, 59%, var(--transparency));
+	transform: rotateX(-90deg) translateZ(calc(var(--cubeSize) / 2));
+}
