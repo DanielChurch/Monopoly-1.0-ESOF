@@ -5,6 +5,7 @@ import 'dart:html';
 import 'package:Monopoly/dom.dart';
 
 class Dice {
+  num lx, ly, lz;
   num x, y, z;
   num velX, velY, velZ;
   num rotX, rotY, rotZ;
@@ -17,7 +18,10 @@ class Dice {
       {this.rotX, this.rotY, this.rotZ, Element container})
       : velX = 0,
         velY = 0,
-        velZ = 0 {
+        velZ = 0,
+        lx = x,
+        ly = y,
+        lz = z {
     this.rotX = rotX ?? 0;
     this.rotY = rotY ?? 0;
     this.rotZ = rotZ ?? 0;
@@ -27,9 +31,10 @@ class Dice {
     // Add the dom elements to the container
     container.append(this.box = Dom.div(
       ['one', 'two', 'three', 'four', 'five', 'six'].map((className) =>
-      Dom.figure(Dom.img()
-        ..src = 'res/images/dice-$className.png'
-        ..className = 'cube'
+      Dom.figure(
+          Dom.img()
+            ..src = 'res/images/dice-$className.png'
+            ..className = 'cube'
       )..className = '$className').toList()
     )..id = 'cube');
 
@@ -90,6 +95,10 @@ class Dice {
   }
 
   void update() {
+    lx = x;
+    ly = y;
+    lz = z;
+
     velY += 0.0981;
 
     x += velX;
@@ -102,7 +111,12 @@ class Dice {
     }
   }
 
-  void render() {
+  void render(num delta) {
+    /* Alternative
+            translateX(${x * (1 - delta) + delta * lx}px)
+            translateY(${y * (1 - delta) + delta * ly}px)
+            translateZ(${z * (1 - delta) + delta * lz}px)
+     */
     box.style.transform = '''
            translateX(${x}px)
            translateY(${y}px)
