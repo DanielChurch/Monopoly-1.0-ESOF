@@ -1,5 +1,6 @@
-## How to run
- - https://danielchurch.github.io/dart/Monopoly/build/web/
+# Monopoly
+[Check it out on github.io!](https://danielchurch.github.io/dart/Monopoly/build/web/)
+## How to run locally
  - Install Dart version 1.24.2 or greater
    - Any os: From https://www.dartlang.org/
    - Mac: `brew install dart --with-content-shell --with-dartium`
