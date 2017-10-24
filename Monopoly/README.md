@@ -16,5 +16,5 @@
  - You can optionally specify text for the tests to search for, where it will only run tests with that string
    - `pub run test -p chrome -n Banker`
  - To run tests quickly:
-   - Serve the app with `pub serve` (Use the `dartdevc` compiler for quest results: `pub serve --web-compiler=dartdevc`)
+   - Serve the app with `pub serve` (Use the `dartdevc` compiler for quickest results: `pub serve --web-compiler=dartdevc`)
    - Run the tests `pub run test -p chrome --pub-serve=8080`
