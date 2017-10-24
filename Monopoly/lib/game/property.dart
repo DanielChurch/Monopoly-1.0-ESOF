@@ -1,4 +1,3 @@
-
 class Property {
 
   int _rent;

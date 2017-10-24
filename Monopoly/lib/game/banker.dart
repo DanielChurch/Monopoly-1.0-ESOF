@@ -1,9 +1,10 @@
-
 import 'player.dart';
 import 'property.dart';
 import 'square.dart';
 
 class Banker {
+
+  Banker() {}
 
   int _housesRemaining;
 

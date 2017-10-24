@@ -1,10 +1,11 @@
+import 'package:Monopoly/graphics/dice.dart';
+import 'package:Monopoly/graphics/dom.dart';
+import 'package:Monopoly/graphics/graphics.dart';
+
 import 'dart:core';
 import 'dart:html';
 import 'dart:math';
 
-import 'package:Monopoly/graphics/dice.dart';
-import 'package:Monopoly/graphics/dom.dart';
-import 'package:Monopoly/graphics/graphics.dart';
 
 Graphics g;
 var mouseX, mouseY;

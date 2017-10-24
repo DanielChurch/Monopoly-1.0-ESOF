@@ -1,4 +1,3 @@
-
 class Player {
 
   int _location;
@@ -9,8 +8,6 @@ class Player {
   int get balance => _balance;
   int get location => _location;
 
-  void payRent(int amount) {
-    _balance -= amount;
-  }
+  void payRent(int amount) => _balance -= amount;
 
 }
