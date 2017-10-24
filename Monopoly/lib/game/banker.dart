@@ -2,7 +2,7 @@ import 'package:meta/meta.dart';
 
 import 'player.dart';
 import 'property.dart';
-import 'square.dart';
+import 'tile.dart';
 
 class Banker {
 

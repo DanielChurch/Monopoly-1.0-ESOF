@@ -1,9 +1,9 @@
 class Property {
 
   int _rent;
+  bool _isMortgaged;
 
   bool isOwned;
-  bool _isMortgaged;
   int price;
   String color;
   int numHouses;

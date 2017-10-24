@@ -1,4 +1,4 @@
-import 'square_type.dart';
+import 'tile_type.dart';
 
 class Square {
 
