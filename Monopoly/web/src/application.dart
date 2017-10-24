@@ -6,7 +6,6 @@ import 'dart:core';
 import 'dart:html';
 import 'dart:math';
 
-
 Graphics g;
 var mouseX, mouseY;
 
