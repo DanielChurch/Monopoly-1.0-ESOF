@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:math';
 import 'dart:html';
 
-import 'package:Monopoly/dom.dart';
+import 'package:Monopoly/graphics/dom.dart';
 
 class Dice {
   num lx, ly, lz;

@@ -2,9 +2,9 @@ import 'dart:core';
 import 'dart:html';
 import 'dart:math';
 
-import 'package:Monopoly/dice.dart';
-import 'package:Monopoly/dom.dart';
-import 'package:Monopoly/graphics.dart';
+import 'package:Monopoly/graphics/dice.dart';
+import 'package:Monopoly/graphics/dom.dart';
+import 'package:Monopoly/graphics/graphics.dart';
 
 Graphics g;
 var mouseX, mouseY;
