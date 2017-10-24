@@ -15,7 +15,7 @@ class Banker {
   DateTime _endTime;
 
   Banker() {}
-
+  
   List<Player> get players => _players;
 
   @visibleForTesting
