@@ -2,10 +2,12 @@ import 'tile_type.dart';
 
 class Tile {
 
-  SquareType type;
+  static const Map<String, int> colors = const {'red' : 0, 'blue' : 1};
 
-  Tile(SquareType this.type);
+  TileType type;
 
-  bool get isProperty => type == SquareType.property;
+  Tile(TileType this.type);
+
+  bool get isProperty => type == TileType.property;
 
 }

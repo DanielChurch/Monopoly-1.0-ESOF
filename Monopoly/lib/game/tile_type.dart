@@ -1,4 +1,4 @@
-enum SquareType {
+enum TileType {
   property,
   luxuryTax,
   incomeTax,
