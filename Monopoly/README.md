@@ -17,5 +17,6 @@
    - `pub run test -p chrome -n Banker`
  - To run tests quickly:
    - Serve the app with `pub serve test`
-     - Use the `dartdevc` compiler for quickest results: `pub serve test --web-compiler=dartdevc`
+     - Use the `dartdevc` compiler for quickest results
+       - `pub serve test --web-compiler=dartdevc`
    - Run the tests `pub run test -p chrome --pub-serve=8080`
