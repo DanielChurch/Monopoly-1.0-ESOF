@@ -1,3 +1,5 @@
+import 'package:meta/meta.dart';
+
 import 'player.dart';
 import 'property.dart';
 import 'square.dart';
@@ -13,12 +15,15 @@ class Banker {
   DateTime _endTime;
 
   Banker() {}
-  
+
   List<Player> get players => _players;
+
+  @visibleForTesting
+  set endTime(DateTime endTime) => _endTime = endTime;
 
   bool sellPropertyToPlayer(Property property) {}
 
-  bool _isWithinMaxTime() => new DateTime.now().millisecondsSinceEpoch < _endTime.millisecondsSinceEpoch;
+  bool isWithinMaxTime() => new DateTime.now().millisecondsSinceEpoch < _endTime.millisecondsSinceEpoch;
   Player declareWinner() {}
   bool _updateProperty(Property property) {}
   void _updateLocation(Player player) {}

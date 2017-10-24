@@ -10,6 +10,6 @@ class Property {
   int numHotels;
 
   bool get isMortgaged => _isMortgaged;
-  int get rent {}
+  int get rent => _rent;
 
 }
