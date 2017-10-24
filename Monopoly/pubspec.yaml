@@ -13,3 +13,14 @@ dev_dependencies:
 dependencies:
   browser: any
   meta: any
+transformers:
+- test/pub_serve:
+    $include: test/**_test.dart
+- $dart2js:
+    analyzeAll: true
+    checked: true
+    minify: true
+    sourceMaps: true
+web:
+  compiler:
+    debug: dartdevc
