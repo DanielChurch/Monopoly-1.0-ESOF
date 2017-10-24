@@ -1,5 +1,6 @@
 import 'dart:core';
 import 'dart:html';
+import 'dart:math';
 
 import 'package:Monopoly/dice.dart';
 import 'package:Monopoly/dom.dart';
@@ -46,14 +47,30 @@ void main() {
 
   Dom.body.append(g.canvas);
 
-  Dom.body.append(Dom.a("test"));
-
-  loop(null);
+  window.requestAnimationFrame(loop);
 }
 
-void loop(_) {
-  dice.forEach((d) => d.update());
-  dice.forEach((d) => d.render());
+num now, dt = 0, last = window.performance.now(), step = 1/60;
 
-  window.animationFrame.then(loop);
+void loop(_) {
+  // Props to http://codeincomplete.com/posts/javascript-game-foundations-the-game-loop/
+  // For this loop code
+  now = window.performance.now();
+  dt = dt + min(1, (now - last) / 1000);
+  while(dt > step) {
+    dt = dt - step;
+    update();
+  }
+  render(dt);
+  last = now;
+
+  window.requestAnimationFrame(loop);
+}
+
+void update() {
+  dice.forEach((d) => d.update());
+}
+
+void render(num delta) {
+  dice.forEach((d) => d.render(delta));
 }
