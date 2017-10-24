@@ -11,7 +11,7 @@ class Banker {
   List<Player> _players;
 
   List<Property> _deeds;
-  List<Square> _board;
+  List<Tile> _board;
   DateTime _endTime;
 
   Banker() {}
