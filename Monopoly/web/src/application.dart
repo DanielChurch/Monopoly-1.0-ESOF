@@ -1,4 +1,4 @@
-import 'package:Monopoly/graphics/dice.dart';
+import 'package:Monopoly/game/dice.dart';
 import 'package:Monopoly/graphics/dom.dart';
 import 'package:Monopoly/graphics/graphics.dart';
 

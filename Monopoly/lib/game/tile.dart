@@ -1,8 +1,11 @@
 import 'tile_type.dart';
 
-class Square {
+class Tile {
 
   SquareType type;
-  bool isProperty;
+
+  Tile(SquareType this.type);
+  
+  bool get isProperty => type == SquareType.property;
 
 }
