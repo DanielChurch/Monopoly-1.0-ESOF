@@ -9,5 +9,9 @@ void main() {
     setUp(() {
       player = new Player();
     });
+
+    test('tests run', () {
+      expect(true, isTrue);
+    });
   });
 }

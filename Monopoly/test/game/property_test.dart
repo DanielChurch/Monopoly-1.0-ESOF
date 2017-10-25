@@ -9,5 +9,9 @@ void main() {
     setUp(() {
       property = new Property();
     });
+
+    test('tests run', () {
+      expect(true, isTrue);
+    });
   });
 }
