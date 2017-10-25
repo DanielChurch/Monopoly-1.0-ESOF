@@ -2,34 +2,28 @@ import 'dart:async';
 import 'dart:math';
 import 'dart:html';
 
-import 'package:Monopoly/graphics/dom.dart';
+import 'package:monopoly/graphics/dom.dart';
+import 'package:vector_math/vector_math.dart';
 
 class Dice {
-  num lx, ly, lz;
-  num x, y, z;
-  num velX, velY, velZ;
-  num rotX, rotY, rotZ;
+  Vector3 position;
+  Vector3 rotation;
+  Vector3 velocity;
 
-  Element box;
+  Element cube;
 
   Random random = new Random();
 
-  Dice(this.x, this.y, this.z,
-      {this.rotX, this.rotY, this.rotZ, Element container})
-      : velX = 0,
-        velY = 0,
-        velZ = 0,
-        lx = x,
-        ly = y,
-        lz = z {
-    this.rotX = rotX ?? 0;
-    this.rotY = rotY ?? 0;
-    this.rotZ = rotZ ?? 0;
+  Dice(double x, double y, double z,
+    {Element container})
+      : position = new Vector3(x, y, z),
+        velocity = new Vector3(0.0, 0.0, 0.0) {
+    rotation = new Vector3(0.0, 0.0, 0.0);
 
     container = container ?? Dom.body;
 
     // Add the dom elements to the container
-    container.append(this.box = Dom.div(
+    container.append(this.cube = Dom.div(
       ['one', 'two', 'three', 'four', 'five', 'six'].map((className) =>
       Dom.figure(
           Dom.img()
@@ -37,18 +31,15 @@ class Dice {
             ..className = 'cube'
       )..className = '$className').toList()
     )..id = 'cube');
-
-    box.onClick.listen((_) => spin());
-//    box.onMouseMove.listen((_) => spin());
   }
 
   int offset = 0;
 
   int spin() {
     // make random rotation to make the dice spin
-    rotX = random.nextDouble() * 100000;
-    rotY = random.nextDouble() * 100000;
-    rotZ = random.nextDouble() * 100000;
+    rotation.x = random.nextDouble() * 100000;
+    rotation.y = random.nextDouble() * 100000;
+    rotation.z = random.nextDouble() * 100000;
 
     // get a random number for the dice to land on when it lands
     int result = random.nextInt(6) + 1;
@@ -58,73 +49,64 @@ class Dice {
     new Future.delayed(new Duration(milliseconds: 1100)).then((_) {
       switch (result) {
         case 1: // Face 1
-          rotX = rotY = rotZ = 0;
+          rotation.x = rotation.y = rotation.z = 0.0;
           break;
         case 2: // Face 2
-          rotX = 180;
-          rotY = 0;
-          rotZ = 0;
+          rotation.x = 180.0;
+          rotation.y = 0.0;
+          rotation.z = 0.0;
           break;
         case 3: // Face 3
-          rotX = 0;
-          rotY = 270;
-          rotZ = 0;
+          rotation.x = 0.0;
+          rotation.y = 270.0;
+          rotation.z = 0.0;
           break;
         case 4: // Face 4
-          rotX = 0;
-          rotY = 90;
-          rotZ = 0;
+          rotation.x = 0.0;
+          rotation.y = 90.0;
+          rotation.z = 0.0;
           break;
         case 5: // Face 5
-          rotX = 270;
-          rotY = 0;
-          rotZ = 0;
+          rotation.x = 270.0;
+          rotation.y = 0.0;
+          rotation.z = 0.0;
           break;
         case 6: // Face 6
-          rotX = 90;
-          rotY = 0;
-          rotZ = 0;
+          rotation.x = 90.0;
+          rotation.y = 0.0;
+          rotation.z = 0.0;
           break;
       }
     });
 
     // Give the dice a force to rocket into the air
-    velY = -10;
+    velocity.y = -10.0;
 
     return result;
   }
 
   void update() {
-    lx = x;
-    ly = y;
-    lz = z;
+    velocity.y += 0.0981;
 
-    velY += 0.0981;
+    position.x += velocity.x;
+    position.y += velocity.y;
+    position.z += velocity.z;
 
-    x += velX;
-    y += velY;
-    z += velZ;
-
-    if (y >= 600) {
-      y = 600;
-      velY = 0;
+    if (position.y >= 600) {
+      position.y = 600.0;
+      velocity.y = 0.0;
     }
   }
 
   void render(num delta) {
-    /* Alternative
-            translateX(${x * (1 - delta) + delta * lx}px)
-            translateY(${y * (1 - delta) + delta * ly}px)
-            translateZ(${z * (1 - delta) + delta * lz}px)
-     */
-    box.style.transform = '''
-           translateX(${x}px)
-           translateY(${y}px)
-           translateZ(${z}px)
+    cube.style.transform = '''
+           translateX(${position.x}px)
+           translateY(${position.y}px)
+           translateZ(${position.z}px)
            
-           rotateX(${rotX}deg)
-           rotateY(${rotY}deg)
-           rotateZ(${rotZ}deg)
+           rotateX(${rotation.x}deg)
+           rotateY(${rotation.y}deg)
+           rotateZ(${rotation.z}deg)
         ''';
   }
 }

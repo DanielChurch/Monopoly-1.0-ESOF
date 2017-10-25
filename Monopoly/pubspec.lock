@@ -401,6 +401,12 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.5.3"
+  vector_math:
+    description:
+      name: vector_math
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.0.5"
   vm_service_client:
     description:
       name: vm_service_client

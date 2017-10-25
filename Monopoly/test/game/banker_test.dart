@@ -1,6 +1,7 @@
 import 'dart:async';
 
-import 'package:Monopoly/game/banker.dart';
+import 'package:monopoly/game/banker.dart';
+import 'package:monopoly/game/player.dart';
 import 'package:test/test.dart';
 
 main() {
@@ -8,7 +9,7 @@ main() {
     Banker banker;
 
     setUp(() {
-      banker = new Banker();
+      banker = new Banker([new Player('Player 1', '00ff00')], new DateTime.now());
     });
 
     group('isWithinMaxTime works as expected', () {
