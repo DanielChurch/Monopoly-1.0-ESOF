@@ -9,5 +9,9 @@ void main() {
     setUp(() {
       // tile = new Tile();
     });
+
+    test('tests run', () {
+      expect(true, isTrue);
+    });
   });
 }
