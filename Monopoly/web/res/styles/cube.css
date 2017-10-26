@@ -1,8 +1,3 @@
-.board {
-    position: fixed;
-    background: #774455;
-}
-
 .cube {
     width: var(--cubeSize);
     height: var(--cubeSize);

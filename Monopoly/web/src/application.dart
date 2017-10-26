@@ -14,13 +14,13 @@ var mouseX, mouseY;
 Banker banker;
 
 void main() {
-  Element overlay = Dom.div("Welcome to Monopoly!")..id = 'overlay';
+  Element overlay;
 
-  overlay.onClick.listen((_) {
-    overlay.style.display = 'none';
-  });
-
-  Dom.body(overlay);
+  Dom.body(
+      overlay = Dom.div("Welcome to Monopoly!")
+        ..id = 'overlay'
+        ..onClick.listen((_) => overlay.style.display = 'none')
+  )..style.background = '#222';
 
   var taken = Dom.div('Taken', Dom.hr());
   var available = Dom.div('Available', Dom.hr());
@@ -58,28 +58,31 @@ void main() {
   Dom.body(
       available,
       taken,
-      Dom.div('Continue')
-        ..onClick.listen((_) {
-          Dom.body().children.clear();
-
-          // Canvas
-          //Dom.body(
-              (g = new Graphics.blank('board'));//.canvas
-          //);
-          g.setSize(1280, 720);
-
-          banker = new Banker(taken.children.where((div) => div.id.contains('Player Container')).map((div) {
-            List<String> data = div.id.split('Player Container ')[1].split('#');
-            return new Player(data[0], data[1]);
-          }).toList(),
-              new DateTime.now().add(new Duration(minutes: 30)));
-
-          run();
-        })
+      Dom.div('Continue')..onClick.listen((_) => run(taken.children))
   );
+
+  // Skip to game for testing
+  //run(available.children);
 }
 
-void run() {
+void run(List<Element> players) {
+  Dom.body().children.clear();
+
+  // Canvas
+  Dom.body(
+      (g = new Graphics.blank('board')).canvas
+        ..style.position = 'fixed'
+        ..style.top = '20px'
+        ..style.left = '15px'
+  );
+  g.setSize(1350, 1050);
+
+  banker = new Banker(players.where((div) => div.id.contains('Player Container')).map((div) {
+    List<String> data = div.id.split('Player Container ')[1].split('#');
+    return new Player(data[0], data[1]);
+  }).toList(),
+      new DateTime.now().add(new Duration(minutes: 30)));
+
   banker.run();
 
   mouseX = g.width / 2;

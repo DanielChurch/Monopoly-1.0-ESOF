@@ -1,7 +1,13 @@
 // Many of these are from W3Schools https://www.w3schools.com
 html, body {
-  background-color: #aaa;
+  background-color: #777777;
   font-family: Sans-Serif;
+}
+
+.board {
+    position: fixed;
+    background: #774455;
+    z-index: -2;
 }
 
 .chipContainer {
@@ -30,11 +36,14 @@ html, body {
 }
 
 .card {
-    width: 200px;
+    position: fixed;
+    width: 9.38%;
     /* Add shadows to create the "card" effect */
     box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
     transition: 0.3s;
     text-align: center;
+    z-index: 2;
+    border-radius: 5px;
 }
 
 /* On mouse-over, add a deeper shadow */

@@ -10,27 +10,34 @@ class Dice {
   Vector3 rotation;
   Vector3 velocity;
 
-  Element cube;
+  Element box;
 
   Random random = new Random();
 
-  Dice(double x, double y, double z,
+  Dice(num x, num y, num z,
     {Element container})
-      : position = new Vector3(x, y, z),
+      : position = new Vector3(0.0, 0.0, 0.0),
         velocity = new Vector3(0.0, 0.0, 0.0) {
     rotation = new Vector3(0.0, 0.0, 0.0);
 
     container = container ?? Dom.body;
 
     // Add the dom elements to the container
-    container.append(this.cube = Dom.div(
-      ['one', 'two', 'three', 'four', 'five', 'six'].map((className) =>
-      Dom.figure(
-          Dom.img()
-            ..src = 'res/images/dice-$className.png'
-            ..className = 'cube'
-      )..className = '$className').toList()
-    )..id = 'cube');
+    container.append(this.box =
+      Dom.div(
+        ['one', 'two', 'three', 'four', 'five', 'six'].map((className) =>
+        Dom.figure(
+            Dom.img()
+              ..src = 'res/images/dice-$className.png'
+              ..className = 'cube'
+        )..className = '$className').toList()
+      )
+        ..id = 'cube'
+        ..style.left = '$x'
+    );
+
+    box.onClick.listen((_) => spin());
+//    box.onMouseMove.listen((_) => spin());
   }
 
   int offset = 0;
@@ -92,14 +99,14 @@ class Dice {
     position.y += velocity.y;
     position.z += velocity.z;
 
-    if (position.y >= 600) {
-      position.y = 600.0;
+    if (position.y >= 0) {
+      position.y = 0.0;
       velocity.y = 0.0;
     }
   }
 
   void render(num delta) {
-    cube.style.transform = '''
+        box.style.transform = '''
            translateX(${position.x}px)
            translateY(${position.y}px)
            translateZ(${position.z}px)

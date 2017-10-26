@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:html';
 
 import 'package:meta/meta.dart';
@@ -24,64 +23,54 @@ class Banker {
 
   Banker(List<Player> this.players, DateTime this._endTime) {
     // Dice
-    Element section = Dom.div()
+    Element section = Dom.div(Dom.div()..className = 'cubeContainer')
       ..className = 'cubeContainer'
-      ..style.transform = 'translateX(1000px)'
+      ..style.position = 'fixed'
+      ..style.left = '1675px'
+      ..style.top = '800px'
+      ..style.zIndex = '20'
       ..onClick.listen((_) => dice.forEach((dice) => dice.spin()));
-
-    /*
-    <div class="card">
-      <img src="img_avatar.png" alt="Avatar" style="width:100%">
-      <div class="container">
-        <h4><b>John Doe</b></h4>
-        <p>Architect & Engineer</p>
-      </div>
-    </div>
-     */
-
-    /*
-    Dom.div(
-      Dom.div(
-        Dom.div()
-          ..style.background = '#${player.token}'
-          ..id = 'right',
-        'Player ${player.name}',
-      )..className = 'chip chipContainer',
-      Dom.hr()
-    )
-     */
-    /*
-    <div class="card">
-      <img src="img_avatar.png" alt="Avatar" style="width:100%">
-      <div class="container">
-        <h4><b>John Doe</b></h4>
-        <p>Architect & Engineer</p>
-      </div>
-    </div>
-     */
 
     Dom.body(section);
 
+    int x = 0;
+    int y = 0;
+
+    // baseWidth 2133
+    // baseHeight 1087
+
     Dom.body(
-      Dom.span(
+      Dom.div(
         players.map((player) =>
           Dom.div(
               Dom.div(
                   Dom.img()..src = 'res/images/dogIcon.png'
+                    ..style.zIndex = '10'
               )
                 ..style.width = '100%'
-                ..style.height = '200px'
-                ..style.background = '#${player.token}',
+                ..style.height = '18.4%'
+                ..style.background = '#${player.token}'
+                ..style.borderRadius = '5px 5px 0 0',
               Dom.div(
                   Dom.p('Player ${player.name}')..style.color = '#ffffff'
               )..className = 'cardContainer'
-          )..className = 'card'
+          )
+            ..className = 'card'
+            ..style.left = '${10.38 * (x % 3) + 65.64}vw' // 9.38
+            ..style.top = '${25 * (x++ ~/ 3) + 4.6 + 5.4}vh' // 23
         ).toList()
-      )
+      ) // TODO: waaaay too much inline css
+        ..style.background = '#333'
+        ..style.width = '${10.5 * (x > 2 ? 3 : x)}vw'
+        ..style.height = '${25 * (x / 3).ceil()}vh'
+        ..style.position = 'fixed'
+        ..style.left = '65vw'
+        ..style.top = '${3.4 + 5.3}vh'
+        ..style.border = '5px solid #555'
     );
 
-    dice.add(new Dice(120.0, 600.0, 0.0, container: section));
-    dice.add(new Dice(0.0, 600.0, 0.0, container: section));
+    dice.add(new Dice(60.0, 600.0, 0.0, container: section));
+    dice.add(new Dice(-60.0, 600.0, 0.0, container: section));
   }
 
   void run() {
