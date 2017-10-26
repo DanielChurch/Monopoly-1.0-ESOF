@@ -16,9 +16,9 @@ class Dice {
 
   Dice(num x, num y, num z,
     {Element container})
-      : position = new Vector3(0.0, 0.0, 0.0),
-        velocity = new Vector3(0.0, 0.0, 0.0) {
-    rotation = new Vector3(0.0, 0.0, 0.0);
+      : position = new Vector3(x, 0.0, 0.0),
+        velocity = new Vector3(0.0, 0.0, 0.0),
+        rotation = new Vector3(0.0, 0.0, 0.0) {
 
     container = container ?? Dom.body;
 
@@ -31,9 +31,7 @@ class Dice {
               ..src = 'res/images/dice-$className.png'
               ..className = 'cube'
         )..className = '$className').toList()
-      )
-        ..id = 'cube'
-        ..style.left = '$x'
+      )..id = 'cube'
     );
 
     box.onClick.listen((_) => spin());

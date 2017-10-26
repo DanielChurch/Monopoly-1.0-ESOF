@@ -20,7 +20,7 @@ void main() {
       overlay = Dom.div("Welcome to Monopoly!")
         ..id = 'overlay'
         ..onClick.listen((_) => overlay.style.display = 'none')
-  )..style.background = '#222';
+  )..style.background = '#fff';
 
   var taken = Dom.div('Taken', Dom.hr());
   var available = Dom.div('Available', Dom.hr());
@@ -62,7 +62,7 @@ void main() {
   );
 
   // Skip to game for testing
-  //run(available.children);
+   run(available.children);
 }
 
 void run(List<Element> players) {
@@ -72,10 +72,11 @@ void run(List<Element> players) {
   Dom.body(
       (g = new Graphics.blank('board')).canvas
         ..style.position = 'fixed'
-        ..style.top = '20px'
-        ..style.left = '15px'
-  );
-  g.setSize(1350, 1050);
+        ..style.top = '${100.0 * 20.0 / 2133.0}vw'
+        ..style.left = '${100.0 * 15.0 / 1087.0}vh'
+  )..style.background = '#222';
+
+  g.setSize((1350.0 / 2133 * window.innerWidth).toInt(), (1050.0 / 1087 * window.innerHeight).toInt());
 
   banker = new Banker(players.where((div) => div.id.contains('Player Container')).map((div) {
     List<String> data = div.id.split('Player Container ')[1].split('#');
