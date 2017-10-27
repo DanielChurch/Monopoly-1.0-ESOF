@@ -62,7 +62,7 @@ void main() {
   );
 
   // Skip to game for testing
-   run(available.children);
+//   run(available.children);
 }
 
 void run(List<Element> players) {
