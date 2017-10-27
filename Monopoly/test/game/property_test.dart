@@ -1,5 +1,4 @@
-
-import 'package:Monopoly/game/property.dart';
+import 'package:monopoly/game/property.dart';
 import 'package:test/test.dart';
 
 void main() {

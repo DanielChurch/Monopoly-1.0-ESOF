@@ -1,33 +1,90 @@
-import 'package:Monopoly/game/dice.dart';
-import 'package:Monopoly/graphics/dom.dart';
-import 'package:Monopoly/graphics/graphics.dart';
+import 'package:monopoly/game/banker.dart';
+import 'package:monopoly/game/player.dart';
+import 'package:monopoly/graphics/dom.dart';
+import 'package:monopoly/graphics/graphics.dart';
 
 import 'dart:core';
 import 'dart:html';
 import 'dart:math';
 
 Graphics g;
+
 var mouseX, mouseY;
 
-List<Dice> dice = [];
+Banker banker;
 
 void main() {
-  // Dice
-  Element section = Dom.div()..className = 'cubeContainer';
+  Element overlay;
 
-  Dom.body.append(section);
+  Dom.body(
+      overlay = Dom.div("Welcome to Monopoly!")
+        ..id = 'overlay'
+        ..onClick.listen((_) => overlay.style.display = 'none')
+  )..style.background = '#fff';
 
-  dice.add(new Dice(400, 0, 0, container: section));
-  dice.add(new Dice(300, 0, 0, container: section));
-  dice.add(new Dice(200, 0, 0, container: section));
-  dice.add(new Dice(100, 0, 0, container: section));
-  dice.add(new Dice(0, 0, 0, container: section));
+  var taken = Dom.div('Taken', Dom.hr());
+  var available = Dom.div('Available', Dom.hr());
 
-//  document.onMouseDown.listen((m) => dice.forEach((d) => d.spin()));
+  available.children.addAll(
+      ['1#ff0000', '2#00ff00', '3#0000ff', '4#654321', '5#00ffff', '6#ffff00'].map((color) =>
+          Dom.div(
+              Dom.div(
+                  Dom.div()
+                    ..style.display = 'block'
+                    ..style.background = '#${color.split('#')[1]}',
+                  'Player ${color.split('#')[0]}',
+              )..className = 'chip chipContainer',
+              Dom.hr()
+          )
+          ..id = 'Player Container $color'
+          ..onClick.listen((MouseEvent event) {
+            if (event.target is Element){
+              Element target = event.target;
+              while (!target.id.contains('Player Container')) {
+                target = target.parent;
+              }
+              if (taken.contains(target)) {
+                taken.children.remove(target);
+                available.children.add(target);
+              } else {
+                available.children.remove(target);
+                taken.children.add(target);
+              }
+            }
+          })
+      ).toList()
+  );
+
+  Dom.body(
+      available,
+      taken,
+      Dom.div('Continue')..onClick.listen((_) => run(taken.children))
+  );
+
+  // Skip to game for testing
+//   run(available.children);
+}
+
+void run(List<Element> players) {
+  Dom.body().children.clear();
 
   // Canvas
-  g = new Graphics.blank();
-  g.setSize(1280, 1280);
+  Dom.body(
+      (g = new Graphics.blank('board')).canvas
+        ..style.position = 'fixed'
+        ..style.top = '${100.0 * 20.0 / 2133.0}vw'
+        ..style.left = '${100.0 * 15.0 / 1087.0}vh'
+  )..style.background = '#222';
+
+  g.setSize((1350.0 / 2133 * window.innerWidth).toInt(), (1050.0 / 1087 * window.innerHeight).toInt());
+
+  banker = new Banker(players.where((div) => div.id.contains('Player Container')).map((div) {
+    List<String> data = div.id.split('Player Container ')[1].split('#');
+    return new Player(data[0], data[1]);
+  }).toList(),
+      new DateTime.now().add(new Duration(minutes: 30)));
+
+  banker.run();
 
   mouseX = g.width / 2;
   mouseY = g.height / 2;
@@ -44,8 +101,6 @@ void main() {
 
   document.onMouseDown.listen((_) => mouseDown = true);
   document.onMouseUp.listen((_) => mouseDown = false);
-
-  Dom.body.append(g.canvas);
 
   window.requestAnimationFrame(loop);
 }
@@ -68,9 +123,9 @@ void loop(_) {
 }
 
 void update() {
-  dice.forEach((d) => d.update());
+  banker.update();
 }
 
 void render(num delta) {
-  dice.forEach((d) => d.render(delta));
+  banker.render(delta);
 }

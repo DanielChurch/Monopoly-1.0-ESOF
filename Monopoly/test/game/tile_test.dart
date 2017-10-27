@@ -1,5 +1,4 @@
-
-import 'package:Monopoly/game/tile.dart';
+import 'package:monopoly/game/tile.dart';
 import 'package:test/test.dart';
 
 void main() {
