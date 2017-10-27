@@ -1,5 +1,4 @@
-
-import 'package:Monopoly/game/player.dart';
+import 'package:monopoly/game/player.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -7,7 +6,7 @@ void main() {
     Player player;
 
     setUp(() {
-      player = new Player();
+      player = new Player('Player 1', '00ff00');
     });
 
     test('tests run', () {
