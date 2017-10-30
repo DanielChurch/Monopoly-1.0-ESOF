@@ -23,29 +23,8 @@ void main() {
         ..onClick.listen((_) => overlay.style.display = 'none')
   )..style.background = '#222';
 
-  var taken = Dom.div('Taken', Dom.hr()..style.fontSize = '16px')
-    ..style.color = '#fff'
-    ..style.float = 'left'
-    ..style.padding = '0 15% 0 15%'
-    ..style.background = '#333'
-    ..style.height = '500px'
-    ..style.width = '${40000.0/2133.0}vw'
-    ..style.textAlign = 'center'
-    ..style.border = '5px solid #555'
-    ..style.borderRadius = '10px'
-    ..style.fontSize = '35px';
-  var available = Dom.div('Available', Dom.hr()..style.fontSize = '16px')
-    ..style.color = '#fff'
-    ..style.float = 'right'
-    ..style.padding = '0 15% 0 15%'
-    ..style.background = '#333'
-    ..style.height = '500px'
-    ..style.width = '${40000.0/2133.0}vw'
-    ..style.textAlign = 'center'
-    ..style.border = '5px solid #555'
-    ..style.borderRadius = '10px'
-    ..style.fontSize = '35px'
-    ..style.margin = '0 0 200px 0';
+  var taken = Dom.div('Taken', Dom.hr()..style.fontSize = '16px')..className = 'left roster';
+  var available = Dom.div('Available', Dom.hr()..style.fontSize = '16px')..className = 'right roster';
 
   available.children.addAll(
       ['1#ff0000', '2#00ff00', '3#0000ff', '4#654321', '5#00ffff', '6#ffff00'].map((color) =>
@@ -85,19 +64,11 @@ void main() {
   Dom.body(
       available,
       taken,
-      Dom.br()
-        ..style.padding = '50px, 0, 150px, 0',
+      Dom.br()..style.padding = '50px, 0, 150px, 0',
       Dom.div(
           Dom.div('Continue')
+            ..className = 'continueButton'
             ..onClick.listen((_) => run(taken.children))
-            ..style.clear = 'both'
-            ..style.width = '400px'
-            ..style.textAlign = 'center'
-            ..style.fontSize = '50px'
-            ..style.background = '#777'
-            ..style.border = '3px solid black'
-            ..style.borderRadius = '50px'
-            ..style.margin = 'auto'
       )
         ..style.width = '100%'
         ..style.textAlign = 'center'
