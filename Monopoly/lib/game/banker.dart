@@ -98,7 +98,7 @@ class Banker {
                 ..style.background = '#${player.token}'
                 ..style.borderRadius = '5px 5px 0 0',
               Dom.div(
-                  Dom.div('Player ${player.name}')..style.color = '#ffffff',
+                  Dom.div('${player.name}')..style.color = '#ffffff',
                   Dom.div('\$6969696969696')..style.color = '#ffffff',
                   Dom.div('Properties')..style.color = '#ffffff',
                   Dom.div('Line1')..style.color = '#ffffff',
@@ -106,7 +106,7 @@ class Banker {
           )
             ..onMouseEnter.listen((_) {
               tooltip.style.visibility = 'visible';
-              tooltip.children.where((child) => child.id == 'name').toList()[0].text = 'Player ${player.name}';
+              tooltip.children.where((child) => child.id == 'name').toList()[0].text = '${player.name}';
               tooltip.children.where((child) => child.id == 'money').toList()[0].text = '\$696969669';
             })
             ..onMouseLeave.listen((_) => tooltip.style.visibility = 'hidden')

@@ -52,7 +52,11 @@ void main() {
                   Dom.div()
                     ..style.display = 'block'
                     ..style.background = '#${color.split('#')[1]}',
-                  'Player ${color.split('#')[0]}',
+                  Dom.input("Player ${color.split('#')[0]}")
+                    ..id = 'Player'
+                    ..style.background = 'inherit'
+                    ..style.border = 'inherit'
+                    ..style.margin = '15px 0 0 0',
               )..className = 'chip chipContainer',
               Dom.hr()..style.fontSize = '16px'
           )
@@ -81,12 +85,20 @@ void main() {
       taken,
       Dom.hr()
         ..style.padding = '50px, 0, 150px, 0',
-      Dom.div('Continue')
-        ..onClick.listen((_) => run(taken.children))
-        ..style.clear = 'both'
+      Dom.div(
+          Dom.div('Continue')
+            ..onClick.listen((_) => run(taken.children))
+            ..style.clear = 'both'
+            ..style.width = '400px'
+            ..style.textAlign = 'center'
+            ..style.fontSize = '50px'
+            ..style.background = '#777'
+            ..style.border = '3px solid black'
+            ..style.borderRadius = '50px'
+            ..style.margin = 'auto'
+      )
         ..style.width = '100%'
         ..style.textAlign = 'center'
-        ..style.fontSize = '50px'
   );
 
   // Skip to game for testing
@@ -108,7 +120,7 @@ void run(List<Element> players) {
 
   banker = new Banker(players.where((div) => div.id.contains('Player Container')).map((div) {
     List<String> data = div.id.split('Player Container ')[1].split('#');
-    return new Player(data[0], data[1]);
+    return new Player(data[0], div.querySelector('#Player').value, data[1]);
   }).toList(),
       new DateTime.now().add(new Duration(minutes: 30)));
 

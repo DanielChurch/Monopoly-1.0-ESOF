@@ -9,10 +9,11 @@ class Player {
 
   bool isInJail;
 
+  String id;
   String name;
   String token;
 
-  Player(String this.name, String this.token);
+  Player(String this.id, String this.name, String this.token);
 
   int get balance => _balance;
   int get location => _location;
