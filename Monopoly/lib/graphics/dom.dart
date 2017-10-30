@@ -24,7 +24,10 @@ class Dom extends Element {
   factory Dom._() => new Element.div();
 
   static Element _setUpDomChildren(Element e, List<dynamic> children) {
-    children.where((c) => c is String).forEach((c) => e.text += c);
+    if (e is InputElement)
+      children.where((c) => c is String).forEach((c) => e.value += c);
+    else
+      children.where((c) => c is String).forEach((c) => e.text += c);
     children.where((c) => !(c is String)).forEach(e.append);
     return e;
   }
@@ -60,6 +63,7 @@ class Dom extends Element {
   static final Function ul = new VariadicFunction(([List<dynamic> children]) => children != null ? _setUpDomChildren(new Element.ul(), children) : new Element.ul());
   static final Function video = new VariadicFunction(([List<dynamic> children]) => children != null ? _setUpDomChildren(new Element.video(), children) : new Element.video());
   static final Function figure = new VariadicFunction(([List<dynamic> children]) => children != null ?  _setUpDomChildren(document.createElement('FIGURE'), children) : document.createElement('FIGURE'));
+  static final Function input = new VariadicFunction(([List<dynamic> children]) => children != null ?  _setUpDomChildren(document.createElement('input'), children) : document.createElement('input'));
 
   static Element byId(String id) => querySelector('#$id');
 

@@ -93,9 +93,7 @@ class Dice {
   void update() {
     velocity.y += 0.0981;
 
-    position.x += velocity.x;
-    position.y += velocity.y;
-    position.z += velocity.z;
+    position += velocity;
 
     if (position.y >= 0) {
       position.y = 0.0;

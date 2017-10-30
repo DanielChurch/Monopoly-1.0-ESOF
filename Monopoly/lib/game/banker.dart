@@ -24,12 +24,15 @@ class Banker {
 
   static List<Dice> dice = [];
 
+  static SpanElement tooltip;
+
   Banker(List<Player> this.players, DateTime this._endTime) {
+
     Element overlay;
 
     Dom.body(
         overlay = Dom.div()
-          ..onClick.listen((_) => overlay.style.display = 'none')
+          ..onClick.listen((_) => Banker.tooltip.style.display = 'none')
           ..id = 'overlay'
           ..style.color = '#fff'
           ..style.display = 'none'
@@ -55,19 +58,16 @@ class Banker {
 
     Dom.body(section);
 
-    int x = 0;
-    int y = 0;
-
     // baseWidth 2133
     // baseHeight 1087
 
     //Tooltip
-    SpanElement tooltip = Dom.span(
+    tooltip = Dom.span(
       Dom.div()..id = 'name',
       Dom.p(),
       Dom.div()..id = 'money',
       Dom.p(),
-      Dom.div('all of dem')..id = 'properties'
+      Dom.div('Tooltip Line 3')..id = 'properties'
     )
       ..className = 'tooltip tooltiptext'
       ..style.width = '200px';
@@ -78,57 +78,55 @@ class Banker {
       mouseX = me.client.x;
       mouseY = me.client.y;
 
-      tooltip
+      Banker.tooltip
         ..style.left = '${me.client.x - 100}px'
         ..style.top = '${me.client.y + 20}px';
     });
 
-    Dom.body(
-      Dom.div(
-        players.map((player) =>
-          Dom.div(
-              Dom.div(
-                  Dom.img()..src = 'res/images/dogIcon.png'
-                    ..style.zIndex = '10'
-                    ..style.position = 'relative'
-              )
-                ..style.position = 'relative'
-                ..style.width = '100%'
-                ..style.height = '18.4%'
-                ..style.background = '#${player.token}'
-                ..style.borderRadius = '5px 5px 0 0',
-              Dom.div(
-                  Dom.p('Player ${player.name}')..style.color = '#ffffff',
-                  Dom.p('\$6969696969696')..style.color = '#ffffff',
-              )..className = 'cardContainer'
-          )
-            ..onMouseEnter.listen((_) {
-              tooltip.style.visibility = 'visible';
-              tooltip.children.where((child) => child.id == 'name').toList()[0].text = 'Player ${player.name}';
-              tooltip.children.where((child) => child.id == 'money').toList()[0].text = '\$696969669';
-            })
-            ..onMouseLeave.listen((_) => tooltip.style.visibility = 'hidden')
-            ..style.position = 'fixed'
-            ..className = 'card ${player.name == '$_currentPlayerIndex' ? 'selected' : ''}'
-            ..style.left = '${10.38 * (x % 3) + 65.64}vw' // 9.38
-            ..style.top = '${28 * (x++ ~/ 3) + 1.3 + 2.4}vh' // 23
-        ).toList()
-      )
-        ..style.background = '#333'
-        ..style.width = '${10.5 * (x > 2 ? 3 : x)}vw'
-        ..style.height = '${28.5 * (x / 3).ceil()}vh'
-        ..style.position = 'fixed'
-        ..style.left = '64.75vw'
-        ..style.top = '${2}vh'
-        ..style.border = '5px solid #555'
-        ..style.borderRadius = '10px'
-        ..onClick.listen((_) {
-            _currentPlayerIndex++;
-        })
-    );
+    Dom.body(renderAllCards(players));
 
     dice.add(new Dice(60.0, 600.0, 0.0, container: section));
     dice.add(new Dice(-60.0, 600.0, 0.0, container: section));
+  }
+
+  Element renderAllCards(List<Player> players) {
+    int index = 0;
+
+    return Dom.div(
+        players.map((player) => renderCard(player, index++)).toList()
+    )
+      ..className = 'cardBackground'
+      ..style.width = '${10.5 * (index > 2 ? 3 : index)}vw'
+      ..style.height = '${28.5 * (index / 3).ceil()}vh'
+      ..onClick.listen((_) {
+        _currentPlayerIndex++;
+      });
+  }
+
+  Element renderCard(Player player, int index) {
+    return Dom.div(
+        Dom.div(
+            Dom.img()..src = 'res/images/dogIcon.png'
+        )
+          ..className = 'cardImage'
+          ..style.background = '#${player.token}',
+        Dom.div(
+          Dom.div('${player.name}'),
+          Dom.div('\$6969696969696'),
+          Dom.div('Properties'),
+          Dom.div('Line1'),
+        )..className = 'cardContainer'
+    )
+      ..onMouseEnter.listen((_) {
+        Banker.tooltip.style.visibility = 'visible';
+        Banker.tooltip.children.where((child) => child.id == 'name').toList()[0].text = '${player.name}';
+        Banker.tooltip.children.where((child) => child.id == 'money').toList()[0].text = '\$696969669';
+      })
+      ..onMouseLeave.listen((_) => Banker.tooltip.style.visibility = 'hidden')
+      ..style.position = 'fixed'
+      ..className = 'card ${player.name == '$_currentPlayerIndex' ? 'selected' : ''}'
+      ..style.left = '${10.38 * (index % 3) + 65.64}vw' // 9.38
+      ..style.top = '${28 * (index ~/ 3) + 1.3 + 2.4}vh'; // 23
   }
 
   void run() {

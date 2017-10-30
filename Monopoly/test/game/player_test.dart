@@ -6,7 +6,7 @@ void main() {
     Player player;
 
     setUp(() {
-      player = new Player('Player 1', '00ff00');
+      player = new Player('1', 'Player 1', '00ff00');
     });
 
     test('tests run', () {
