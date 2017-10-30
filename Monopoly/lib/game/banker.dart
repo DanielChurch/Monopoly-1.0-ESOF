@@ -98,8 +98,10 @@ class Banker {
                 ..style.background = '#${player.token}'
                 ..style.borderRadius = '5px 5px 0 0',
               Dom.div(
-                  Dom.p('Player ${player.name}')..style.color = '#ffffff',
-                  Dom.p('\$6969696969696')..style.color = '#ffffff',
+                  Dom.div('Player ${player.name}')..style.color = '#ffffff',
+                  Dom.div('\$6969696969696')..style.color = '#ffffff',
+                  Dom.div('Properties')..style.color = '#ffffff',
+                  Dom.div('Line1')..style.color = '#ffffff',
               )..className = 'cardContainer'
           )
             ..onMouseEnter.listen((_) {

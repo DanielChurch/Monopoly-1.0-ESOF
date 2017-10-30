@@ -1,3 +1,4 @@
+import 'package:dnd/dnd.dart';
 import 'package:monopoly/game/banker.dart';
 import 'package:monopoly/game/player.dart';
 import 'package:monopoly/graphics/dom.dart';
@@ -22,8 +23,27 @@ void main() {
         ..onClick.listen((_) => overlay.style.display = 'none')
   )..style.background = '#fff';
 
-  var taken = Dom.div('Taken', Dom.hr());
-  var available = Dom.div('Available', Dom.hr());
+  var taken = Dom.div('Taken', Dom.hr()..style.fontSize = '16px')
+    ..style.float = 'left'
+    ..style.padding = '0 15% 0 15%'
+    ..style.background = '#777'
+    ..style.height = '500px'
+    ..style.width = '${40000.0/2133.0}vw'
+    ..style.textAlign = 'center'
+    ..style.border = '3px solid black'
+    ..style.borderRadius = '10px'
+    ..style.fontSize = '35px';
+  var available = Dom.div('Available', Dom.hr()..style.fontSize = '16px')
+    ..style.float = 'right'
+    ..style.padding = '0 15% 0 15%'
+    ..style.background = '#777'
+    ..style.height = '500px'
+    ..style.width = '${40000.0/2133.0}vw'
+    ..style.textAlign = 'center'
+    ..style.border = '3px solid black'
+    ..style.borderRadius = '10px'
+    ..style.fontSize = '35px'
+    ..style.margin = '0 0 200px 0';
 
   available.children.addAll(
       ['1#ff0000', '2#00ff00', '3#0000ff', '4#654321', '5#00ffff', '6#ffff00'].map((color) =>
@@ -34,31 +54,39 @@ void main() {
                     ..style.background = '#${color.split('#')[1]}',
                   'Player ${color.split('#')[0]}',
               )..className = 'chip chipContainer',
-              Dom.hr()
+              Dom.hr()..style.fontSize = '16px'
           )
           ..id = 'Player Container $color'
-          ..onClick.listen((MouseEvent event) {
-            if (event.target is Element){
-              Element target = event.target;
-              while (!target.id.contains('Player Container')) {
-                target = target.parent;
-              }
-              if (taken.contains(target)) {
-                taken.children.remove(target);
-                available.children.add(target);
-              } else {
-                available.children.remove(target);
-                taken.children.add(target);
-              }
-            }
-          })
       ).toList()
   );
+
+  for (Element e in available.children) {
+    new Draggable(e, avatarHandler: new AvatarHandler.clone());
+  }
+
+  Dropzone takenDrop = new Dropzone(taken)
+    ..onDrop.listen((DropzoneEvent e) {
+      available.children.remove(e.draggableElement);
+      taken.children.add(e.draggableElement);
+    });
+
+  Dropzone availableDrop = new Dropzone(available)
+    ..onDrop.listen((DropzoneEvent e) {
+      taken.children.remove(e.draggableElement);
+      available.children.add(e.draggableElement);
+    });
 
   Dom.body(
       available,
       taken,
-      Dom.div('Continue')..onClick.listen((_) => run(taken.children))
+      Dom.hr()
+        ..style.padding = '50px, 0, 150px, 0',
+      Dom.div('Continue')
+        ..onClick.listen((_) => run(taken.children))
+        ..style.clear = 'both'
+        ..style.width = '100%'
+        ..style.textAlign = 'center'
+        ..style.fontSize = '50px'
   );
 
   // Skip to game for testing
