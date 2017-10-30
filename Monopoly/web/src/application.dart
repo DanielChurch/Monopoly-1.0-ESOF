@@ -21,26 +21,28 @@ void main() {
       overlay = Dom.div("Welcome to Monopoly!")
         ..id = 'overlay'
         ..onClick.listen((_) => overlay.style.display = 'none')
-  )..style.background = '#fff';
+  )..style.background = '#222';
 
   var taken = Dom.div('Taken', Dom.hr()..style.fontSize = '16px')
+    ..style.color = '#fff'
     ..style.float = 'left'
     ..style.padding = '0 15% 0 15%'
-    ..style.background = '#777'
+    ..style.background = '#333'
     ..style.height = '500px'
     ..style.width = '${40000.0/2133.0}vw'
     ..style.textAlign = 'center'
-    ..style.border = '3px solid black'
+    ..style.border = '5px solid #555'
     ..style.borderRadius = '10px'
     ..style.fontSize = '35px';
   var available = Dom.div('Available', Dom.hr()..style.fontSize = '16px')
+    ..style.color = '#fff'
     ..style.float = 'right'
     ..style.padding = '0 15% 0 15%'
-    ..style.background = '#777'
+    ..style.background = '#333'
     ..style.height = '500px'
     ..style.width = '${40000.0/2133.0}vw'
     ..style.textAlign = 'center'
-    ..style.border = '3px solid black'
+    ..style.border = '5px solid #555'
     ..style.borderRadius = '10px'
     ..style.fontSize = '35px'
     ..style.margin = '0 0 200px 0';
@@ -83,7 +85,7 @@ void main() {
   Dom.body(
       available,
       taken,
-      Dom.hr()
+      Dom.br()
         ..style.padding = '50px, 0, 150px, 0',
       Dom.div(
           Dom.div('Continue')

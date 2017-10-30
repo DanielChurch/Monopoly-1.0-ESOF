@@ -20,7 +20,7 @@
 }
 
 .dnd-over {
-  border: 3px dashed black !important;
+  border-style: dashed !important;
   opacity: 1;
 }
 
