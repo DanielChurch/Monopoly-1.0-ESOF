@@ -8,6 +8,7 @@ import 'dice.dart';
 import 'player.dart';
 import 'property.dart';
 import 'tile.dart';
+import 'tile_type.dart';
 
 class Banker {
 
@@ -17,7 +18,50 @@ class Banker {
   int _currentPlayerIndex = 1;
 
   List<Property> _deeds;
-  List<Tile> _board;
+  
+  List<Tile> _board = [
+    new Tile(TileType.go),
+    new Tile(TileType.property),
+    new Tile(TileType.freeParking),
+    new Tile(TileType.property),
+    new Tile(TileType.incomeTax),
+    new Tile(TileType.railroad),
+    new Tile(TileType.property),
+    new Tile(TileType.freeParking),
+    new Tile(TileType.property),
+    new Tile(TileType.property),
+    new Tile(TileType.jail),
+    new Tile(TileType.property),
+    new Tile(TileType.utility),
+    new Tile(TileType.property),
+    new Tile(TileType.property),
+    new Tile(TileType.railroad),
+    new Tile(TileType.property),
+    new Tile(TileType.freeParking),
+    new Tile(TileType.property),
+    new Tile(TileType.property),
+    new Tile(TileType.freeParking),
+    new Tile(TileType.property),
+    new Tile(TileType.freeParking),
+    new Tile(TileType.property),
+    new Tile(TileType.property),
+    new Tile(TileType.railroad),
+    new Tile(TileType.property),
+    new Tile(TileType.property),
+    new Tile(TileType.utility),
+    new Tile(TileType.property),
+    new Tile(TileType.goToJail),
+    new Tile(TileType.property),
+    new Tile(TileType.property),
+    new Tile(TileType.freeParking),
+    new Tile(TileType.property),
+    new Tile(TileType.railroad),
+    new Tile(TileType.freeParking),
+    new Tile(TileType.property),
+    new Tile(TileType.luxuryTax),
+    new Tile(TileType.property)
+  ];
+  
   DateTime _endTime;
 
   int mouseX, mouseY;
