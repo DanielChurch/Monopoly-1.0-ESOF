@@ -27,13 +27,12 @@ void main() {
   var available = Dom.div('Available', Dom.hr()..style.fontSize = '16px')..className = 'right roster';
 
   available.children.addAll(
-      ['1#ff0000', '2#00ff00', '3#0000ff', '4#654321', '5#00ffff', '6#ffff00'].map((color) =>
+      ['1#Rick', '2#Morty', '3#Summer', '4#Beth', '5#Jerry', '6#Jessica'].map((color) =>
           Dom.div(
               Dom.div(
                   Dom.div()
-                    ..style.display = 'block'
-                    ..style.background = '#${color.split('#')[1]}',
-                  Dom.input("Player ${color.split('#')[0]}")
+                    ..style.display = 'block',
+                  Dom.input('${color.split('#')[1]}')
                     ..id = 'Player'
                     ..style.background = 'inherit'
                     ..style.border = 'inherit'
@@ -64,7 +63,7 @@ void main() {
   Dom.body(
       available,
       taken,
-      Dom.br()..style.padding = '50px, 0, 150px, 0',
+      Dom.br()..style.padding = '4.6vh, 0, 13.8vh, 0',
       Dom.div(
           Dom.div('Continue')
             ..className = 'continueButton'
@@ -75,7 +74,9 @@ void main() {
   );
 
   // Skip to game for testing
-//   run(available.children);
+  if (Uri.base.queryParameters['skipRoster'] == '') {
+    run(available.children);
+  }
 }
 
 void run(List<Element> players) {

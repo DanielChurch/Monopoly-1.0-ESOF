@@ -50,7 +50,9 @@ packages:
     source: hosted
     version: "0.28.0"
   browser:
-    description: browser
+    description:
+      name: browser
+      url: "https://pub.dartlang.org"
     source: hosted
     version: "0.10.0+2"
   charcode:
@@ -226,7 +228,7 @@ packages:
       name: mime
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.9.3"
+    version: "0.9.4"
   mustache4dart:
     description:
       name: mustache4dart
@@ -310,7 +312,7 @@ packages:
       name: shelf
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.7.0"
+    version: "0.7.1"
   shelf_packages_handler:
     description:
       name: shelf_packages_handler
@@ -352,7 +354,7 @@ packages:
       name: stack_trace
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.8.2"
+    version: "1.8.3"
   stream_channel:
     description:
       name: stream_channel
@@ -450,4 +452,4 @@ packages:
     source: hosted
     version: "2.1.13"
 sdks:
-  dart: ">=1.23.0 <2.0.0-dev.infinity"
+  dart: ">=1.23.0 <2.0.0"
