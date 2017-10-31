@@ -10,7 +10,11 @@ class Tile {
   TileType type;
   Property property;
 
-  Tile(TileType this.type, {Property this.property});
+  Tile({TileType this.type, Property this.property}){
+    if (this.property != null) {
+      this.type = TileType.property;
+    }
+  }
 
   bool get isProperty => type == TileType.property;
 
