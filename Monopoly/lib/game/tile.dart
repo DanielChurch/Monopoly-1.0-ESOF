@@ -8,15 +8,9 @@ import 'property.dart';
 class Tile {
 
   TileType type;
-  Property _property;
+  Property property;
 
-  Tile(TileType this.type);
-
-  factory Tile.property(Property property){
-    var tile = new Tile(TileType.property);
-    tile._property = property;
-    return tile;
-  }
+  Tile(TileType this.type, {Property this.property});
 
   bool get isProperty => type == TileType.property;
 
