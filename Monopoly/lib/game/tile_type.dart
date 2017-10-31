@@ -5,5 +5,7 @@ enum TileType {
   goToJail,
   jail,
   freeParking,
-  go
+  go,
+  utility,
+  railroad
 }

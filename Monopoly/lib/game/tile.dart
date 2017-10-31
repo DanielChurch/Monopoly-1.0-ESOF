@@ -4,7 +4,7 @@ import 'package:monopoly/graphics/graphics.dart';
 import 'tile_type.dart';
 
 class Tile {
-  
+
   TileType type;
 
   Tile(TileType this.type);
@@ -24,6 +24,8 @@ class Tile {
       case TileType.incomeTax: imageSrc = ''; break;
       case TileType.jail: imageSrc = ''; break;
       case TileType.luxuryTax: imageSrc = ''; break;
+      case TileType.railroad: imageSrc = ''; break;
+      case TileType.utility: imageSrc = ''; break;
     }
     g.drawImage(Dom.img(imageSrc), 0, 0, 50, 50);
   }
