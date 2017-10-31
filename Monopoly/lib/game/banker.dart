@@ -150,10 +150,18 @@ class Banker {
   Element renderCard(Player player, int index) {
     return Dom.div(
         Dom.div(
-            Dom.img()..src = 'res/images/dogIcon.png'
+            Dom.img()
+              ..src = 'res/images/${player.id}.png'
+              ..style.width = '150px'
+              ..style.height = '150px'
+              ..style.position = 'absolute'
+              ..style.bottom = '0'
+              ..style.right = '25px'
+              ..style.margin = 'auto'
         )
           ..className = 'cardImage'
-          ..style.background = '#${player.token}',
+          ..style.background = 'url(res/images/${player.id}.png)' // #${player.token}
+          ..style.height = '200px',
         Dom.div(
           Dom.div('${player.name}'),
           Dom.div('\$6969696969696'),
