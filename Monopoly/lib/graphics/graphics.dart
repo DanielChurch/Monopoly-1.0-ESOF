@@ -7,7 +7,7 @@ class Graphics {
 
   Graphics._internal(this._canvas) : _graphics = _canvas.getContext("2d");
 
-  factory Graphics.blank() => new Graphics._internal(new CanvasElement());
+  factory Graphics.blank([String className]) => new Graphics._internal(new CanvasElement()..className = className ?? '');
 
   get canvas => _canvas;
   get width => _canvas.width;

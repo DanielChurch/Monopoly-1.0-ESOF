@@ -24,7 +24,10 @@ class Dom extends Element {
   factory Dom._() => new Element.div();
 
   static Element _setUpDomChildren(Element e, List<dynamic> children) {
-    children.where((c) => c is String).forEach((c) => e.text += c);
+    if (e is InputElement)
+      children.where((c) => c is String).forEach((c) => e.value += c);
+    else
+      children.where((c) => c is String).forEach((c) => e.text += c);
     children.where((c) => !(c is String)).forEach(e.append);
     return e;
   }
@@ -33,6 +36,7 @@ class Dom extends Element {
   static final Function article = new VariadicFunction(([List<dynamic> children]) => children != null ? _setUpDomChildren(new Element.article(), children) : new Element.article());
   static final Function aside = new VariadicFunction(([List<dynamic> children]) => children != null ? _setUpDomChildren(new Element.aside(), children) : new Element.aside());
   static final Function audio = new VariadicFunction(([List<dynamic> children]) => children != null ? _setUpDomChildren(new Element.audio(), children) : new Element.audio());
+  static final Function body = new VariadicFunction(([List<dynamic> children]) => children != null ? _setUpDomChildren(document.body, children) : document.body);
   static final Function br = new VariadicFunction(([List<dynamic> children]) => children != null ? _setUpDomChildren(new Element.br(), children) : new Element.br());
   static final Function canvas = new VariadicFunction(([List<dynamic> children]) => children != null ? _setUpDomChildren(new Element.canvas(), children) : new Element.canvas());
   static final Function div = new VariadicFunction(([List<dynamic> children]) => children != null ? _setUpDomChildren(new Element.div(), children) : new Element.div());
@@ -59,10 +63,9 @@ class Dom extends Element {
   static final Function ul = new VariadicFunction(([List<dynamic> children]) => children != null ? _setUpDomChildren(new Element.ul(), children) : new Element.ul());
   static final Function video = new VariadicFunction(([List<dynamic> children]) => children != null ? _setUpDomChildren(new Element.video(), children) : new Element.video());
   static final Function figure = new VariadicFunction(([List<dynamic> children]) => children != null ?  _setUpDomChildren(document.createElement('FIGURE'), children) : document.createElement('FIGURE'));
+  static final Function input = new VariadicFunction(([List<dynamic> children]) => children != null ?  _setUpDomChildren(document.createElement('input'), children) : document.createElement('input'));
 
   static Element byId(String id) => querySelector('#$id');
 
   static Element byClass(String id) => querySelector('.$id');
-
-  static BodyElement get body => document.body;
 }

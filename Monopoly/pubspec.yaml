@@ -1,4 +1,4 @@
-name: Monopoly
+name: monopoly
 version: 0.0.1-dev
 description: Monopoly
 homepage: danielchurch.github.io/Dart/Monopoly/build
@@ -13,3 +13,16 @@ dev_dependencies:
 dependencies:
   browser: any
   meta: any
+  vector_math: any
+  dnd: ^0.4.0
+transformers:
+- test/pub_serve:
+    $include: test/**_test.dart
+- $dart2js:
+    analyzeAll: true
+    checked: true
+    minify: true
+    sourceMaps: true
+web:
+  compiler:
+    debug: dartdevc
