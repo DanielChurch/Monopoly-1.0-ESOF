@@ -15,13 +15,16 @@ var mouseX, mouseY;
 Banker banker;
 
 void main() {
-  Element overlay;
+  Dom.body()..style.background = '#222';
+//  Element overlay;
 
-  Dom.body(
-      overlay = Dom.div("Welcome to Monopoly!")
-        ..id = 'overlay'
-        ..onClick.listen((_) => overlay.style.display = 'none')
-  )..style.background = '#222';
+//  Dom.body(
+//      overlay = Dom.div("Welcome to Monopoly!")
+//        ..id = 'overlay'
+//        ..onClick.listen((_) => overlay.style.display = 'none')
+//  )..style.background = '#222';
+
+  print('window.innerWidth ${window.innerWidth}, window.innerHeight ${window.innerHeight}');
 
   var taken = Dom.div('Taken', Dom.hr()..style.fontSize = '16px')..className = 'left roster';
   var available = Dom.div('Available', Dom.hr()..style.fontSize = '16px')..className = 'right roster';
@@ -30,15 +33,35 @@ void main() {
       ['1#Rick', '2#Morty', '3#Summer', '4#Beth', '5#Jerry', '6#Jessica'].map((color) =>
           Dom.div(
               Dom.div(
-                  Dom.div()
-                    ..style.display = 'block',
+                  Dom.div(
+                      Dom.img()
+                        ..src = 'res/images/${color.split('#')[0]}.png'
+                        ..style.height = '100%'
+                        ..style.position = 'absolute'
+                        ..style.bottom = '0'
+                        ..style.margin = 'auto'
+                  )
+                    ..style.display = 'block'
+                    ..style.background = 'url(res/images/charBackround_${color.split('#')[0]}.png)'
+                    ..style.backgroundSize = 'cover'
+                    ..style.backgroundRepeat = 'no-repeat'
+                    ..style.backgroundPosition = 'center center'
+                    ..style.width = '100%'
+                    ..style.borderRadius = '0'
+                    ..style.position = 'absolute',
                   Dom.input('${color.split('#')[1]}')
                     ..id = 'Player'
-                    ..style.background = 'inherit'
+                    ..style.opacity = '0.8'
+                    ..style.color = '#fff'
+                    ..style.background = '#000'
                     ..style.border = 'inherit'
-                    ..style.margin = '15px 0 0 0',
+                    ..style.margin = '${15.0 * 100 / 1087}vh 0 0 0'
+                    ..style.zIndex = '3'
+                    ..style.left = '${100.0 * 55 / 2133}vw'
+                    ..style.position = 'absolute'
+                    ..style.textAlign = 'center',
               )..className = 'chip chipContainer',
-              Dom.hr()..style.fontSize = '16px'
+              Dom.hr()..style.fontSize = '16px'..style.opacity = '0'
           )
           ..id = 'Player Container $color'
       ).toList()

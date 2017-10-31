@@ -155,7 +155,7 @@ class Banker {
               ..style.height = '13.8vh'
               ..style.position = 'absolute'
               ..style.bottom = '0'
-              ..style.right = '25px'
+              ..style.right = '.94vw'
               ..style.margin = 'auto'
         )
           ..className = 'cardImage'
@@ -169,7 +169,12 @@ class Banker {
           Dom.div('\$6969696969696'),
           Dom.div('Properties'),
           Dom.div('Line1'),
-        )..className = 'cardContainer'
+        )
+          ..className = 'cardContainer'
+          ..style.height = '${76.0 * 100 / 1087}vh'
+          ..style.fontSize = '${16.0 * 100 / 1087}vh'
+          ..style.textOverflow = 'clip'
+          ..style.overflow = 'hidden'
     )
       ..onMouseEnter.listen((_) {
         Banker.tooltip.style.visibility = 'visible';
@@ -180,7 +185,9 @@ class Banker {
       ..style.position = 'fixed'
       ..className = 'card ${player.id == '$_currentPlayerIndex' ? 'selected' : ''}'
       ..style.left = '${10.38 * (index % 3) + 65.64}vw' // 9.38
-      ..style.top = '${28 * (index ~/ 3) + 1.3 + 2.4}vh'; // 23
+      ..style.top = '${28 * (index ~/ 3) + 1.3 + 2.4}vh' // 23
+      ..style.height = '${280 / 1087 * 100}vh'
+      ..style.width = '${205 * 100 / 2133}vw';
   }
 
   void run() {
