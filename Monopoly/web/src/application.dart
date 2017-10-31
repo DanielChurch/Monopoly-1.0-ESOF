@@ -27,13 +27,12 @@ void main() {
   var available = Dom.div('Available', Dom.hr()..style.fontSize = '16px')..className = 'right roster';
 
   available.children.addAll(
-      ['1#ff0000#Rick', '2#00ff00#Morty', '3#0000ff#Summer', '4#654321#Beth', '5#00ffff#Jerry', '6#ffff00#Jessica'].map((color) =>
+      ['1#Rick', '2#Morty', '3#Summer', '4#Beth', '5#Jerry', '6#Jessica'].map((color) =>
           Dom.div(
               Dom.div(
                   Dom.div()
-                    ..style.display = 'block'
-                    ..style.background = '#${color.split('#')[1]}',
-                  Dom.input('${color.split('#')[2]}')
+                    ..style.display = 'block',
+                  Dom.input('${color.split('#')[1]}')
                     ..id = 'Player'
                     ..style.background = 'inherit'
                     ..style.border = 'inherit'
@@ -64,7 +63,7 @@ void main() {
   Dom.body(
       available,
       taken,
-      Dom.br()..style.padding = '50px, 0, 150px, 0',
+      Dom.br()..style.padding = '4.6vh, 0, 13.8vh, 0',
       Dom.div(
           Dom.div('Continue')
             ..className = 'continueButton'

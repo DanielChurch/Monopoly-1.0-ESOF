@@ -32,7 +32,7 @@
 
 .card.selected {
     transition: 0s;
-    border: 3px solid pink;
+    border: 3px solid #7FFF00 !important;
 }
 
 /* Add some padding inside the card container */

@@ -86,8 +86,8 @@ class Banker {
     Element section = Dom.div(Dom.div()..className = 'cubeContainer')
       ..className = 'cubeContainer'
       ..style.position = 'fixed'
-      ..style.left = '1675px'
-      ..style.top = '800px'
+      ..style.left = '78.53vw'
+      ..style.top = '73.6vh'
       ..style.zIndex = '20'
       ..onClick.listen((_) async {
           int sum = 0;
@@ -122,7 +122,7 @@ class Banker {
       mouseY = me.client.y;
 
       Banker.tooltip
-        ..style.left = '${me.client.x - 100}px'
+        ..style.left = '${me.client.x - 100}px' // 4.69
         ..style.top = '${me.client.y + 20}px';
     });
 
@@ -151,16 +151,19 @@ class Banker {
         Dom.div(
             Dom.img()
               ..src = 'res/images/${player.id}.png'
-              ..style.width = '150px'
-              ..style.height = '150px'
+              ..style.width = '7.03vw'
+              ..style.height = '13.8vh'
               ..style.position = 'absolute'
               ..style.bottom = '0'
               ..style.right = '25px'
               ..style.margin = 'auto'
         )
           ..className = 'cardImage'
-          ..style.background = 'url(res/images/${player.id}.png)' // #${player.token}
-          ..style.height = '200px',
+          ..style.background = 'url(res/images/charBackround_${player.id}.png)' // #${player.token}
+          ..style.height = '18.4vh'
+          ..style.backgroundSize = 'cover'
+          ..style.backgroundRepeat = 'no-repeat'
+          ..style.backgroundPosition = 'center center',
         Dom.div(
           Dom.div('${player.name}'),
           Dom.div('\$6969696969696'),
@@ -175,7 +178,7 @@ class Banker {
       })
       ..onMouseLeave.listen((_) => Banker.tooltip.style.visibility = 'hidden')
       ..style.position = 'fixed'
-      ..className = 'card ${player.name == '$_currentPlayerIndex' ? 'selected' : ''}'
+      ..className = 'card ${player.id == '$_currentPlayerIndex' ? 'selected' : ''}'
       ..style.left = '${10.38 * (index % 3) + 65.64}vw' // 9.38
       ..style.top = '${28 * (index ~/ 3) + 1.3 + 2.4}vh'; // 23
   }
