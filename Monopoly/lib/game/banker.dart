@@ -63,7 +63,6 @@ class Banker {
   ];
   
   DateTime _endTime;
-
   int mouseX, mouseY;
 
   static List<Dice> dice = [];
