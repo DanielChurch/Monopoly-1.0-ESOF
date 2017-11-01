@@ -107,19 +107,24 @@ void run(List<Element> players) {
 
   // Canvas
   Dom.body(
+    Dom.div(
       (g = new Graphics.blank('board')).canvas
-        ..style.position = 'fixed'
+        ..id = 'gameBoard'
+        ..style.display = 'block'
+//        ..style.position = 'fixed'
         ..style.top = '${100.0 * 20.0 / 2133.0}vw'
-        ..style.left = '${100.0 * 15.0 / 1087.0}vh'
+        ..style.margin = 'auto' // 15
+        ..style.border = '5px solid #777'
+    )..style.width = '65%'
   )..style.background = '#222';
 
-  g.setSize((1350.0 / 2133 * window.innerWidth).toInt(), (1050.0 / 1087 * window.innerHeight).toInt());
+  g.setSize((1050).toInt(), (1050).toInt());
 
   banker = new Banker(players.where((div) => div.id.contains('Player Container')).map((div) {
     List<String> data = div.id.split('Player Container ')[1].split('#');
     return new Player(data[0], div.querySelector('#Player').value, data[1]);
   }).toList(),
-      new DateTime.now().add(new Duration(minutes: 30)));
+      new DateTime.now().add(new Duration(minutes: 30)), g);
 
   banker.run();
 

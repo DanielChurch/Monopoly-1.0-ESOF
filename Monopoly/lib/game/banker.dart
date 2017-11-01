@@ -3,6 +3,7 @@ import 'dart:html';
 
 import 'package:meta/meta.dart';
 import 'package:monopoly/graphics/dom.dart';
+import 'package:monopoly/graphics/graphics.dart';
 
 import 'dice.dart';
 import 'player.dart';
@@ -69,7 +70,9 @@ class Banker {
 
   static SpanElement tooltip;
 
-  Banker(List<Player> this.players, DateTime this._endTime) {
+  Banker(List<Player> this.players, DateTime this._endTime, Graphics g) {
+
+    setUpCanvas(g);
 
     Element overlay;
 
@@ -130,6 +133,30 @@ class Banker {
 
     dice.add(new Dice(60.0, 600.0, 0.0, container: section));
     dice.add(new Dice(-60.0, 600.0, 0.0, container: section));
+  }
+
+  Future<Null> setUpCanvas(Graphics g) async {
+    int x = 0;
+    int y = 0;
+    int amt = 10;
+
+    g.drawImage("res/images/rickandmorty2bg.png", Tile.tileScale, Tile.tileScale, g.width - 2 * Tile.tileScale + 5, g.height - 2 * Tile.tileScale + 5).then((_) {
+      g.setColor('rgb(255, 255, 255)');
+      g.drawRect(Tile.tileScale + 2, Tile.tileScale + 2, g.width - 2 * Tile.tileScale + 3, g.height - 2 * Tile.tileScale + 3);
+      _board.forEach((tile) {
+        tile.render(g, x, y, 0.0);
+
+        if (x != amt && y == 0) {
+          x++;
+        } else if (x == amt && y != amt) {
+          y++;
+        } else if(x != 0 && y == amt) {
+          x--;
+        } else if (x == 0 && y != 0) {
+          y--;
+        }
+      });
+    });
   }
 
   Element renderAllCards(List<Player> players) {

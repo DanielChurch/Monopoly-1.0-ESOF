@@ -32,7 +32,7 @@ html, body {
 }
 
 .board {
-    position: fixed;
+/*    position: fixed; */
     background: #774455;
     z-index: -2;
 }
