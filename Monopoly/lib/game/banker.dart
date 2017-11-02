@@ -3,6 +3,7 @@ import 'dart:html';
 
 import 'package:meta/meta.dart';
 import 'package:monopoly/graphics/dom.dart';
+import 'package:monopoly/graphics/graphics.dart';
 
 import 'dice.dart';
 import 'player.dart';
@@ -69,7 +70,9 @@ class Banker {
 
   static SpanElement tooltip;
 
-  Banker(List<Player> this.players, DateTime this._endTime) {
+  Banker(List<Player> this.players, DateTime this._endTime, Graphics g) {
+
+    setUpCanvas(g);
 
     Element overlay;
 
@@ -132,6 +135,30 @@ class Banker {
     dice.add(new Dice(-60.0, 600.0, 0.0, container: section));
   }
 
+  Future<Null> setUpCanvas(Graphics g) async {
+    int x = 0;
+    int y = 0;
+    int amt = 10;
+
+    g.drawImage("res/images/rickandmorty2bg.png", Tile.tileScale, Tile.tileScale, g.width - 2 * Tile.tileScale + 5, g.height - 2 * Tile.tileScale + 5).then((_) {
+      g.setColor('rgb(255, 255, 255)');
+      g.drawRect(Tile.tileScale + 2, Tile.tileScale + 2, g.width - 2 * Tile.tileScale + 3, g.height - 2 * Tile.tileScale + 3);
+      _board.forEach((tile) {
+        tile.render(g, x, y, 0.0);
+
+        if (x != amt && y == 0) {
+          x++;
+        } else if (x == amt && y != amt) {
+          y++;
+        } else if(x != 0 && y == amt) {
+          x--;
+        } else if (x == 0 && y != 0) {
+          y--;
+        }
+      });
+    });
+  }
+
   Element renderAllCards(List<Player> players) {
     int index = 0;
 
@@ -169,7 +196,12 @@ class Banker {
           Dom.div('\$6969696969696'),
           Dom.div('Properties'),
           Dom.div('Line1'),
-        )..className = 'cardContainer'
+        )
+          ..className = 'cardContainer'
+          ..style.height = '${76.0 * 100 / 1087}vh'
+          ..style.fontSize = '${16.0 * 100 / 1087}vh'
+          ..style.textOverflow = 'clip'
+          ..style.overflow = 'hidden'
     )
       ..onMouseEnter.listen((_) {
         Banker.tooltip.style.visibility = 'visible';
@@ -180,7 +212,9 @@ class Banker {
       ..style.position = 'fixed'
       ..className = 'card ${player.id == '$_currentPlayerIndex' ? 'selected' : ''}'
       ..style.left = '${10.38 * (index % 3) + 65.64}vw' // 9.38
-      ..style.top = '${28 * (index ~/ 3) + 1.3 + 2.4}vh'; // 23
+      ..style.top = '${28 * (index ~/ 3) + 1.3 + 2.4}vh' // 23
+      ..style.height = '${280 / 1087 * 100}vh'
+      ..style.width = '${205 * 100 / 2133}vw';
   }
 
   void run() {

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:html';
 import 'dart:math';
 
@@ -40,6 +41,11 @@ class Graphics {
     _graphics.fillText(text, x, y);
   }
 
+  void drawRect(x1, y1, width, height) {
+    _graphics.rect(x1, y1, width, height);
+    _graphics.stroke();
+  }
+
   void fillRect(x1, y1, width, height, {gradient}) {
     if (gradient != null) _graphics.fillStyle = gradient;
     _graphics.fillRect(x1, y1, width, height);
@@ -61,7 +67,7 @@ class Graphics {
     _graphics.clearRect(x1, y1, width, height);
   }
 
-  void drawImage(String image, x, y, [w, h]) {
+  Future<Null> drawImage(String image, x, y, [w, h]) async {
     ImageElement img = new ImageElement(src: image);
     img.onLoad.listen((e) {
       if (w == null || h == null) {
@@ -70,5 +76,6 @@ class Graphics {
         _graphics.drawImageScaled(img, x, y, w, h);
       }
     });
+    await img.onLoad.first;
   }
 }
