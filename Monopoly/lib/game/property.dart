@@ -9,8 +9,9 @@ class Property {
   int numHouses = 0;
   int numHotels = 0;
 
+  Property(int this.price, int this._rent, String this.color);
+
   bool get isMortgaged => _isMortgaged;
   int get rent => _rent;
 
-  Property(int this._rent, int this.price, String this.color);
 }
