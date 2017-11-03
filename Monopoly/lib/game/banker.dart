@@ -141,8 +141,8 @@ class Banker {
     int amt = 10;
 
     g.drawImage("res/images/rickandmorty2bg.png", Tile.tileScale, Tile.tileScale, g.width - 2 * Tile.tileScale + 5, g.height - 2 * Tile.tileScale + 5).then((_) {
-      g.setColor('rgb(255, 255, 255)');
-      g.drawRect(Tile.tileScale + 2, Tile.tileScale + 2, g.width - 2 * Tile.tileScale + 3, g.height - 2 * Tile.tileScale + 3);
+      g.setColor('rgb(255, 255, 0)');
+      g.drawRect(Tile.tileScale + 1, Tile.tileScale + 1, g.width - 2 * Tile.tileScale + 4, g.height - 2 * Tile.tileScale + 4);
       _board.forEach((tile) {
         tile.render(g, x, y, 0.0);
 
