@@ -39,7 +39,7 @@
 .cardContainer {
     position: relative;
     z-index: 2;
-    padding: .094vw 1.47vh;
+    padding: 0.094vw 1.47vh;
     background-color: #000;
     color: #fff;
 }
