@@ -78,4 +78,16 @@ class Graphics {
     });
     await img.onLoad.first;
   }
+
+  void drawPreloadedImage(ImageElement img, x, y, [w, h]) {
+    if (w == null || h == null) {
+      _graphics.drawImage(img, x, y);
+    } else {
+      _graphics.drawImageScaled(img, x, y, w, h);
+    }
+  }
+
+  void drawCanvas(CanvasElement canvas) {
+    _graphics.drawImage(canvas, 0, 0);
+  }
 }

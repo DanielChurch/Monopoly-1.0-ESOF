@@ -13,16 +13,16 @@ Graphics g;
 var mouseX, mouseY;
 
 Banker banker;
+Element overlay;
 
 void main() {
   Dom.body()..style.background = '#222';
-//  Element overlay;
 
-//  Dom.body(
-//      overlay = Dom.div("Welcome to Monopoly!")
-//        ..id = 'overlay'
-//        ..onClick.listen((_) => overlay.style.display = 'none')
-//  )..style.background = '#222';
+  Dom.body(
+      overlay = Dom.div()
+        ..id = 'overlay'
+        ..onClick.listen((_) => overlay.style.display = 'none')
+  )..style.background = '#222';
 
   print('window.innerWidth ${window.innerWidth}, window.innerHeight ${window.innerHeight}');
 
@@ -30,7 +30,7 @@ void main() {
   var available = Dom.div('Available', Dom.hr()..style.fontSize = '16px')..className = 'right roster';
 
   available.children.addAll(
-      ['1#Rick', '2#Morty', '3#Summer', '4#Beth', '5#Jerry', '6#Jessica'].map((color) =>
+      ['0#Rick', '1#Morty', '2#Summer', '3#Beth', '4#Jerry', '5#Jessica'].map((color) =>
           Dom.div(
               Dom.div(
                   Dom.div(
@@ -67,9 +67,7 @@ void main() {
       ).toList()
   );
 
-  for (Element e in available.children) {
-    new Draggable(e, avatarHandler: new AvatarHandler.clone());
-  }
+  available.children.forEach((child) => new Draggable(child, avatarHandler: new AvatarHandler.clone()));
 
   Dropzone takenDrop = new Dropzone(taken)
     ..onDrop.listen((DropzoneEvent e) {
@@ -90,21 +88,33 @@ void main() {
       Dom.div(
           Dom.div('Continue')
             ..className = 'continueButton'
-            ..onClick.listen((_) => run(taken.children))
+            ..onClick.listen((_) {
+              if (taken.children.every((child) => !child.id.contains('Player Container'))) {
+                overlay
+                  ..text = 'Please select at least one player.'
+                  ..style.display = 'block';
+              } else {
+                // Dispose of dropzones
+                takenDrop.destroy();
+                availableDrop.destroy();
+
+                run(taken.children);
+              }
+            })
       )
         ..style.width = '100%'
         ..style.textAlign = 'center'
   );
 
   // Skip to game for testing
-  if (Uri.base.queryParameters['skipRoster'] == '') {
+  if (Uri.base.queryParameters['skipRoster'] != null) {
     run(available.children);
   }
 }
 
 void run(List<Element> players) {
   Dom.body().children.clear();
-
+  
   // Canvas
   Dom.body(
     Dom.div(
@@ -114,7 +124,7 @@ void run(List<Element> players) {
 //        ..style.position = 'fixed'
         ..style.top = '${100.0 * 20.0 / 2133.0}vw'
         ..style.margin = 'auto' // 15
-        ..style.border = '5px solid #777'
+        ..style.border = '5px solid #c40'
     )..style.width = '65%'
   )..style.background = '#222';
 
@@ -122,7 +132,7 @@ void run(List<Element> players) {
 
   banker = new Banker(players.where((div) => div.id.contains('Player Container')).map((div) {
     List<String> data = div.id.split('Player Container ')[1].split('#');
-    return new Player(data[0], div.querySelector('#Player').value, data[1]);
+    return new Player(data[0], (div.querySelector('#Player') as InputElement).value);
   }).toList(),
       new DateTime.now().add(new Duration(minutes: 30)), g);
 

@@ -16,9 +16,11 @@ class Banker {
   int _housesRemaining;
 
   List<Player> players;
-  int _currentPlayerIndex = 1;
+  int _currentPlayerIndex = 0;
 
   List<Property> _deeds;
+
+  Graphics g;
   
   List<Tile> _board = [
     new Tile(type: TileType.go),
@@ -72,9 +74,9 @@ class Banker {
 
   static SpanElement tooltip;
 
-  Banker(List<Player> this.players, DateTime this._endTime, Graphics g) {
+  Banker(List<Player> this.players, DateTime this._endTime, this.g) {
 
-    setUpCanvas(g);
+    redrawCanvas(g);
 
     Element overlay;
 
@@ -100,6 +102,18 @@ class Banker {
           new Future.delayed(new Duration(seconds: 3, milliseconds: 500)).then((_) {
             overlay.text = '$sum';
             overlay.style.display = 'block';
+
+            _updateLocation(players[_currentPlayerIndex], sum);
+            _currentPlayerIndex = _currentPlayerIndex + 1 % (players.length - 1);
+
+            redrawCanvas(g);
+            querySelectorAll('#selectedCardContainer').forEach((Element element) {
+              if (element.className.contains('$_currentPlayerIndex')) {
+                element.className += ' selected';
+              } else {
+                element.className = element.className.replaceAll(' selected', '');
+              }
+            });
             new Future.delayed(new Duration(seconds: 1, milliseconds: 500)).then((_) => overlay.style.display = 'none');
           });
       });
@@ -137,16 +151,28 @@ class Banker {
     dice.add(new Dice(-60.0, 600.0, 0.0, container: section));
   }
 
-  Future<Null> setUpCanvas(Graphics g) async {
+  Future<Null> redrawCanvas(Graphics g) async {
+    // Back buffer for double buffering
+    Graphics g2 = new Graphics.blank()..setSize(g.width, g.height);
+
     int x = 0;
     int y = 0;
     int amt = 10;
 
-    g.drawImage("res/images/rickandmorty2bg.png", Tile.tileScale, Tile.tileScale, g.width - 2 * Tile.tileScale + 5, g.height - 2 * Tile.tileScale + 5).then((_) {
-      g.setColor('rgb(255, 255, 255)');
-      g.drawRect(Tile.tileScale + 2, Tile.tileScale + 2, g.width - 2 * Tile.tileScale + 3, g.height - 2 * Tile.tileScale + 3);
-      _board.forEach((tile) {
-        tile.render(g, x, y, 0.0);
+    int spot = 0;
+
+    await g2.drawImage("res/images/rickandmorty2bg.png", Tile.tileScale, Tile.tileScale, g.width - 2 * Tile.tileScale + 5, g.height - 2 * Tile.tileScale + 5).then((_) async {
+      g2.setColor('rgb(255, 255, 0)');
+      g2.drawRect(Tile.tileScale + 1, Tile.tileScale + 1, g.width - 2 * Tile.tileScale + 4, g.height - 2 * Tile.tileScale + 4);
+      for (Tile tile in _board) {
+        tile.render(g2, x, y, 0.0);
+
+        players.forEach((player) {
+          if (player.location == spot) {
+            player.render(g2, x, y);
+          }
+        });
+
 
         if (x != amt && y == 0) {
           x++;
@@ -157,8 +183,12 @@ class Banker {
         } else if (x == 0 && y != 0) {
           y--;
         }
-      });
+
+        spot++;
+      };
     });
+
+    g.drawCanvas(g2.canvas);
   }
 
   Element renderAllCards(List<Player> players) {
@@ -169,10 +199,7 @@ class Banker {
     )
       ..className = 'cardBackground'
       ..style.width = '${10.5 * (index > 2 ? 3 : index)}vw'
-      ..style.height = '${28.5 * (index / 3).ceil()}vh'
-      ..onClick.listen((_) {
-        _currentPlayerIndex++;
-      });
+      ..style.height = '${28.5 * (index / 3).ceil()}vh';
   }
 
   Element renderCard(Player player, int index) {
@@ -209,10 +236,17 @@ class Banker {
         Banker.tooltip.style.visibility = 'visible';
         Banker.tooltip.children.where((child) => child.id == 'name').toList()[0].text = '${player.name}';
         Banker.tooltip.children.where((child) => child.id == 'money').toList()[0].text = '\$696969669';
+        player.tokenScale = 3;
+        redrawCanvas(g);
       })
-      ..onMouseLeave.listen((_) => Banker.tooltip.style.visibility = 'hidden')
+      ..onMouseLeave.listen((_) {
+        Banker.tooltip.style.visibility = 'hidden';
+        player.tokenScale = 1;
+        redrawCanvas(g);
+      })
+      ..id = 'selectedCardContainer'
       ..style.position = 'fixed'
-      ..className = 'card ${player.id == '$_currentPlayerIndex' ? 'selected' : ''}'
+      ..className = 'card  ${player.id} ${player.id == '$_currentPlayerIndex' ? 'selected' : ''}'
       ..style.left = '${10.38 * (index % 3) + 65.64}vw' // 9.38
       ..style.top = '${28 * (index ~/ 3) + 1.3 + 2.4}vh' // 23
       ..style.height = '${280 / 1087 * 100}vh'
@@ -224,13 +258,6 @@ class Banker {
 
     // Cycle through players and let them do their turn
 
-    // End of turn, next players turn
-    if (_currentPlayerIndex <= players.length) {
-      _currentPlayerIndex++;
-    } else {
-      _currentPlayerIndex = 0;
-    }
-
   }
 
   @visibleForTesting
@@ -241,7 +268,10 @@ class Banker {
   bool isWithinMaxTime() => new DateTime.now().millisecondsSinceEpoch < _endTime.millisecondsSinceEpoch;
   Player declareWinner() {}
   bool _updateProperty(Property property) {}
-  void _updateLocation(Player player) {}
+
+  void _updateLocation(Player player, int amount) {
+    player.location = (player.location + amount) % _board.length;
+  }
 
   void update() {
     if (isWithinMaxTime()) {
