@@ -9,6 +9,7 @@ class VariadicFunction implements Function {
 
   call() => _onCall([]);
 
+  @override
   noSuchMethod(Invocation invocation) {
     final arguments = invocation.positionalArguments;
     if (invocation.positionalArguments[0] is List) {
