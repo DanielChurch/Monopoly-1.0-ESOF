@@ -33,25 +33,24 @@ class Dice {
         )..className = '$className').toList()
       )..id = 'cube'
     );
-
-    box.onClick.listen((_) => spin());
-//    box.onMouseMove.listen((_) => spin());
   }
 
   int offset = 0;
 
-  int spin() {
+  int spin({int value, Duration time = const Duration(milliseconds: 1100), double upVelocity = -10.0}) {
     // make random rotation to make the dice spin
-    rotation.x = random.nextDouble() * 100000;
-    rotation.y = random.nextDouble() * 100000;
-    rotation.z = random.nextDouble() * 100000;
+    if (time.inMilliseconds != 0) {
+      rotation.x = random.nextDouble() * 100000;
+      rotation.y = random.nextDouble() * 100000;
+      rotation.z = random.nextDouble() * 100000;
+    }
 
     // get a random number for the dice to land on when it lands
-    int result = random.nextInt(6) + 1;
+    int result = value ?? random.nextInt(6) + 1;
 
     // Let the dice spin randomly, then in 1 second set it on path to
     // get to the desired rotate for the calculated random number
-    new Future.delayed(new Duration(milliseconds: 1100)).then((_) {
+    new Future.delayed(time).then((_) {
       switch (result) {
         case 1: // Face 1
           rotation.x = rotation.y = rotation.z = 0.0;
@@ -85,7 +84,7 @@ class Dice {
     });
 
     // Give the dice a force to rocket into the air
-    velocity.y = -10.0;
+    velocity.y = upVelocity ?? -10.0;
 
     return result;
   }

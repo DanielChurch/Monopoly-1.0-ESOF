@@ -74,7 +74,11 @@ class Banker {
 
   static SpanElement tooltip;
 
+  bool quickRoll = false;
+
   Banker(List<Player> this.players, DateTime this._endTime, this.g) {
+
+    quickRoll = Uri.base.queryParameters['quickroll'] != null;
 
     redrawCanvas(g);
 
@@ -82,7 +86,7 @@ class Banker {
 
     Dom.body(
         overlay = Dom.div()
-          ..onClick.listen((_) => Banker.tooltip.style.display = 'none')
+          ..onClick.listen((_) => overlay.style.display = 'none')
           ..id = 'overlay'
           ..style.color = '#fff'
           ..style.display = 'none'
@@ -97,14 +101,27 @@ class Banker {
       ..style.top = '73.6vh'
       ..style.zIndex = '20'
       ..onClick.listen((_) async {
-          int sum = 0;
-          dice.forEach((dice) => sum += dice.spin());
-          new Future.delayed(new Duration(seconds: 3, milliseconds: 500)).then((_) {
+          Map values = {};
+          dice.forEach((dice) {
+            int val = quickRoll ? dice.spin(upVelocity: 0.0, time: new Duration()) : dice.spin();
+            values[val] ??= 0;
+            values[val]++;
+          });
+
+          void updatePlayers () {
+            int sum = 0;
+            values.keys.forEach((key) => sum += key * values[key]);
+
             overlay.text = '$sum';
-            overlay.style.display = 'block';
+
+            int lastPlayerIndex = _currentPlayerIndex;
 
             _updateLocation(players[_currentPlayerIndex], sum);
-            _currentPlayerIndex = _currentPlayerIndex + 1 % (players.length - 1);
+
+            // Double roll if length one, don't move on turn
+            if (values.keys.where((key) => values[key] == 2).isEmpty) {
+              _currentPlayerIndex = (_currentPlayerIndex + 1) % players.length;
+            }
 
             redrawCanvas(g);
             querySelectorAll('#selectedCardContainer').forEach((Element element) {
@@ -113,9 +130,24 @@ class Banker {
               } else {
                 element.className = element.className.replaceAll(' selected', '');
               }
+
+              if (element.className.contains('$lastPlayerIndex')) {
+                element.querySelector('#properties').children[1].text = '\$${players[lastPlayerIndex].balance}';
+              }
             });
-            new Future.delayed(new Duration(seconds: 1, milliseconds: 500)).then((_) => overlay.style.display = 'none');
-          });
+          }
+
+          if (quickRoll) {
+            updatePlayers();
+          } else {
+            new Future.delayed(new Duration(seconds: 3, milliseconds: 500)).then((_) {
+              overlay.style.display = 'block';
+
+              updatePlayers();
+
+              new Future.delayed(new Duration(seconds: 1, milliseconds: 500)).then((_) => overlay..style.display = 'none');
+            });
+          }
       });
 
     Dom.body(section);
@@ -167,11 +199,10 @@ class Banker {
       for (Tile tile in _board) {
         tile.render(g2, x, y, 0.0);
 
-        players.forEach((player) {
-          if (player.location == spot) {
-            player.render(g2, x, y);
-          }
-        });
+        List playersOnSpot = players.where((player) => player.location == spot).toList();
+
+        // TODO: custom rendered based on [playersOnSpot.length]
+        playersOnSpot.forEach((player) => player.render(g2, x, y));
 
 
         if (x != amt && y == 0) {
@@ -222,10 +253,11 @@ class Banker {
           ..style.backgroundPosition = 'center center',
         Dom.div(
           Dom.div('${player.name}'),
-          Dom.div('\$6969696969696'),
+          Dom.div('\$${player.balance}'),
           Dom.div('Properties'),
           Dom.div('Line1'),
         )
+          ..id = 'properties'
           ..className = 'cardContainer'
           ..style.height = '${76.0 * 100 / 1087}vh'
           ..style.fontSize = '${16.0 * 100 / 1087}vh'
@@ -270,7 +302,13 @@ class Banker {
   bool _updateProperty(Property property) {}
 
   void _updateLocation(Player player, int amount) {
-    player.location = (player.location + amount) % _board.length;
+    player.location += amount;
+
+    if (player.location > _board.length) {
+      player.balance += 200;
+    }
+
+    player.location %= _board.length;
   }
 
   void update() {
