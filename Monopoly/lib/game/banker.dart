@@ -204,7 +204,6 @@ class Banker {
         // TODO: custom rendered based on [playersOnSpot.length]
         playersOnSpot.forEach((player) => player.render(g2, x, y));
 
-
         if (x != amt && y == 0) {
           x++;
         } else if (x == amt && y != amt) {
