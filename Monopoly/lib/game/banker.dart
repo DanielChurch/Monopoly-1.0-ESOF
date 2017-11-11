@@ -5,11 +5,16 @@ import 'package:meta/meta.dart';
 import 'package:monopoly/graphics/dom.dart';
 import 'package:monopoly/graphics/graphics.dart';
 
+import 'board.dart';
 import 'dice.dart';
+import 'modes.dart';
 import 'player.dart';
 import 'property.dart';
 import 'tile.dart';
-import 'tile_type.dart';
+import 'ui.dart';
+
+// baseWidth 2133
+// baseHeight 1087
 
 class Banker {
 
@@ -20,52 +25,9 @@ class Banker {
 
   List<Property> _deeds;
 
-  Graphics g;
+  static Graphics g;
 
-  List<Tile> _board = [
-    new Tile(type: TileType.go),
-    new Tile(property: new Property(60, 30, [2, 10, 30, 90, 160, 250], Color.brown)),
-    new Tile(type: TileType.freeParking),
-    new Tile(property: new Property(60, 30, [4, 20, 60, 180, 320, 450], Color.brown)),
-    new Tile(type: TileType.freeParking),
-    // Railroad is: $25 if owned, $50 for 2, $100 if three, 200 if all owned
-    new Tile(property: new Property(200, 100, [25, 50, 100, 200], Color.railroad)),
-    new Tile(property: new Property(100, 50, [6, 30, 90, 270, 400, 550], Color.lightBlue)),
-    new Tile(type: TileType.freeParking),
-    new Tile(property: new Property(100, 50, [6, 30, 90, 270, 400, 550], Color.lightBlue)),
-    new Tile(property: new Property(120, 60, [8, 40, 100, 300, 450, 600], Color.lightBlue)),
-    new Tile(type: TileType.jail),
-    new Tile(property: new Property(140, 70, [10, 50, 150, 450, 625, 750], Color.purple)),
-    // Utility is 4 x dice roll and 10 x dice roll if both utilities are owned
-    new Tile(property: new Property(150, 75, [4, 10], Color.utility)),
-    new Tile(property: new Property(140, 70, [10, 50, 150, 450, 625, 750], Color.purple)),
-    new Tile(property: new Property(160, 80, [12, 60, 180, 500, 700, 900], Color.purple)),
-    new Tile(property: new Property(200, 100, [25, 50, 100, 200], Color.railroad)),
-    new Tile(property: new Property(180, 90, [14, 70, 200, 550, 750, 950], Color.orange)),
-    new Tile(type: TileType.freeParking),
-    new Tile(property: new Property(180, 90, [14, 70, 200, 550, 750, 950], Color.orange)),
-    new Tile(property: new Property(200, 100, [16, 80, 220, 600, 800, 1000], Color.orange)),
-    new Tile(type: TileType.freeParking),
-    new Tile(property: new Property(220, 110, [16, 80, 220, 600, 800, 1000], Color.red)),
-    new Tile(type: TileType.freeParking),
-    new Tile(property: new Property(220, 110, [18, 90, 250, 700, 875, 1050], Color.red)),
-    new Tile(property: new Property(240, 120, [20, 100, 300, 750, 925, 1100], Color.red)),
-    new Tile(property: new Property(200, 100, [25, 50, 100, 200], Color.railroad)),
-    new Tile(property: new Property(260, 130, [22, 110, 330, 800, 975, 1150], Color.yellow)),
-    new Tile(property: new Property(260, 130, [22, 110, 330, 800, 975, 1150], Color.yellow)),
-    new Tile(property: new Property(150, 75, [4, 10], Color.utility)),
-    new Tile(property: new Property(280, 140, [24, 120, 360, 850, 1025, 1200], Color.yellow)),
-    new Tile(type: TileType.freeParking),
-    new Tile(property: new Property(300, 150, [26, 130, 390, 900, 1100, 1275], Color.green)),
-    new Tile(property: new Property(300, 150, [26, 130, 390, 900, 1100, 1275], Color.green)),
-    new Tile(type: TileType.freeParking),
-    new Tile(property: new Property(320, 160, [28, 150, 450, 1000, 1200, 1400], Color.green)),
-    new Tile(property: new Property(200, 100, [25, 50, 100, 200], Color.railroad)),
-    new Tile(type: TileType.freeParking),
-    new Tile(property: new Property(350, 175, [35, 175, 500, 1100, 1300, 1500], Color.darkBlue)),
-    new Tile(type: TileType.freeParking),
-    new Tile(property: new Property(400, 200, [50, 200, 600, 1400, 1700, 2000], Color.darkBlue))
-  ];
+  Element overlay;
   
   DateTime _endTime;
   int mouseX, mouseY;
@@ -74,116 +36,17 @@ class Banker {
 
   static SpanElement tooltip;
 
-  bool quickRoll = false;
-
-  Banker(List<Player> this.players, DateTime this._endTime, this.g) {
-
-    quickRoll = Uri.base.queryParameters['quickroll'] != null;
-
-    redrawCanvas(g);
-
-    Element overlay;
-
+  Banker(List<Player> this.players, DateTime this._endTime) {
+    redrawCanvas(players);
     Dom.body(
-        overlay = Dom.div()
-          ..onClick.listen((_) => overlay.style.display = 'none')
-          ..id = 'overlay'
-          ..style.color = '#fff'
-          ..style.display = 'none'
-          ..style.zIndex = '50'
+        overlay = UserInterface.renderOverlay(),
+        tooltip = UserInterface.renderTooltip(),
+        UserInterface.renderAllCards(players),
+        UserInterface.renderDice()..onClick.listen(rollDice),
     );
-
-    // Dice
-    Element section = Dom.div(Dom.div()..className = 'cubeContainer')
-      ..className = 'cubeContainer'
-      ..style.position = 'fixed'
-      ..style.left = '78.53vw'
-      ..style.top = '73.6vh'
-      ..style.zIndex = '20'
-      ..onClick.listen((_) async {
-          Map values = {};
-          dice.forEach((dice) {
-            int val = quickRoll ? dice.spin(upVelocity: 0.0, time: new Duration()) : dice.spin();
-            values[val] ??= 0;
-            values[val]++;
-          });
-
-          void updatePlayers () {
-            int sum = 0;
-            values.keys.forEach((key) => sum += key * values[key]);
-
-            overlay.text = '$sum';
-
-            int lastPlayerIndex = _currentPlayerIndex;
-
-            _updateLocation(players[_currentPlayerIndex], sum);
-
-            // Double roll if length one, don't move on turn
-            if (values.keys.where((key) => values[key] == 2).isEmpty) {
-              _currentPlayerIndex = (_currentPlayerIndex + 1) % players.length;
-            }
-
-            redrawCanvas(g);
-            querySelectorAll('#selectedCardContainer').forEach((Element element) {
-              if (element.className.contains('$_currentPlayerIndex')) {
-                element.className += ' selected';
-              } else {
-                element.className = element.className.replaceAll(' selected', '');
-              }
-
-              if (element.className.contains('$lastPlayerIndex')) {
-                element.querySelector('#properties').children[1].text = '\$${players[lastPlayerIndex].balance}';
-              }
-            });
-          }
-
-          if (quickRoll) {
-            updatePlayers();
-          } else {
-            new Future.delayed(new Duration(seconds: 3, milliseconds: 500)).then((_) {
-              overlay.style.display = 'block';
-
-              updatePlayers();
-
-              new Future.delayed(new Duration(seconds: 1, milliseconds: 500)).then((_) => overlay..style.display = 'none');
-            });
-          }
-      });
-
-    Dom.body(section);
-
-    // baseWidth 2133
-    // baseHeight 1087
-
-    //Tooltip
-    tooltip = Dom.span(
-      Dom.div()..id = 'name',
-      Dom.p(),
-      Dom.div()..id = 'money',
-      Dom.p(),
-      Dom.div('Tooltip Line 3')..id = 'properties'
-    )
-      ..className = 'tooltip tooltiptext'
-      ..style.width = '200px';
-
-    Dom.body(tooltip);
-
-    window.onMouseMove.listen((MouseEvent me) {
-      mouseX = me.client.x;
-      mouseY = me.client.y;
-
-      Banker.tooltip
-        ..style.left = '${me.client.x - 100}px' // 4.69
-        ..style.top = '${me.client.y + 20}px';
-    });
-
-    Dom.body(renderAllCards(players));
-
-    dice.add(new Dice(60.0, 600.0, 0.0, container: section));
-    dice.add(new Dice(-60.0, 600.0, 0.0, container: section));
   }
 
-  Future<Null> redrawCanvas(Graphics g) async {
+  static Future<Null> redrawCanvas(List<Player> players) async {
     // Back buffer for double buffering
     Graphics g2 = new Graphics.blank()..setSize(g.width, g.height);
 
@@ -196,7 +59,7 @@ class Banker {
     await g2.drawImage("res/images/rickandmorty2bg.png", Tile.tileScale, Tile.tileScale, g.width - 2 * Tile.tileScale + 5, g.height - 2 * Tile.tileScale + 5).then((_) async {
       g2.setColor('rgb(255, 255, 0)');
       g2.drawRect(Tile.tileScale + 1, Tile.tileScale + 1, g.width - 2 * Tile.tileScale + 4, g.height - 2 * Tile.tileScale + 4);
-      for (Tile tile in _board) {
+      for (Tile tile in Board.tiles) {
         tile.render(g2, x, y, 0.0);
 
         List playersOnSpot = players.where((player) => player.location == spot).toList();
@@ -221,74 +84,54 @@ class Banker {
     g.drawCanvas(g2.canvas);
   }
 
-  Element renderAllCards(List<Player> players) {
-    int index = 0;
+  Future<Null> rollDice(_) async {
+    Map values = {};
+    dice.forEach((dice) {
+      int val = Modes.quickroll ? dice.spin(upVelocity: 0.0, time: new Duration()) : dice.spin();
+      values[val] ??= 0;
+      values[val]++;
+    });
 
-    return Dom.div(
-        players.map((player) => renderCard(player, index++)).toList()
-    )
-      ..className = 'cardBackground'
-      ..style.width = '${10.5 * (index > 2 ? 3 : index)}vw'
-      ..style.height = '${28.5 * (index / 3).ceil()}vh';
-  }
+    void updatePlayers () {
+      int sum = 0;
+      values.keys.forEach((key) => sum += key * values[key]);
 
-  Element renderCard(Player player, int index) {
-    return Dom.div(
-        Dom.div(
-            Dom.img()
-              ..src = 'res/images/${player.id}.png'
-              ..style.width = '7.03vw'
-              ..style.height = '13.8vh'
-              ..style.position = 'absolute'
-              ..style.bottom = '0'
-              ..style.right = '.94vw'
-              ..style.margin = 'auto'
-        )
-          ..className = 'cardImage'
-          ..style.background = 'url(res/images/charBackround_${player.id}.png)' // #${player.token}
-          ..style.height = '18.4vh'
-          ..style.backgroundSize = 'cover'
-          ..style.backgroundRepeat = 'no-repeat'
-          ..style.backgroundPosition = 'center center',
-        Dom.div(
-          Dom.div('${player.name}'),
-          Dom.div('\$${player.balance}'),
-          Dom.div('Properties'),
-          Dom.div('Line1'),
-        )
-          ..id = 'properties'
-          ..className = 'cardContainer'
-          ..style.height = '${76.0 * 100 / 1087}vh'
-          ..style.fontSize = '${16.0 * 100 / 1087}vh'
-          ..style.textOverflow = 'clip'
-          ..style.overflow = 'hidden'
-    )
-      ..onMouseEnter.listen((_) {
-        Banker.tooltip.style.visibility = 'visible';
-        Banker.tooltip.children.where((child) => child.id == 'name').toList()[0].text = '${player.name}';
-        Banker.tooltip.children.where((child) => child.id == 'money').toList()[0].text = '\$696969669';
-        player.tokenScale = 3;
-        redrawCanvas(g);
-      })
-      ..onMouseLeave.listen((_) {
-        Banker.tooltip.style.visibility = 'hidden';
-        player.tokenScale = 1;
-        redrawCanvas(g);
-      })
-      ..id = 'selectedCardContainer'
-      ..style.position = 'fixed'
-      ..className = 'card  ${player.id} ${player.id == '$_currentPlayerIndex' ? 'selected' : ''}'
-      ..style.left = '${10.38 * (index % 3) + 65.64}vw' // 9.38
-      ..style.top = '${28 * (index ~/ 3) + 1.3 + 2.4}vh' // 23
-      ..style.height = '${280 / 1087 * 100}vh'
-      ..style.width = '${205 * 100 / 2133}vw';
-  }
+      overlay.text = '$sum';
 
-  void run() {
-    if (players.isEmpty) return;
+      int lastPlayerIndex = _currentPlayerIndex;
 
-    // Cycle through players and let them do their turn
+      players[_currentPlayerIndex].updateLocation(sum);
 
+      // Double roll if length one, don't move on turn
+      if (values.keys.where((key) => values[key] == 2).isEmpty) {
+        _currentPlayerIndex = (_currentPlayerIndex + 1) % players.length;
+      }
+
+      redrawCanvas(players);
+      querySelectorAll('#selectedCardContainer').forEach((Element element) {
+        if (element.className.contains('$_currentPlayerIndex')) {
+          element.className += ' selected';
+        } else {
+          element.className = element.className.replaceAll(' selected', '');
+        }
+
+        if (element.className.contains('$lastPlayerIndex')) {
+          element.querySelector('#properties').children[1].text = '\$${players[lastPlayerIndex].balance}';
+        }
+      });
+    }
+
+    if (Modes.quickroll) {
+      updatePlayers();
+    } else {
+      new Future.delayed(new Duration(seconds: 3, milliseconds: 500)).then((_) {
+        overlay.style.display = 'block';
+
+        updatePlayers();
+
+        new Future.delayed(new Duration(seconds: 1, milliseconds: 500)).then((_) => overlay..style.display = 'none');
+      });
+    }
   }
 
   @visibleForTesting
@@ -299,16 +142,6 @@ class Banker {
   bool isWithinMaxTime() => new DateTime.now().millisecondsSinceEpoch < _endTime.millisecondsSinceEpoch;
   Player declareWinner() {}
   bool _updateProperty(Property property) {}
-
-  void _updateLocation(Player player, int amount) {
-    player.location += amount;
-
-    if (player.location > _board.length) {
-      player.balance += 200;
-    }
-
-    player.location %= _board.length;
-  }
 
   void update() {
     if (isWithinMaxTime()) {

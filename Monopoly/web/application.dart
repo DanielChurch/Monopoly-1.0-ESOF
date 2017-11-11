@@ -1,5 +1,6 @@
 import 'package:dnd/dnd.dart';
 import 'package:monopoly/game/banker.dart';
+import 'package:monopoly/game/modes.dart';
 import 'package:monopoly/game/player.dart';
 import 'package:monopoly/graphics/dom.dart';
 import 'package:monopoly/graphics/graphics.dart';
@@ -10,14 +11,10 @@ import 'dart:math';
 
 Graphics g;
 
-var mouseX, mouseY;
-
 Banker banker;
 Element overlay;
 
 void main() {
-  Dom.body()..style.background = '#222';
-
   Dom.body(
       overlay = Dom.div()
         ..id = 'overlay'
@@ -107,7 +104,7 @@ void main() {
   );
 
   // Skip to game for testing
-  if (Uri.base.queryParameters['skipRoster'] != null) {
+  if (Modes.skiproster) {
     run(available.children);
   }
 }
@@ -118,41 +115,32 @@ void run(List<Element> players) {
   // Canvas
   Dom.body(
     Dom.div(
+    Dom.div(
       (g = new Graphics.blank('board')).canvas
         ..id = 'gameBoard'
         ..style.display = 'block'
 //        ..style.position = 'fixed'
         ..style.top = '${100.0 * 20.0 / 2133.0}vw'
         ..style.margin = 'auto' // 15
-        ..style.border = '5px solid #c40'
-    )..style.width = '65%'
-  )..style.background = '#222';
+        ..style.border = '5px solid #000'
+    )
+      ..style.width = '1060px'
+      ..style.margin = 'auto'
+      ..className = 'effect8'
+    )
+      ..style.width = '65%'
+  );
 
   g.setSize((1050).toInt(), (1050).toInt());
 
-  banker = new Banker(players.where((div) => div.id.contains('Player Container')).map((div) {
-    List<String> data = div.id.split('Player Container ')[1].split('#');
-    return new Player(data[0], (div.querySelector('#Player') as InputElement).value);
-  }).toList(),
-      new DateTime.now().add(new Duration(minutes: 30)), g);
-
-  banker.run();
-
-  mouseX = g.width / 2;
-  mouseY = g.height / 2;
-
-  bool mouseDown = false;
-
-  document.onMouseMove.listen((MouseEvent e) {
-    num lastX = mouseX;
-    num lastY = mouseY;
-    mouseX = e.client.x;
-    mouseY = e.client.y;
-    if (mouseDown) g.drawLine(lastX, lastY, mouseX, mouseY);
-  });
-
-  document.onMouseDown.listen((_) => mouseDown = true);
-  document.onMouseUp.listen((_) => mouseDown = false);
+  banker = new Banker(
+      players.where((div) => div.id.contains('Player Container'))
+        .map((div) {
+            List<String> data = div.id.split('Player Container ')[1].split('#');
+            return new Player(data[0], (div.querySelector('#Player') as InputElement).value);
+        }).toList(),
+      new DateTime.now().add(new Duration(minutes: 30)));
+  Banker.g = g;
 
   window.requestAnimationFrame(loop);
 }

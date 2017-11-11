@@ -9,7 +9,7 @@ main() {
     Banker banker;
 
     setUp(() {
-      banker = new Banker([new Player('1', 'Player 1')], new DateTime.now(), null);
+      banker = new Banker([new Player('1', 'Player 1')], new DateTime.now());
     });
 
     group('isWithinMaxTime works as expected', () {

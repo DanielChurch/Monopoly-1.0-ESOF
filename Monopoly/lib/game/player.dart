@@ -5,9 +5,11 @@ import 'package:monopoly/game/tile.dart';
 import 'package:monopoly/graphics/dom.dart';
 import 'package:monopoly/graphics/graphics.dart';
 
+import 'board.dart';
+
 class Player {
 
-  int location;
+  int _location;
   int balance;
 
   bool _isInJail = false;
@@ -18,7 +20,20 @@ class Player {
 
   int tokenScale = 1;
 
-  Player(String this.id, String this.name) : location = 0, token = Dom.img()..src = 'res/images/$id.png', balance = 1300;
+  Player(String this.id, String this.name) : _location = 0, token = Dom.img()..src = 'res/images/$id.png', balance = 1300;
+
+  int get location => _location;
+
+  void updateLocation(int amount) {
+    print(_location);
+    _location += amount;
+
+    if (location > Board.tiles.length) {
+      balance += 200;
+    }
+
+    _location %= Board.tiles.length;
+  }
 
   void payRent(int amount) => balance -= amount;
 
