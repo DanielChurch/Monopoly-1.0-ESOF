@@ -35,7 +35,7 @@ class Player {
     _location %= Board.tiles.length;
   }
 
-  void payRent(int amount) => balance -= amount;
+  void pay(int amount) => balance -= amount;
 
   void buyProperty(Property purchase) {
     throw new UnimplementedError();
@@ -47,10 +47,6 @@ class Player {
 
   void upgradeProperty(Property propertyToUpgrade) {
     throw new UnimplementedError();
-  }
-
-  void payFine(int amount) {
-    balance -= amount;
   }
 
   /// Render the [Player] on the board

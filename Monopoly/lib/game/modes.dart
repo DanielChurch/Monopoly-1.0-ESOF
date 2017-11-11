@@ -1,7 +1,14 @@
+import 'package:meta/meta.dart';
+
 class Modes {
 
-  static bool get quickroll => Uri.base.queryParameters['quickroll'] != null;
+  static Uri _uri;
 
-  static bool get skiproster => Uri.base.queryParameters['skiproster'] != null;
+  @visibleForTesting
+  static set uri(Uri uri) => _uri = uri;
+
+  static bool get quickroll => (_uri ?? Uri.base).queryParameters['quickroll'] != null;
+
+  static bool get skiproster => (_uri ?? Uri.base).queryParameters['skiproster'] != null;
 
 }
