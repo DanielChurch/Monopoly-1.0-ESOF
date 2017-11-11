@@ -8,7 +8,7 @@ import 'package:monopoly/graphics/graphics.dart';
 class Player {
 
   int location;
-  int _balance;
+  int balance;
 
   bool _isInJail = false;
 
@@ -18,11 +18,9 @@ class Player {
 
   int tokenScale = 1;
 
-  Player(String this.id, String this.name) : location = 0, token = Dom.img()..src = 'res/images/$id.png';
+  Player(String this.id, String this.name) : location = 0, token = Dom.img()..src = 'res/images/$id.png', balance = 1300;
 
-  int get balance => _balance;
-
-  void payRent(int amount) => _balance -= amount;
+  void payRent(int amount) => balance -= amount;
 
   void buyProperty(Property purchase) {
     throw new UnimplementedError();
@@ -36,19 +34,10 @@ class Player {
     throw new UnimplementedError();
   }
 
-  void payFine() {
-    throw new UnimplementedError();
+  void payFine(int amount) {
+    balance -= amount;
   }
 
-  void pickToken() {
-    throw new UnimplementedError();
-  }
-
-  int rollDice() {
-    bool turn = true;
-    if (turn) {
-    }
-  }
   /// Render the [Player] on the board
   void render(Graphics g, int x, int y) {
     g.setFillColor('rgba(0, 0, 0, 1)');
