@@ -21,7 +21,7 @@ class Banker {
   int _housesRemaining;
 
   List<Player> players;
-  int _currentPlayerIndex = 0;
+  int currentPlayerIndex = 0;
 
   List<Property> _deeds;
 
@@ -84,54 +84,62 @@ class Banker {
     g.drawCanvas(g2.canvas);
   }
 
-  Future<Null> rollDice(_) async {
-    Map values = {};
-    dice.forEach((dice) {
-      int val = Modes.quickroll ? dice.spin(upVelocity: 0.0, time: new Duration()) : dice.spin();
-      values[val] ??= 0;
-      values[val]++;
-    });
-
-    void updatePlayers () {
-      int sum = 0;
-      values.keys.forEach((key) => sum += key * values[key]);
-
-      overlay.text = '$sum';
-
-      int lastPlayerIndex = _currentPlayerIndex;
-
-      players[_currentPlayerIndex].updateLocation(sum);
-
-      // Double roll if length one, don't move on turn
-      if (values.keys.where((key) => values[key] == 2).isEmpty) {
-        _currentPlayerIndex = (_currentPlayerIndex + 1) % players.length;
-      }
-
-      redrawCanvas(players);
-      querySelectorAll('#selectedCardContainer').forEach((Element element) {
-        if (element.className.contains('$_currentPlayerIndex')) {
-          element.className += ' selected';
-        } else {
-          element.className = element.className.replaceAll(' selected', '');
-        }
-
-        if (element.className.contains('$lastPlayerIndex')) {
-          element.querySelector('#properties').children[1].text = '\$${players[lastPlayerIndex].balance}';
-        }
+  // Called on rolling the dice for the current player
+  Future<Map> rollDice(_, {Map values}) async {
+    // Roll the dice
+    if (values == null) {
+      values = {};
+      dice.forEach((dice) {
+        int val = Modes.quickroll ? dice.spin(
+            upVelocity: 0.0, time: new Duration()) : dice.spin();
+        values[val] ??= 0;
+        values[val]++;
       });
     }
 
     if (Modes.quickroll) {
-      updatePlayers();
+      updatePlayers(values);
     } else {
       new Future.delayed(new Duration(seconds: 3, milliseconds: 500)).then((_) {
         overlay.style.display = 'block';
 
-        updatePlayers();
+        updatePlayers(values);
 
         new Future.delayed(new Duration(seconds: 1, milliseconds: 500)).then((_) => overlay..style.display = 'none');
       });
     }
+
+    return values;
+  }
+
+  /// Updates the players based on the inputted [values] map of the dice rolls
+  void updatePlayers (Map values) {
+    int sum = 0;
+    values.keys.forEach((key) => sum += key * values[key]);
+
+    overlay.text = '$sum';
+
+    int lastPlayerIndex = currentPlayerIndex;
+
+    players[currentPlayerIndex].updateLocation(sum);
+
+    // Double roll if length one, don't move on turn
+    if (values.keys.where((key) => values[key] == 2).isEmpty) {
+      currentPlayerIndex = (currentPlayerIndex + 1) % players.length;
+    }
+
+    redrawCanvas(players);
+    querySelectorAll('#selectedCardContainer').forEach((Element element) {
+      if (element.className.contains('$currentPlayerIndex')) {
+        element.className += ' selected';
+      } else {
+        element.className = element.className.replaceAll(' selected', '');
+      }
+
+      if (element.className.contains('$lastPlayerIndex')) {
+        element.querySelector('#properties').children[1].text = '\$${players[lastPlayerIndex].balance}';
+      }
+    });
   }
 
   @visibleForTesting
@@ -139,12 +147,14 @@ class Banker {
 
   bool sellPropertyToPlayer(Property property) {}
 
-  bool isWithinMaxTime() => new DateTime.now().millisecondsSinceEpoch < _endTime.millisecondsSinceEpoch;
+  bool get isWithinMaxTime => new DateTime.now().millisecondsSinceEpoch < _endTime.millisecondsSinceEpoch;
+
   Player declareWinner() {}
+
   bool _updateProperty(Property property) {}
 
   void update() {
-    if (isWithinMaxTime()) {
+    if (!isWithinMaxTime) {
       // End game
     }
     dice.forEach((d) => d.update());

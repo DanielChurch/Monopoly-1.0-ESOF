@@ -12,8 +12,8 @@ void main() {
 
     test('constructs properly', () {
       expect(Color.railroad, property.color);
-      expect(20, property.rent);
-      expect(30, property.price);
+      expect(property.price, 20);
+      expect(property.mortgage, 30);
     });
   });
 }
