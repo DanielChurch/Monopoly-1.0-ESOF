@@ -4,11 +4,16 @@ html, body {
   font-family: Sans-Serif;
 }
 
+hr {
+    font-size: 1.4719411223551057957681692732291vh;
+    border-width: .2vh;
+}
+
 /* Tooltip container */
 .tooltip {
     position: relative;
     display: inline-block;
-    border-bottom: 1px dotted black; /* If you want dots under the hoverable text */
+    border-bottom: 0.09199632014719411223551057957682vh dotted black; /* If you want dots under the hoverable text */
 }
 
 /* Tooltip text */
@@ -18,8 +23,8 @@ html, body {
     background-color: black;
     color: #fff;
     text-align: center;
-    padding: 5px 0;
-    border-radius: 6px;
+    padding: 0.45998160073597056117755289788408vw 0;
+    border-radius: 0.28129395218002812939521800281294vw;
 
     /* Position the tooltip text - see examples below! */
     position: fixed;
@@ -77,11 +82,11 @@ html, body {
     position: relative;
     z-index: 2;
     display: inline-block;
-    padding: 0 25px;
+    padding: 0 1.1720581340834505391467416783872vw;
     height: 4.6vh;
-    font-size: 16px;
+    font-size: 1.471941vh;
     line-height: 4.6vh;
-    border: 3px solid black;
+    border: 0.14064697609001406469760900140647vw solid black;
     background-color: #bbb;
     text-align: left;
 }
@@ -107,7 +112,7 @@ html, body {
     background-color: rgba(0,0,0,0.5); /* Black background with opacity */
     z-index: 20; /* Specify a stack order in case you're using a different order for other elements */
     cursor: pointer; /* Add a pointer on hover */
-    font-size: 50px;
+    font-size: 4.5998vh;
     text-align: center;
     padding: 25% 0;
     color: #777;
@@ -115,13 +120,13 @@ html, body {
 
 canvas {
   background-color: #000;
-  border: 1px solid black;
+  border: 0.04688232536333802156586966713549vw solid black;
 }
 
 #uiContainer {
   position: absolute;
-  top: 10px;
-  right: 10px;
+  top: 0.91996320147194112235510579576817vh;
+  right: 0.4688232536333802156586966713549vw;
   z-index: 3;
 }
 
@@ -151,8 +156,8 @@ canvas {
 body.iframe {
   width: 100%;
   height: 100%;
-  margin: 0px;
-  padding: 0px;
+  margin: 0;
+  padding: 0;
   overflow: hidden;
 }
 
@@ -178,10 +183,10 @@ body.iframe {
     clear: both;
     width: 18.75vw;
     text-align: center;
-    font-size: 50px;
+    font-size: 4.5998vh;
     background: #777;
-    border: 3px solid black;
-    border-radius: 50px;
+    border: 0.14064697609001406469760900140647vw solid black;
+    border-radius: 2.4594vw;
     margin: auto;
 }
 
@@ -193,9 +198,9 @@ body.iframe {
     height: 46vh;
     width: 18.75vw;
     text-align: center;
-    border: 5px solid #555;
-    border-radius: 10px;
-    font-size: 35px;
+    border: 0.23441162681669010782934833567745vw solid #555;
+    border-radius: 0.4688232536333802156586966713549vw;
+    font-size: 3.2198vh;
     margin: 0 0 18.4vh 0;
 }
 
@@ -208,15 +213,16 @@ body.iframe {
 }
 
 .genericButton {
-    border: 2px solid #777;
-    border-radius: 5px;
+    border: 0.09376465072667604313173933427098vw solid #777;
+    border-radius: 0.23441162681669010782934833567745vw;
     background: #000;
     color: #fff;
     width: 95%;
     margin: auto;
-    margin-top: 20px;
+    margin-top: 1.84vh;
     text-align: center;
-    height: 50px;
-    line-height: 50px;
+    height: 4.6vh;
+    line-height: 4.6vh;
     white-space: nowrap;
+    font-size: 2.3vh;
 }

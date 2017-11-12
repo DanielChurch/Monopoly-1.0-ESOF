@@ -120,6 +120,16 @@ class Banker {
       canMortgageProperty = false;
       canPayMortgage = false;
     });
+
+    void setCanvasSize() {
+      g.setSize((window.innerHeight * .96596136154553817847286108555658).toInt(), (window.innerHeight * .96596136154553817847286108555658).toInt());
+      Tile.tileScale = (0.08831646734130634774609015639374 * window.innerHeight).toInt();
+      redrawCanvas(players);
+    };
+
+    setCanvasSize();
+
+    window.onResize.listen((_) => setCanvasSize());
   }
 
   static Future<Null> redrawCanvas(List<Player> players) async {
@@ -133,8 +143,6 @@ class Banker {
     int spot = 0;
 
     await g2.drawImage("res/images/rickandmorty2bg.png", Tile.tileScale, Tile.tileScale, g.width - 2 * Tile.tileScale + 5, g.height - 2 * Tile.tileScale + 5).then((_) async {
-      g2.setColor('rgb(255, 255, 0)');
-      g2.drawRect(Tile.tileScale + 1, Tile.tileScale + 1, g.width - 2 * Tile.tileScale + 4, g.height - 2 * Tile.tileScale + 4);
       for (Tile tile in Board.tiles) {
         tile.render(g2, x, y, 0.0);
 
@@ -183,13 +191,9 @@ class Banker {
       isRolling = false;
     } else {
       new Future.delayed(new Duration(seconds: 3, milliseconds: 500)).then((_) {
-        overlay.style.display = 'block';
-
         updatePlayers(values);
 
         isRolling = false;
-
-        new Future.delayed(new Duration(seconds: 1, milliseconds: 500)).then((_) => overlay..style.display = 'none');
       });
     }
 

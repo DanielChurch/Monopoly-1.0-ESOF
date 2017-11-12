@@ -56,8 +56,9 @@ class Player {
   /// Render the [Player] on the board
   void render(Graphics g, int x, int y) {
     g.setFillColor('rgba(0, 0, 0, 1)');
-    g.fillRect(x * Tile.tileScale + (30 * int.parse(id) % 90), y * Tile.tileScale + 60 * (30 * int.parse(id) ~/ 90), 30, 30);
-    g.drawPreloadedImage(token, x * Tile.tileScale + (30 * int.parse(id) % 90), y * Tile.tileScale + 60 * (30 * int.parse(id) ~/ 90), 30, 30);
+    num relativeTileScale = Tile.tileScale * 0.3125;
+    g.fillRect(x * Tile.tileScale + (relativeTileScale * int.parse(id) % (3 * relativeTileScale)), y * Tile.tileScale + (2 * relativeTileScale) * (relativeTileScale * int.parse(id) ~/ (3 * relativeTileScale)), relativeTileScale, relativeTileScale);
+    g.drawPreloadedImage(token, x * Tile.tileScale + (relativeTileScale * int.parse(id) % (3 * relativeTileScale)), y * Tile.tileScale + (2 * relativeTileScale) * (relativeTileScale * int.parse(id) ~/ (3 * relativeTileScale)), relativeTileScale, relativeTileScale);
   }
 
 }

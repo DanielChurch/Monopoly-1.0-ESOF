@@ -5,11 +5,11 @@
 
 /* Cube */
 .cubeContainer {
-    --cubeSize: 100px;
+    --cubeSize: 9.1996320147194112235510579576817vh;
     position: fixed;
 	width: var(--cubeSize);
 	height: var(--cubeSize);
-	perspective: 1000px;
+	perspective: 91.996320147194112235510579576817vh;
 	margin: 0 auto;
 }
 
@@ -18,7 +18,7 @@
 	height: 100%;
 	position: absolute;
 	transform-style: preserve-3d;
-	transform: translateZ(-200px);
+	transform: translateZ(-18.399264029438822447102115915363vh);
 	transition: transform 0.2s;
 }
 
@@ -32,7 +32,7 @@
 	height: var(--cubeSize);
 	display: block;
 	position: absolute;
-	border: 1px solid black;
+	border: 0.04688232536333802156586966713549vw solid black;
 	opacity: 100%;
 	font-weight: bold;
 	color: white;

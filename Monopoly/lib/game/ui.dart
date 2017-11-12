@@ -183,8 +183,8 @@ class UserInterface {
       ..style.top = '77.6vh'
       ..style.zIndex = '20';
 
-    Banker.dice.add(new Dice(60.0, 600.0, 0.0, container: section));
-    Banker.dice.add(new Dice(-60.0, 600.0, 0.0, container: section));
+    Banker.dice.add(new Dice(5.519779208831646734130634774609, 55.19779208831646734130634774609, 0.0, container: section));
+    Banker.dice.add(new Dice(-5.519779208831646734130634774609, 55.19779208831646734130634774609, 0.0, container: section));
 
     return section;
   }
@@ -225,7 +225,9 @@ class UserInterface {
             ..style.background = '#222'
             ..style.textAlign = 'center'
             ..style.color = '#fff'
-            ..style.border = 'inherit',
+            ..style.border = 'inherit'
+            ..style.fontSize = '1.2951057957681692732290708371665vh'
+            ..style.height = '1.5698252069917203311867525298988vh',
           Dom.div('Line1'),
         )
           ..id = 'properties'

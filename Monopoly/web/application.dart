@@ -23,8 +23,8 @@ void main() {
 
   print('window.innerWidth ${window.innerWidth}, window.innerHeight ${window.innerHeight}');
 
-  var taken = Dom.div('Taken', Dom.hr()..style.fontSize = '16px')..className = 'left roster';
-  var available = Dom.div('Available', Dom.hr()..style.fontSize = '16px')..className = 'right roster';
+  var taken = Dom.div('Taken', Dom.hr())..className = 'left roster';
+  var available = Dom.div('Available', Dom.hr())..className = 'right roster';
 
   available.children.addAll(
       ['0#Rick', '1#Morty', '2#Summer', '3#Beth', '4#Jerry', '5#Jessica'].map((color) =>
@@ -56,9 +56,11 @@ void main() {
                     ..style.zIndex = '3'
                     ..style.left = '${100.0 * 55 / 2133}vw'
                     ..style.position = 'absolute'
-                    ..style.textAlign = 'center',
+                    ..style.textAlign = 'center'
+                    ..style.fontSize = '1.22vh'
+                    ..style.height = '2vh',
               )..className = 'chip chipContainer',
-              Dom.hr()..style.fontSize = '16px'..style.opacity = '0'
+              Dom.hr()..style.opacity = '0'
           )
           ..id = 'Player Container $color'
       ).toList()
@@ -121,9 +123,9 @@ void run(List<Element> players) {
           ..style.display = 'block'
           ..style.top = '${100.0 * 20.0 / 2133.0}vw'
           ..style.margin = 'auto'
-          ..style.border = '5px solid #000'
+          ..style.border = '0.23441162681669010782934833567745vw solid #000'
       )
-        ..style.width = '1060px'
+        ..style.width = '97.516099356025758969641214351426vh'
         ..style.margin = 'auto'
         ..className = 'effect8'
         ..onMouseEnter.listen((_) => Banker.tooltip.style.visibility = 'visible')
@@ -131,8 +133,6 @@ void run(List<Element> players) {
     )
       ..style.width = '65%'
   );
-
-  g.setSize((1050).toInt(), (1050).toInt());
 
   banker = new Banker(
       players.where((div) => div.id.contains('Player Container'))

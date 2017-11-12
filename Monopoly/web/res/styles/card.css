@@ -2,7 +2,7 @@
     position: relative;
     width: 100%;
     height 18.4%;
-    border-radius: 5px 5px 0 0;
+    border-radius: 0.45998160073597056117755289788408vh 0.23441162681669010782934833567745vw 0 0;
 }
 
 .cardBackground {
@@ -10,19 +10,19 @@
     position: fixed;
     left: 64.75vw;
     top: 2vh;
-    border: 5px solid #555;
-    border-radius: 10px;
+    border: 0.23441162681669010782934833567745vw solid #555;
+    border-radius: 0.4688232536333802156586966713549vw;
 }
 
 .card {
     position: fixed;
     width: 9.38%;
     /* Add shadows to create the "card" effect */
-    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
-    transition: 0.3s;
+    box-shadow: 0 0.18752930145335208626347866854196vw 0.73597056117755289788408463661454vh 0 rgba(0,0,0,0.2);
+    transition: 0s;
     text-align: center;
     z-index: 2;
-    border-radius: 5px;
+    border-radius: 0.23441162681669010782934833567745vw;
 }
 
 /* On mouse-over, add a deeper shadow */
@@ -32,7 +32,7 @@
 
 .card.selected {
     transition: 0s;
-    border: 3px solid #7FFF00 !important;
+    border: 0.14064697609001406469760900140647vw solid #7FFF00 !important;
 }
 
 /* Add some padding inside the card container */
