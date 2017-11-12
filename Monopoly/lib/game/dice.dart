@@ -14,8 +14,7 @@ class Dice {
 
   Random random = new Random();
 
-  Dice(num x, num y, num z,
-    {Element container})
+  Dice(num x, num y, num z, {Element container})
       : position = new Vector3(x, 0.0, 0.0),
         velocity = new Vector3(0.0, 0.0, 0.0),
         rotation = new Vector3(0.0, 0.0, 0.0) {
@@ -37,7 +36,7 @@ class Dice {
 
   int offset = 0;
 
-  int spin({int value, Duration time = const Duration(milliseconds: 1100), double upVelocity = -10.0}) {
+  int spin({int value, Duration time = const Duration(milliseconds: 1100), double upVelocity = -0.91996320147194112235510579576817}) {
     // make random rotation to make the dice spin
     if (time.inMilliseconds != 0) {
       rotation.x = random.nextDouble() * 100000;
@@ -84,13 +83,13 @@ class Dice {
     });
 
     // Give the dice a force to rocket into the air
-    velocity.y = upVelocity ?? -10.0;
+    velocity.y = upVelocity;
 
     return result;
   }
 
   void update() {
-    velocity.y += 0.0981;
+    velocity.y += 0.00902483900643974241030358785649;
 
     position += velocity;
 
@@ -102,9 +101,9 @@ class Dice {
 
   void render(num delta) {
         box.style.transform = '''
-           translateX(${position.x}px)
-           translateY(${position.y}px)
-           translateZ(${position.z}px)
+           translateX(${position.x}vh)
+           translateY(${position.y}vh)
+           translateZ(${position.z}vh)
            
            rotateX(${rotation.x}deg)
            rotateY(${rotation.y}deg)
