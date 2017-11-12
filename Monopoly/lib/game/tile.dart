@@ -30,6 +30,8 @@ class Tile {
     TileType.utility: Dom.img()..src = 'res/images/plumbus.png',
   };
 
+  static ImageElement mortgagedImage = Dom.img()..src = 'res/images/mortgage.png';
+
   Tile({TileType this.type, Property this.property}) {
     if (property != null) {
       if (property.color == Color.railroad) {
@@ -68,7 +70,11 @@ class Tile {
     g.setColor('rgb(0, 0, 0)');
     g.drawRect(x * tileScale, y * tileScale, tileScale, tileScale);
     // Tile Image
-    g.drawPreloadedImage(preloadedImageMap[type], x * tileScale, y * tileScale, tileScale, tileScale);
+    if (property?.isMortgaged == true) {
+      g.drawPreloadedImage(mortgagedImage, x * tileScale, y * tileScale, tileScale, tileScale);
+    } else {
+      g.drawPreloadedImage(preloadedImageMap[type], x * tileScale, y * tileScale, tileScale, tileScale);
+    }
 
     int xOffset = 0;
     int yOffset = 0;

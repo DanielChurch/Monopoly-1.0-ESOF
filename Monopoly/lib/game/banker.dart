@@ -44,6 +44,7 @@ class Banker {
   bool canPayMortgage = false;
   bool canTradeMortgage = false;
   bool canTradeProperty = false;
+  bool isAuctioning = false;
 
   Banker(List<Player> this.players, DateTime this._endTime) {
     redrawCanvas(players);
@@ -98,7 +99,12 @@ class Banker {
         if (x > tile.x && y > tile.y &&
             x < tile.x + Tile.tileScale &&
             y < tile.y + Tile.tileScale && tile.isProperty) {
-          print(canMortgageProperty || canPayMortgage);
+
+          if (!tile.isProperty) {
+            canTradeMortgage = false;
+            canTradeProperty = false;
+          }
+
           if (canMortgageProperty || canPayMortgage) {
             endAction(tile);
           } else {
@@ -113,8 +119,6 @@ class Banker {
       });
       canMortgageProperty = false;
       canPayMortgage = false;
-      canTradeMortgage = false;
-      canTradeProperty = false;
     });
   }
 
@@ -161,7 +165,7 @@ class Banker {
 
   // Called on rolling the dice for the current player
   Future<Map> rollDice(_, {Map values}) async {
-    if (isRolling) return null;
+    if (isRolling || isAuctioning) return null;
     isRolling = true;
     // Roll the dice
     if (values == null) {
@@ -205,6 +209,7 @@ class Banker {
     Board.tiles[players[max(currentPlayerIndex - 1, 0)].location].property.auction(players);
     redrawCanvas(players);
     UserInterface.updateCards(players);
+    isAuctioning = false;
   }
 
   void buyProperty(_) {
@@ -215,6 +220,7 @@ class Banker {
   }
 
   Future<Null> declineProperty(_) async {
+    isAuctioning = true;
     UserInterface.buyPropertyOverlay.style.display = 'none';
     overlay.style.display = 'block';
     overlay.text = 'Time to get shwifty with this auction!';
