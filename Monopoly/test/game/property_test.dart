@@ -10,15 +10,14 @@ void main() {
     Player owner;
 
     setUp(() {
-      property = new Property(20, [1, 2, 3, 4, 5, 6], Color.railroad);
+      property = new Property(20, [1, 2, 3, 4, 5, 6], Color.darkBlue);
       player = new Player('0', 'Player 1');
       owner = new Player('1', 'Owner');
     });
 
     test('constructs properly', () {
-      expect(Color.railroad, property.color);
+      expect(property.color, Color.darkBlue);
       expect(property.price, 20);
-      expect(property.mortgage, 30);
     });
 
     group('buyProperty', () {
@@ -46,7 +45,7 @@ void main() {
         expect(owner.balance, 1300);
         expect(player.balance, 1300);
         property.owner = owner;
-        property.payRent(player);
+        property.payRent(player, 1);
         expect(owner.balance, 1300 + property.rent[property.numHouses]);
         expect(player.balance, 1300 - property.rent[property.numHouses]);
       });
@@ -60,7 +59,7 @@ void main() {
         expect(owner.balance, 1300);
         expect(player.balance, 1300);
         property.owner = owner;
-        property.payRent(player);
+        property.payRent(player, 1);
         expect(owner.balance, 1300 + property.rent[property.numHouses]);
         expect(player.balance, 1300 - property.rent[property.numHouses]);
       }
