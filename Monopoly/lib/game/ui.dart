@@ -80,7 +80,7 @@ class UserInterface {
     )
       ..className = 'cardBackground'
       ..style.top = '31vw'
-      ..style.width = '${10.5 * 3}vw'
+      ..style.width = '${10.6 * 3}vw'
       ..style.height = '${36}vh';
 
   }
@@ -196,7 +196,7 @@ class UserInterface {
         players.map((player) => renderCard(players, player, index++)).toList()
     )
       ..className = 'cardBackground'
-      ..style.width = '${10.5 * (index > 2 ? 3 : index)}vw'
+      ..style.width = '${10.6 * (index > 2 ? 3 : index)}vw'
       ..style.height = '${28.5 * (index / 3).ceil()}vh';
   }
 

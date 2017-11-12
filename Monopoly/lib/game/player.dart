@@ -9,6 +9,8 @@ import 'board.dart';
 
 class Player {
 
+  static const int baseBalance = 1300;
+
   int _location;
   int balance;
 
@@ -22,7 +24,7 @@ class Player {
 
   int tokenScale = 1;
 
-  Player(String this.id, String this.name) : _location = 0, token = Dom.img()..src = 'res/images/$id.png', balance = 1300;
+  Player(String this.id, String this.name) : _location = 0, token = Dom.img()..src = 'res/images/$id.png', balance = baseBalance;
 
   int get location => _location;
 

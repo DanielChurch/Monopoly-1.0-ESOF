@@ -19,33 +19,28 @@ import 'ui.dart';
 
 class Banker {
 
-  int _housesRemaining;
+  static List<Dice> dice = [];
+  static SpanElement tooltip;
+  static Graphics g;
+
+  /// If the main game/animation loop should update
+  static bool shouldUpdate = true;
+
+  DateTime _endTime;
 
   List<Player> players;
   int currentPlayerIndex = 0;
-
-  List<Property> _deeds;
-
-  static Graphics g;
-
   Element overlay;
-  
-  DateTime _endTime;
-  int mouseX, mouseY;
 
-  static List<Dice> dice = [];
-  bool isRolling = false;
-
-  static SpanElement tooltip;
-
-  static bool shouldUpdate = true;
-
+  // Booleans to limit the ability of what the user can currently do
   bool canMortgageProperty = false;
   bool canPayMortgage = false;
   bool canTradeMortgage = false;
   bool canTradeProperty = false;
   bool isAuctioning = false;
+  bool isRolling = false;
 
+  // Temporary tiles to store for when the user is picking them for trade
   Tile tile, tile2;
 
   Banker(List<Player> this.players, DateTime this._endTime) {
@@ -71,13 +66,13 @@ class Banker {
     UserInterface.tradePropertyButton.onClick.listen(tradeProperty);
   }
 
-  void setCanvasListners() {
+  void setCanvasListeners() {
     g.canvas.onMouseMove.listen((MouseEvent me) {
       int x = (me.client.x - g.canvas.getBoundingClientRect().left).toInt();
       int y = (me.client.y - g.canvas.getBoundingClientRect().top).toInt();
 
       if (!Board.tiles.where((tile) {
-        if (x > tile.x && y > tile.y && x < tile.x + Tile.tileScale && y < tile.y + Tile.tileScale && tile.isProperty) {
+        if (x > (tile.x ?? 0) && y > (tile.y ?? 0) && x < (tile.x ?? 0) + Tile.tileScale && y < (tile.y ?? 0) + Tile.tileScale && tile.isProperty) {
           Banker.tooltip.style.visibility = 'visible';
           if (canMortgageProperty || canPayMortgage || canTradeMortgage || canTradeProperty) {
             g.canvas.style.cursor = 'crosshair';
@@ -211,7 +206,7 @@ class Banker {
       });
     });
 
-    Board.tiles[players[max(currentPlayerIndex - 1, 0)].location].property.auction(players);
+    Board.tiles[players[max(currentPlayerIndex - 1, 0)].location].property?.auction(players);
     redrawCanvas(players);
     UserInterface.updateCards(players);
     isAuctioning = false;
@@ -219,7 +214,7 @@ class Banker {
 
   void buyProperty(_) {
     UserInterface.buyPropertyOverlay.style.display = 'none';
-    Board.tiles[players[max(currentPlayerIndex - 1, 0)].location].property.buyProperty(players[max(currentPlayerIndex - 1, 0)]);
+    Board.tiles[players[max(currentPlayerIndex - 1, 0)].location].property?.buyProperty(players[max(currentPlayerIndex - 1, 0)]);
     redrawCanvas(players);
     UserInterface.updateCards(players);
   }
@@ -351,10 +346,10 @@ class Banker {
   @visibleForTesting
   set endTime(DateTime endTime) => _endTime = endTime;
 
-  bool sellPropertyToPlayer(Property property) {}
-
+  /// If the current time has passed the end time or not
   bool get isWithinMaxTime => new DateTime.now().millisecondsSinceEpoch < _endTime.millisecondsSinceEpoch;
 
+  /// Calculates and returns the [Player] with the highest balance
   Player declareWinner() {
     Board.tiles.forEach((Tile tile) {
       if (tile.isProperty) {
@@ -376,7 +371,10 @@ class Banker {
     return players.where((player) => player.balance == maxBalance).toList()[0];
   }
 
+  /// Updates the visual game logic, and checks if we exceed the time limit
+  /// Alerts the winner if out of time
   void update() {
+    // Don't update if the game is over
     if (!shouldUpdate) return;
 
     if (!isWithinMaxTime) {
@@ -388,6 +386,7 @@ class Banker {
     dice.forEach((d) => d.update());
   }
 
+  /// Renders objects that need frequent animation
   void render(double delta) {
     dice.forEach((d) => d.render(delta));
   }

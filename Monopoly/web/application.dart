@@ -1,7 +1,5 @@
 import 'package:dnd/dnd.dart';
 import 'package:monopoly/game/banker.dart';
-import 'package:monopoly/game/board.dart';
-import 'package:monopoly/game/tile.dart';
 import 'package:monopoly/game/modes.dart';
 import 'package:monopoly/game/player.dart';
 import 'package:monopoly/graphics/dom.dart';
@@ -121,9 +119,8 @@ void run(List<Element> players) {
         (g = new Graphics.blank('board')).canvas
           ..id = 'gameBoard'
           ..style.display = 'block'
-  //        ..style.position = 'fixed'
           ..style.top = '${100.0 * 20.0 / 2133.0}vw'
-          ..style.margin = 'auto' // 15
+          ..style.margin = 'auto'
           ..style.border = '5px solid #000'
       )
         ..style.width = '1060px'
@@ -146,7 +143,7 @@ void run(List<Element> players) {
       new DateTime.now().add(new Duration(minutes: 45)));
   Banker.g = g;
 
-  banker.setCanvasListners();
+  banker.setCanvasListeners();
 
   window.requestAnimationFrame(loop);
 }
