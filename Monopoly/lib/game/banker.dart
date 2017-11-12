@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:html';
+import 'dart:math';
 
 import 'package:meta/meta.dart';
 import 'package:monopoly/graphics/dom.dart';
@@ -33,17 +34,67 @@ class Banker {
   int mouseX, mouseY;
 
   static List<Dice> dice = [];
+  bool isRolling = false;
 
   static SpanElement tooltip;
+
+  static bool shouldUpdate = true;
+
+  bool canMortgageProperty = false;
+  bool canPayMortgage = false;
+  bool canTradeMortgage = false;
+  bool canTradeProperty = false;
 
   Banker(List<Player> this.players, DateTime this._endTime) {
     redrawCanvas(players);
     Dom.body(
         overlay = UserInterface.renderOverlay(),
+        UserInterface.buyPropertyOverlay
+          ..children[0].onClick.listen(buyProperty)
+          ..children[1].onClick.listen(declineProperty),
         tooltip = UserInterface.renderTooltip(),
         UserInterface.renderAllCards(players),
         UserInterface.renderDice()..onClick.listen(rollDice),
+        UserInterface.otherButtonGroup,
     );
+
+    UserInterface.finishAuctionButton.onClick.listen(endAuction);
+    UserInterface.mortgagePropertyButton.onClick.listen(mortgageProperty);
+    UserInterface.payMortgageButton.onClick.listen(payMortgage);
+    UserInterface.tradeMortgageButton.onClick.listen(tradeMortgage);
+    UserInterface.tradePropertyButton.onClick.listen(tradeProperty);
+
+//    g.canvas.onMousePress.listen((MouseEvent me) {
+//
+//    });
+  }
+
+  void setCanvasListners() {
+    g.canvas.onMouseMove.listen((MouseEvent me) {
+      int x = (me.client.x - g.canvas.getBoundingClientRect().left).toInt();
+      int y = (me.client.y - g.canvas.getBoundingClientRect().top).toInt();
+
+      if (!Board.tiles.where((tile) {
+        if (x > tile.x && y > tile.y && x < tile.x + Tile.tileScale && y < tile.y + Tile.tileScale && tile.isProperty) {
+          Banker.tooltip.style.visibility = 'visible';
+          if (canMortgageProperty || canPayMortgage || canTradeMortgage || canTradeProperty) {
+            g.canvas.style.cursor = 'crosshair';
+          }
+          Banker.tooltip.children.where((child) => child.id == 'name').toList()[0].text = 'Property';
+          Banker.tooltip.children.where((child) => child.id == 'money').toList()[0].text = '\$${tile.property.price}';
+          Banker.tooltip.children.where((child) => child.id == 'properties').toList()[0].text = 'Owned by ${tile?.property?.owner?.name ?? 'nobody'}';
+          return true;
+        }
+        return false;
+      }).toList().isNotEmpty) {
+        Banker.tooltip.style.visibility = 'hidden';
+        g.canvas.style.cursor = 'default';
+      }
+    });
+
+    g.canvas.onMousePress.listen((_) {
+
+    });
   }
 
   static Future<Null> redrawCanvas(List<Player> players) async {
@@ -67,6 +118,9 @@ class Banker {
         // TODO: custom rendered based on [playersOnSpot.length]
         playersOnSpot.forEach((player) => player.render(g2, x, y));
 
+        tile.x = x * Tile.tileScale;
+        tile.y = y * Tile.tileScale;
+
         if (x != amt && y == 0) {
           x++;
         } else if (x == amt && y != amt) {
@@ -86,6 +140,8 @@ class Banker {
 
   // Called on rolling the dice for the current player
   Future<Map> rollDice(_, {Map values}) async {
+    if (isRolling) return null;
+    isRolling = true;
     // Roll the dice
     if (values == null) {
       values = {};
@@ -99,17 +155,93 @@ class Banker {
 
     if (Modes.quickroll) {
       updatePlayers(values);
+      isRolling = false;
     } else {
       new Future.delayed(new Duration(seconds: 3, milliseconds: 500)).then((_) {
         overlay.style.display = 'block';
 
         updatePlayers(values);
 
+        isRolling = false;
+
         new Future.delayed(new Duration(seconds: 1, milliseconds: 500)).then((_) => overlay..style.display = 'none');
       });
     }
 
     return values;
+  }
+
+  void endAuction(_) {
+    querySelectorAll('#selectedCardContainer').forEach((Element element) {
+      Element properties = element.querySelector('#properties');
+      players.forEach((player) {
+        if (properties.className.contains(player.id)) {
+          player.bid = int.parse((properties.children[2] as InputElement).value.replaceAll('\$', ''));
+        }
+      });
+    });
+
+    Board.tiles[players[max(currentPlayerIndex - 1, 0)].location].property.auction(players);
+    redrawCanvas(players);
+    UserInterface.updateCards(players);
+  }
+
+  void buyProperty(_) {
+    UserInterface.buyPropertyOverlay.style.display = 'none';
+    Board.tiles[players[max(currentPlayerIndex - 1, 0)].location].property.buyProperty(players[max(currentPlayerIndex - 1, 0)]);
+    redrawCanvas(players);
+    UserInterface.updateCards(players);
+  }
+
+  Future<Null> declineProperty(_) async {
+    UserInterface.buyPropertyOverlay.style.display = 'none';
+    overlay.style.display = 'block';
+    overlay.text = 'Time to get shwifty with this auction!';
+
+    await new Future.delayed(new Duration(seconds: 2));
+
+    for (int i = 5; i > 0; i--) {
+      overlay.text = '$i';
+      await new Future.delayed(new Duration(milliseconds: 500));
+    }
+
+    overlay.style.display = 'none';
+  }
+
+  void mortgageProperty(_) {
+    canMortgageProperty = true;
+    overlay.style.display = 'block';
+    overlay.text = 'Click on a property to mortgage it';
+  }
+
+  void payMortgage(_) {
+    canPayMortgage = true;
+    overlay.style.display = 'block';
+    overlay.text = 'Click on a mortgage to pay it';
+  }
+
+  void tradeMortgage(_) {
+    canTradeMortgage = true;
+    overlay.style.display = 'block';
+    overlay.text = 'Click on two mortgages to trade them';
+  }
+
+  void tradeProperty(_) {
+    canTradeProperty = true;
+    overlay.style.display = 'block';
+    overlay.text = 'Click on two properties to trade them';
+  }
+
+  void endAction(int position, [int position2]) {
+    if (canMortgageProperty) {
+      Board.tiles[position].property.mortgage();
+    } else if (canPayMortgage) {
+      Board.tiles[position].property.payMortgage();
+    } else if (canTradeMortgage) {
+      Board.tiles[position].property.tradeMortgage(Board.tiles[position2], false);
+    } else if (canTradeProperty) {
+      Board.tiles[position].property.tradeProperty(Board.tiles[position2]);
+    }
   }
 
   /// Updates the players based on the inputted [values] map of the dice rolls
@@ -119,9 +251,19 @@ class Banker {
 
     overlay.text = '$sum';
 
-    int lastPlayerIndex = currentPlayerIndex;
-
     players[currentPlayerIndex].updateLocation(sum);
+
+    Tile currentTile = Board.tiles[players[currentPlayerIndex].location];
+
+    if (currentTile.isProperty) {
+      Property currentProperty = currentTile.property;
+      if (currentProperty.isOwned) {
+        currentTile.property.payRent(players[currentPlayerIndex]);
+      } else {
+        UserInterface.buyPropertyOverlay.style.display = 'block';
+        UserInterface.buyPropertyOverlay.children[0].text = 'Buy Property for \$${Board.tiles[players[currentPlayerIndex].location].property.price}';
+      }
+    }
 
     // Double roll if length one, don't move on turn
     if (values.keys.where((key) => values[key] == 2).isEmpty) {
@@ -129,15 +271,12 @@ class Banker {
     }
 
     redrawCanvas(players);
+    UserInterface.updateCards(players);
     querySelectorAll('#selectedCardContainer').forEach((Element element) {
       if (element.className.contains('$currentPlayerIndex')) {
         element.className += ' selected';
       } else {
         element.className = element.className.replaceAll(' selected', '');
-      }
-
-      if (element.className.contains('$lastPlayerIndex')) {
-        element.querySelector('#properties').children[1].text = '\$${players[lastPlayerIndex].balance}';
       }
     });
   }
@@ -149,13 +288,35 @@ class Banker {
 
   bool get isWithinMaxTime => new DateTime.now().millisecondsSinceEpoch < _endTime.millisecondsSinceEpoch;
 
-  Player declareWinner() {}
+  Player declareWinner() {
+    Board.tiles.forEach((Tile tile) {
+      if (tile.isProperty) {
+        players.forEach((player) {
+          if (tile.property.owner.id == player.id) {
+            player.balance += tile.property.price;
+          }
+        });
+      }
+    });
 
-  bool _updateProperty(Property property) {}
+    int maxBalance = 0;
+    players.forEach((player) {
+      if (player.balance > maxBalance) {
+        maxBalance = player.balance;
+      }
+    });
+
+    return players.where((player) => player.balance == maxBalance).toList()[0];
+  }
 
   void update() {
+    if (!shouldUpdate) return;
+
     if (!isWithinMaxTime) {
-      // End game
+      shouldUpdate = false;
+      Player winner = declareWinner();
+
+      window.alert("Winner winner chicken dinner ${winner.name}");
     }
     dice.forEach((d) => d.update());
   }

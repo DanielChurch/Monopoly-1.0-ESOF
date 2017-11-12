@@ -24,16 +24,21 @@ class UserInterface {
   static String defaultColor = '';
 
   static Element get buyPropertyOverlay {
-    Element overlay;
-    return overlay = Dom.div(
-      _buyPropertyButton..onMouseDown.listen((_) => overlay..style.display = 'none'),
-      _declinePropertyButton..onMouseDown.listen((_) => overlay..style.display = 'none'),
-    )
-      ..id = 'overlay'
-      ..className = 'propertyOverlay'
-      ..style.color = '#fff'
-      ..style.display = 'none'
-      ..style.zIndex = '50';
+    Element propertyOverlay = querySelector('.propertyOverlay');
+    if (propertyOverlay == null) {
+      Element overlay;
+      return overlay = Dom.div(
+        _buyPropertyButton,
+        _declinePropertyButton,
+      )
+        ..id = 'overlay'
+        ..className = 'propertyOverlay'
+        ..style.color = '#fff'
+        ..style.display = 'none'
+        ..style.zIndex = '50';
+    } else {
+      return propertyOverlay;
+    }
   }
 
   static Element get _buyPropertyButton {
@@ -56,11 +61,75 @@ class UserInterface {
       ..onMouseLeave.listen((_) => div.style.background = defaultColor);
   }
 
-  static Element get mortgagePropertyButton => null;
+  static Element get otherButtonGroup {
+    return Dom.div(
+      finishAuctionButton,
+      mortgagePropertyButton,
+      payMortgageButton,
+      tradeMortgageButton,
+      tradePropertyButton,
+    )
+      ..className = 'cardBackground'
+      ..style.top = '31vw'
+      ..style.width = '${10.5 * 3}vw'
+      ..style.height = '${36}vh';
 
-  static Element get tradeMortgageButton => null;
+  }
 
-  static Element get tradePropertyButton => null;
+  static Element get mortgagePropertyButton {
+    Element auctionButton = querySelector('#mortgagePropertyButton');
+    if (auctionButton == null) {
+      return Dom.div("Mortgage Property")
+        ..id = 'mortgagePropertyButton'
+        ..className = 'genericButton';
+    } else {
+      return auctionButton;
+    }
+  }
+
+  static Element get payMortgageButton {
+    Element auctionButton = querySelector('#payMortgageButton');
+    if (auctionButton == null) {
+      return Dom.div("Pay Mortgage")
+        ..id = 'payMortgageButton'
+        ..className = 'genericButton';
+    } else {
+      return auctionButton;
+    }
+  }
+
+  static Element get tradeMortgageButton {
+    Element auctionButton = querySelector('#tradeMortgageButton');
+    if (auctionButton == null) {
+      return Dom.div("Trade Mortgage")
+        ..id = 'tradeMortgageButton'
+        ..className = 'genericButton';
+    } else {
+      return auctionButton;
+    }
+  }
+
+  static Element get tradePropertyButton {
+    Element auctionButton = querySelector('#tradePropertyButton');
+    if (auctionButton == null) {
+      return Dom.div("Trade Property")
+        ..id = 'tradePropertyButton'
+        ..className = 'genericButton';
+    } else {
+      return auctionButton;
+    }
+  }
+
+  static Element get finishAuctionButton {
+    Element auctionButton = querySelector('#auctionButton');
+    if (auctionButton == null) {
+      return Dom.div("End Auction")
+        ..id = 'auctionButton'
+        ..className = 'genericButton';
+    } else {
+      return auctionButton;
+    }
+  }
 
   static Element renderOverlay() {
     Element overlay;
@@ -82,7 +151,7 @@ class UserInterface {
         Dom.p(),
         Dom.div()..id = 'money',
         Dom.p(),
-        Dom.div('Tooltip Line 3')..id = 'properties'
+        Dom.div('')..id = 'properties'
     )
       ..className = 'tooltip tooltiptext'
       ..style.width = '200px';
@@ -101,8 +170,8 @@ class UserInterface {
     Element section = Dom.div(Dom.div()..className = 'cubeContainer')
       ..className = 'cubeContainer'
       ..style.position = 'fixed'
-      ..style.left = '78.53vw'
-      ..style.top = '73.6vh'
+      ..style.left = '30.53vw'
+      ..style.top = '77.6vh'
       ..style.zIndex = '20';
 
     Banker.dice.add(new Dice(60.0, 600.0, 0.0, container: section));
@@ -143,11 +212,15 @@ class UserInterface {
         Dom.div(
           Dom.div('${player.name}'),
           Dom.div('\$${player.balance}'),
-          Dom.div('Properties'),
+          Dom.input('\$${player.bid}')
+            ..style.background = '#222'
+            ..style.textAlign = 'center'
+            ..style.color = '#fff'
+            ..style.border = 'inherit',
           Dom.div('Line1'),
         )
           ..id = 'properties'
-          ..className = 'cardContainer'
+          ..className = 'cardContainer ${player.id}'
           ..style.height = '${76.0 * 100 / 1087}vh'
           ..style.fontSize = '${16.0 * 100 / 1087}vh'
           ..style.textOverflow = 'clip'
@@ -156,7 +229,7 @@ class UserInterface {
       ..onMouseEnter.listen((_) {
         Banker.tooltip.style.visibility = 'visible';
         Banker.tooltip.children.where((child) => child.id == 'name').toList()[0].text = '${player.name}';
-        Banker.tooltip.children.where((child) => child.id == 'money').toList()[0].text = '\$696969669';
+        Banker.tooltip.children.where((child) => child.id == 'money').toList()[0].text = '\$${player.balance}';
         player.tokenScale = 3;
         Banker.redrawCanvas(players);
       })
@@ -172,6 +245,18 @@ class UserInterface {
       ..style.top = '${28 * (index ~/ 3) + 1.3 + 2.4}vh' // 23
       ..style.height = '${280 / 1087 * 100}vh'
       ..style.width = '${205 * 100 / 2133}vw';
+  }
+
+  static void updateCards(List players) {
+    querySelectorAll('#selectedCardContainer').forEach((Element element) {
+      Element properties = element.querySelector('#properties');
+      players.forEach((player) {
+        if (properties.className.contains(player.id)) {
+          properties.children[1].text = '\$${player.balance}';
+          (properties.children[2] as InputElement).value = '\$${player.bid}';
+        }
+      });
+    });
   }
 
 }

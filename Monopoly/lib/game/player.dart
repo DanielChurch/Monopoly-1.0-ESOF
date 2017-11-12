@@ -18,6 +18,8 @@ class Player {
   String name;
   ImageElement token;
 
+  int bid = 0;
+
   int tokenScale = 1;
 
   Player(String this.id, String this.name) : _location = 0, token = Dom.img()..src = 'res/images/$id.png', balance = 1300;

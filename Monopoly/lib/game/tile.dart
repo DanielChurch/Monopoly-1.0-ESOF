@@ -1,10 +1,11 @@
-import 'dart:async';
 import 'dart:html';
 import 'dart:math';
 
 import 'package:monopoly/graphics/dom.dart';
 import 'package:monopoly/graphics/graphics.dart';
 
+import 'banker.dart';
+import 'color.dart';
 import 'tile_type.dart';
 import 'property.dart';
 
@@ -14,6 +15,8 @@ class Tile {
 
   TileType type;
   Property property;
+
+  int x, y;
 
   static Map<TileType, ImageElement> preloadedImageMap = {
     TileType.property: Dom.img()..src = 'res/images/house.png',
@@ -66,5 +69,26 @@ class Tile {
     g.drawRect(x * tileScale, y * tileScale, tileScale, tileScale);
     // Tile Image
     g.drawPreloadedImage(preloadedImageMap[type], x * tileScale, y * tileScale, tileScale, tileScale);
+
+    int xOffset = 0;
+    int yOffset = 0;
+
+    if (isProperty && property.isOwned) {
+      if (x == 0) {
+        xOffset = tileScale;
+        yOffset = tileScale ~/ 3;
+      } else if (y == 0) {
+        yOffset = tileScale;
+        xOffset = tileScale ~/ 3;
+      } else if (x == 10) {
+        xOffset = -tileScale ~/ 4;
+        yOffset = tileScale ~/ 3;
+      } else if (y == 10) {
+        yOffset = -tileScale ~/ 4;
+        xOffset = tileScale ~/ 3;
+      }
+
+      g.drawPreloadedImage(property.owner.token, x * tileScale + xOffset, y * tileScale + yOffset, tileScale / 4, tileScale / 4);
+    }
   }
 }

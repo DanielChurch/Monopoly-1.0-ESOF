@@ -1,5 +1,7 @@
 import 'package:dnd/dnd.dart';
 import 'package:monopoly/game/banker.dart';
+import 'package:monopoly/game/board.dart';
+import 'package:monopoly/game/tile.dart';
 import 'package:monopoly/game/modes.dart';
 import 'package:monopoly/game/player.dart';
 import 'package:monopoly/graphics/dom.dart';
@@ -115,18 +117,20 @@ void run(List<Element> players) {
   // Canvas
   Dom.body(
     Dom.div(
-    Dom.div(
-      (g = new Graphics.blank('board')).canvas
-        ..id = 'gameBoard'
-        ..style.display = 'block'
-//        ..style.position = 'fixed'
-        ..style.top = '${100.0 * 20.0 / 2133.0}vw'
-        ..style.margin = 'auto' // 15
-        ..style.border = '5px solid #000'
-    )
-      ..style.width = '1060px'
-      ..style.margin = 'auto'
-      ..className = 'effect8'
+      Dom.div(
+        (g = new Graphics.blank('board')).canvas
+          ..id = 'gameBoard'
+          ..style.display = 'block'
+  //        ..style.position = 'fixed'
+          ..style.top = '${100.0 * 20.0 / 2133.0}vw'
+          ..style.margin = 'auto' // 15
+          ..style.border = '5px solid #000'
+      )
+        ..style.width = '1060px'
+        ..style.margin = 'auto'
+        ..className = 'effect8'
+        ..onMouseEnter.listen((_) => Banker.tooltip.style.visibility = 'visible')
+        ..onMouseLeave.listen((_) => Banker.tooltip.style.visibility = 'hidden')
     )
       ..style.width = '65%'
   );
@@ -139,8 +143,10 @@ void run(List<Element> players) {
             List<String> data = div.id.split('Player Container ')[1].split('#');
             return new Player(data[0], (div.querySelector('#Player') as InputElement).value);
         }).toList(),
-      new DateTime.now().add(new Duration(minutes: 30)));
+      new DateTime.now().add(new Duration(minutes: 45)));
   Banker.g = g;
+
+  banker.setCanvasListners();
 
   window.requestAnimationFrame(loop);
 }
