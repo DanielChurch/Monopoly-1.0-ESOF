@@ -92,9 +92,9 @@ class Banker {
       }
     });
 
-    g.canvas.onMousePress.listen((_) {
-
-    });
+//    g.canvas.onMousePress.listen((_) {
+//
+//    });
   }
 
   static Future<Null> redrawCanvas(List<Player> players) async {
