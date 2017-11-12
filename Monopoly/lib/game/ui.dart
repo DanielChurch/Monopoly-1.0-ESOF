@@ -26,8 +26,7 @@ class UserInterface {
   static Element get buyPropertyOverlay {
     Element propertyOverlay = querySelector('.propertyOverlay');
     if (propertyOverlay == null) {
-      Element overlay;
-      return overlay = Dom.div(
+      return Dom.div(
         _buyPropertyButton,
         _declinePropertyButton,
       )
@@ -41,12 +40,43 @@ class UserInterface {
     }
   }
 
+  static Element get payImmediatelyOverlay {
+    Element propertyOverlay = querySelector('.payImmediatelyOverlay');
+    if (propertyOverlay == null) {
+      return Dom.div(
+        'Do you want to pay immediately?',
+        'Paying immediately will change you the full cost but',
+        'Choosing not to will still cost you 10%',
+        _payImmediatelyButton,
+        _doNotPayImmediatelyButton,
+      )
+        ..id = 'overlay'
+        ..className = 'payImmediatelyOverlay'
+        ..style.color = '#fff'
+        ..style.display = 'none'
+        ..style.zIndex = '50';
+    } else {
+      return propertyOverlay;
+    }
+  }
+
+  static Element get _payImmediatelyButton {
+    Element div;
+    return div = Dom.div('Pay Immediately')
+      ..onMouseEnter.listen((_) => div.style.background = highlightColor)
+      ..onMouseLeave.listen((_) => div.style.background = defaultColor);
+  }
+
+  static Element get _doNotPayImmediatelyButton {
+    Element div;
+    return div = Dom.div('Pay Later')
+      ..onMouseEnter.listen((_) => div.style.background = highlightColor)
+      ..onMouseLeave.listen((_) => div.style.background = defaultColor);
+  }
+
   static Element get _buyPropertyButton {
     Element div;
     return div = Dom.div('Buy Property')
-        ..onMouseDown.listen((_) {
-          // Buy property, may be better to let banker handle this.
-        })
         ..onMouseEnter.listen((_) => div.style.background = highlightColor)
         ..onMouseLeave.listen((_) => div.style.background = defaultColor);
   }
@@ -54,9 +84,6 @@ class UserInterface {
   static Element get _declinePropertyButton {
     Element div;
     return div = Dom.div('Decline Property')
-      ..onMouseDown.listen((_) {
-        // Buy property, may be better to let banker handle this.
-      })
       ..onMouseEnter.listen((_) => div.style.background = highlightColor)
       ..onMouseLeave.listen((_) => div.style.background = defaultColor);
   }

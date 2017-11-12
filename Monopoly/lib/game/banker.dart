@@ -53,6 +53,9 @@ class Banker {
         UserInterface.buyPropertyOverlay
           ..children[0].onClick.listen(buyProperty)
           ..children[1].onClick.listen(declineProperty),
+        UserInterface.payImmediatelyOverlay
+          ..children[3].onClick.listen(payImmediately)
+          ..children[4].onClick.listen(payLater),
         tooltip = UserInterface.renderTooltip(),
         UserInterface.renderAllCards(players),
         UserInterface.renderDice()..onClick.listen(rollDice),
@@ -281,12 +284,21 @@ class Banker {
     } else if (canPayMortgage) {
       tile.property.payMortgage();
     } else if (canTradeMortgage) {
+
       tile.property.tradeMortgage(tile2.property, false);
     } else if (canTradeProperty) {
       tile.property.tradeProperty(tile2.property);
     }
     UserInterface.updateCards(players);
     redrawCanvas(players);
+  }
+
+  void payImmediately(_) {
+    
+  }
+
+  void payLater(_) {
+
   }
 
   /// Updates the players based on the inputted [values] map of the dice rolls
