@@ -1,3 +1,4 @@
+import 'board.dart';
 import 'color.dart';
 import 'player.dart';
 
@@ -50,7 +51,7 @@ class Property {
     }
   }
 
-  void payRent(Player player) {
+  void payRent(Player player, int diceRoll) {
     if (isMortgaged) return;
 
     int price;
@@ -58,7 +59,27 @@ class Property {
       // Rent is the 6th item in the list
       price = rent[5];
     } else {
-      price = rent[numHouses];
+      if (color == Color.utility) {
+        int numberOfUtilities = 0;
+        Board.tiles.forEach((tile) {
+          if (tile.isProperty && tile.property.color == Color.utility && tile.property.owner == owner) {
+            numberOfUtilities++;
+          }
+        });
+
+        price = rent[numberOfUtilities - 1] * diceRoll;
+      } else if (color == Color.railroad) {
+        int numberOfRailroads = 0;
+        Board.tiles.forEach((tile) {
+          if (tile.isProperty && tile.property.color == Color.railroad && tile.property.owner == owner) {
+            numberOfRailroads++;
+          }
+        });
+
+        price = rent[numberOfRailroads - 1];
+      } else {
+        price = rent[numHouses];
+      }
     }
 
     if (isOwned) {
@@ -109,7 +130,7 @@ class Property {
   }
 
   void mortgage() {
-    if (numHouses == 0 && !isHotel && !_isMortgaged) {
+    if (numHouses == 0 && !isHotel && !_isMortgaged && isOwned) {
       owner.balance += price ~/ 2;
       _isMortgaged = true;
     }

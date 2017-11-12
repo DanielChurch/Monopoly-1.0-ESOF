@@ -63,10 +63,6 @@ class Banker {
     UserInterface.payMortgageButton.onClick.listen(payMortgage);
     UserInterface.tradeMortgageButton.onClick.listen(tradeMortgage);
     UserInterface.tradePropertyButton.onClick.listen(tradeProperty);
-
-//    g.canvas.onMousePress.listen((MouseEvent me) {
-//
-//    });
   }
 
   void setCanvasListners() {
@@ -92,8 +88,33 @@ class Banker {
       }
     });
 
-    g.canvas.onMousePress.listen((_) {
+    Tile lastTile;
 
+    g.canvas.onMouseDown.listen((MouseEvent me) {
+      int x = (me.client.x - g.canvas.getBoundingClientRect().left).toInt();
+      int y = (me.client.y - g.canvas.getBoundingClientRect().top).toInt();
+
+      Board.tiles.forEach((tile) {
+        if (x > tile.x && y > tile.y &&
+            x < tile.x + Tile.tileScale &&
+            y < tile.y + Tile.tileScale && tile.isProperty) {
+          print(canMortgageProperty || canPayMortgage);
+          if (canMortgageProperty || canPayMortgage) {
+            endAction(tile);
+          } else {
+            if (lastTile == null) {
+              lastTile = tile;
+            } else {
+              endAction(tile, lastTile);
+              lastTile = null;
+            }
+          }
+        }
+      });
+      canMortgageProperty = false;
+      canPayMortgage = false;
+      canTradeMortgage = false;
+      canTradeProperty = false;
     });
   }
 
@@ -210,38 +231,56 @@ class Banker {
 
   void mortgageProperty(_) {
     canMortgageProperty = true;
+    canPayMortgage = false;
+    canTradeMortgage = false;
+    canTradeProperty = false;
+
     overlay.style.display = 'block';
     overlay.text = 'Click on a property to mortgage it';
   }
 
   void payMortgage(_) {
+    canMortgageProperty = false;
     canPayMortgage = true;
+    canTradeMortgage = false;
+    canTradeProperty = false;
+
     overlay.style.display = 'block';
     overlay.text = 'Click on a mortgage to pay it';
   }
 
   void tradeMortgage(_) {
+    canMortgageProperty = false;
+    canPayMortgage = false;
     canTradeMortgage = true;
+    canTradeProperty = false;
+
     overlay.style.display = 'block';
     overlay.text = 'Click on two mortgages to trade them';
   }
 
   void tradeProperty(_) {
+    canMortgageProperty = false;
+    canPayMortgage = false;
+    canTradeMortgage = false;
     canTradeProperty = true;
+
     overlay.style.display = 'block';
     overlay.text = 'Click on two properties to trade them';
   }
 
-  void endAction(int position, [int position2]) {
+  void endAction(Tile tile, [Tile tile2]) {
     if (canMortgageProperty) {
-      Board.tiles[position].property.mortgage();
+      tile.property.mortgage();
     } else if (canPayMortgage) {
-      Board.tiles[position].property.payMortgage();
+      tile.property.payMortgage();
     } else if (canTradeMortgage) {
-      Board.tiles[position].property.tradeMortgage(Board.tiles[position2], false);
+      tile.property.tradeMortgage(tile2.property, false);
     } else if (canTradeProperty) {
-      Board.tiles[position].property.tradeProperty(Board.tiles[position2]);
+      tile.property.tradeProperty(tile2.property);
     }
+    UserInterface.updateCards(players);
+    redrawCanvas(players);
   }
 
   /// Updates the players based on the inputted [values] map of the dice rolls
@@ -258,7 +297,7 @@ class Banker {
     if (currentTile.isProperty) {
       Property currentProperty = currentTile.property;
       if (currentProperty.isOwned) {
-        currentTile.property.payRent(players[currentPlayerIndex]);
+        currentTile.property.payRent(players[currentPlayerIndex], sum);
       } else {
         UserInterface.buyPropertyOverlay.style.display = 'block';
         UserInterface.buyPropertyOverlay.children[0].text = 'Buy Property for \$${Board.tiles[players[currentPlayerIndex].location].property.price}';

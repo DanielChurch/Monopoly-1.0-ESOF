@@ -42,7 +42,7 @@ class Tile {
     }
   }
 
-  bool get isProperty => type == TileType.property;
+  bool get isProperty => type == TileType.property || type == TileType.railroad || type == TileType.utility;
 
   /// Renders each [Tile] on the board
   void render(Graphics g, int x, int y, double delta) {
