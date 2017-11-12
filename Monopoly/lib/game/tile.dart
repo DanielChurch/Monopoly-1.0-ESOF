@@ -20,7 +20,7 @@ class Tile {
 
   static Map<TileType, ImageElement> preloadedImageMap = {
     TileType.property: Dom.img()..src = 'res/images/house.png',
-    TileType.freeParking: Dom.img()..src = 'res/images/freeparking.png',
+    TileType.freeParking: Dom.img()..src = 'res/images/freeparking1.png',
     TileType.go: Dom.img()..src = 'res/images/go.png',
     TileType.goToJail: Dom.img()..src = 'res/images/2.png',
     TileType.incomeTax: Dom.img()..src = 'res/images/3.png',
@@ -29,6 +29,8 @@ class Tile {
     TileType.railroad: Dom.img()..src = 'res/images/railway.png',
     TileType.utility: Dom.img()..src = 'res/images/plumbus.png',
   };
+
+  static ImageElement mortgagedImage = Dom.img()..src = 'res/images/mortgage.png';
 
   Tile({TileType this.type, Property this.property}) {
     if (property != null) {
@@ -42,7 +44,7 @@ class Tile {
     }
   }
 
-  bool get isProperty => type == TileType.property;
+  bool get isProperty => type == TileType.property || type == TileType.railroad || type == TileType.utility;
 
   /// Renders each [Tile] on the board
   void render(Graphics g, int x, int y, double delta) {
@@ -51,13 +53,13 @@ class Tile {
 
     switch(property?.color ?? Color.utility) {
       case Color.brown: color = 'brown'; break;
-      case Color.lightBlue: color = 'cyan'; break;
+      case Color.lightBlue: color = 'blue'; break;
       case Color.purple: color = 'purple'; break;
       case Color.orange: color = 'orange'; break;
       case Color.red: color = 'red'; break;
       case Color.yellow: color = 'yellow'; break;
       case Color.green: color = 'green'; break;
-      case Color.darkBlue: color = 'blue'; break;
+      case Color.darkBlue: color = 'navy'; break;
       case Color.utility: color = 'teal'; break;
       case Color.railroad: color = 'pink'; break;
     }
@@ -68,7 +70,11 @@ class Tile {
     g.setColor('rgb(0, 0, 0)');
     g.drawRect(x * tileScale, y * tileScale, tileScale, tileScale);
     // Tile Image
-    g.drawPreloadedImage(preloadedImageMap[type], x * tileScale, y * tileScale, tileScale, tileScale);
+    if (property?.isMortgaged == true) {
+      g.drawPreloadedImage(mortgagedImage, x * tileScale, y * tileScale, tileScale, tileScale);
+    } else {
+      g.drawPreloadedImage(preloadedImageMap[type], x * tileScale, y * tileScale, tileScale, tileScale);
+    }
 
     int xOffset = 0;
     int yOffset = 0;

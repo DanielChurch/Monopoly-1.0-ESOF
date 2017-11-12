@@ -8,26 +8,13 @@ import 'player.dart';
 
 class UserInterface {
 
-  /* Functions added
-  Land on Property- (Buy, Decline)
-  Mortgaging- (Mortgaging_Property)
-  Trade- (Trade_Mortgage, Trade_Property)
-   */
-
-  /* to be added
-  Auction- (Bid_1, Bid_5, Bid_10, Bid_20, Bid_50, Bid_100, Bid_500)
-  Manage Property- (Buy_House,Buy_Hotel)
-  Selling- (Sell_House, Sell_Hotel, Sell_Property)
-   */
-
-  static String highlightColor = '';
-  static String defaultColor = '';
+  static String highlightColor = '#fff';
+  static String defaultColor = '#aaa';
 
   static Element get buyPropertyOverlay {
     Element propertyOverlay = querySelector('.propertyOverlay');
     if (propertyOverlay == null) {
-      Element overlay;
-      return overlay = Dom.div(
+      return Dom.div(
         _buyPropertyButton,
         _declinePropertyButton,
       )
@@ -41,24 +28,46 @@ class UserInterface {
     }
   }
 
-  static Element get _buyPropertyButton {
+  static Element get payImmediatelyOverlay {
+    Element propertyOverlay = querySelector('.payImmediatelyOverlay');
+    if (propertyOverlay == null) {
+      return Dom.div(
+        'Choose payment plan',
+        _payImmediatelyButton,
+        _doNotPayImmediatelyButton,
+      )
+        ..id = 'overlay'
+        ..className = 'payImmediatelyOverlay'
+        ..style.color = '#fff'
+        ..style.display = 'none'
+        ..style.zIndex = '50';
+    } else {
+      return propertyOverlay;
+    }
+  }
+
+  static Element _renderButton(String text) {
     Element div;
-    return div = Dom.div('Buy Property')
-        ..onMouseDown.listen((_) {
-          // Buy property, may be better to let banker handle this.
-        })
-        ..onMouseEnter.listen((_) => div.style.background = highlightColor)
-        ..onMouseLeave.listen((_) => div.style.background = defaultColor);
+    return div = Dom.div(text)
+      ..onMouseEnter.listen((_) => div.style.color = highlightColor)
+      ..onMouseLeave.listen((_) => div.style.color = defaultColor)
+      ..style.color = defaultColor;
+  }
+
+  static Element get _payImmediatelyButton {
+    return _renderButton('Pay Immediately');
+  }
+
+  static Element get _doNotPayImmediatelyButton {
+    return _renderButton('Pay Later');
+  }
+
+  static Element get _buyPropertyButton {
+    return _renderButton('Buy Property');
   }
 
   static Element get _declinePropertyButton {
-    Element div;
-    return div = Dom.div('Decline Property')
-      ..onMouseDown.listen((_) {
-        // Buy property, may be better to let banker handle this.
-      })
-      ..onMouseEnter.listen((_) => div.style.background = highlightColor)
-      ..onMouseLeave.listen((_) => div.style.background = defaultColor);
+    return _renderButton('Decline Property');
   }
 
   static Element get otherButtonGroup {
@@ -71,7 +80,7 @@ class UserInterface {
     )
       ..className = 'cardBackground'
       ..style.top = '31vw'
-      ..style.width = '${10.5 * 3}vw'
+      ..style.width = '${10.6 * 3}vw'
       ..style.height = '${36}vh';
 
   }
@@ -187,7 +196,7 @@ class UserInterface {
         players.map((player) => renderCard(players, player, index++)).toList()
     )
       ..className = 'cardBackground'
-      ..style.width = '${10.5 * (index > 2 ? 3 : index)}vw'
+      ..style.width = '${10.6 * (index > 2 ? 3 : index)}vw'
       ..style.height = '${28.5 * (index / 3).ceil()}vh';
   }
 

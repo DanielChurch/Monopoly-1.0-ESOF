@@ -19,31 +19,29 @@ import 'ui.dart';
 
 class Banker {
 
-  int _housesRemaining;
+  static List<Dice> dice = [];
+  static SpanElement tooltip;
+  static Graphics g;
+
+  /// If the main game/animation loop should update
+  static bool shouldUpdate = true;
+
+  DateTime _endTime;
 
   List<Player> players;
   int currentPlayerIndex = 0;
-
-  List<Property> _deeds;
-
-  static Graphics g;
-
   Element overlay;
-  
-  DateTime _endTime;
-  int mouseX, mouseY;
 
-  static List<Dice> dice = [];
-  bool isRolling = false;
-
-  static SpanElement tooltip;
-
-  static bool shouldUpdate = true;
-
+  // Booleans to limit the ability of what the user can currently do
   bool canMortgageProperty = false;
   bool canPayMortgage = false;
   bool canTradeMortgage = false;
   bool canTradeProperty = false;
+  bool isAuctioning = false;
+  bool isRolling = false;
+
+  // Temporary tiles to store for when the user is picking them for trade
+  Tile tile, tile2;
 
   Banker(List<Player> this.players, DateTime this._endTime) {
     redrawCanvas(players);
@@ -52,6 +50,9 @@ class Banker {
         UserInterface.buyPropertyOverlay
           ..children[0].onClick.listen(buyProperty)
           ..children[1].onClick.listen(declineProperty),
+        UserInterface.payImmediatelyOverlay
+          ..children[0].onClick.listen(payImmediately)
+          ..children[1].onClick.listen(payLater),
         tooltip = UserInterface.renderTooltip(),
         UserInterface.renderAllCards(players),
         UserInterface.renderDice()..onClick.listen(rollDice),
@@ -63,19 +64,15 @@ class Banker {
     UserInterface.payMortgageButton.onClick.listen(payMortgage);
     UserInterface.tradeMortgageButton.onClick.listen(tradeMortgage);
     UserInterface.tradePropertyButton.onClick.listen(tradeProperty);
-
-//    g.canvas.onMousePress.listen((MouseEvent me) {
-//
-//    });
   }
 
-  void setCanvasListners() {
+  void setCanvasListeners() {
     g.canvas.onMouseMove.listen((MouseEvent me) {
       int x = (me.client.x - g.canvas.getBoundingClientRect().left).toInt();
       int y = (me.client.y - g.canvas.getBoundingClientRect().top).toInt();
 
       if (!Board.tiles.where((tile) {
-        if (x > tile.x && y > tile.y && x < tile.x + Tile.tileScale && y < tile.y + Tile.tileScale && tile.isProperty) {
+        if (x > (tile.x ?? 0) && y > (tile.y ?? 0) && x < (tile.x ?? 0) + Tile.tileScale && y < (tile.y ?? 0) + Tile.tileScale && tile.isProperty) {
           Banker.tooltip.style.visibility = 'visible';
           if (canMortgageProperty || canPayMortgage || canTradeMortgage || canTradeProperty) {
             g.canvas.style.cursor = 'crosshair';
@@ -92,9 +89,37 @@ class Banker {
       }
     });
 
-//    g.canvas.onMousePress.listen((_) {
-//
-//    });
+    Tile lastTile;
+
+    g.canvas.onMouseDown.listen((MouseEvent me) {
+      int x = (me.client.x - g.canvas.getBoundingClientRect().left).toInt();
+      int y = (me.client.y - g.canvas.getBoundingClientRect().top).toInt();
+
+      Board.tiles.forEach((tile) {
+        if (x > tile.x && y > tile.y &&
+            x < tile.x + Tile.tileScale &&
+            y < tile.y + Tile.tileScale && tile.isProperty) {
+
+          if (!tile.isProperty) {
+            canTradeMortgage = false;
+            canTradeProperty = false;
+          }
+
+          if (canMortgageProperty || canPayMortgage) {
+            endAction(tile);
+          } else {
+            if (lastTile == null) {
+              lastTile = tile;
+            } else {
+              endAction(tile, lastTile);
+              lastTile = null;
+            }
+          }
+        }
+      });
+      canMortgageProperty = false;
+      canPayMortgage = false;
+    });
   }
 
   static Future<Null> redrawCanvas(List<Player> players) async {
@@ -140,7 +165,7 @@ class Banker {
 
   // Called on rolling the dice for the current player
   Future<Map> rollDice(_, {Map values}) async {
-    if (isRolling) return null;
+    if (isRolling || isAuctioning) return null;
     isRolling = true;
     // Roll the dice
     if (values == null) {
@@ -181,19 +206,21 @@ class Banker {
       });
     });
 
-    Board.tiles[players[max(currentPlayerIndex - 1, 0)].location].property.auction(players);
+    Board.tiles[players[max(currentPlayerIndex - 1, 0)].location].property?.auction(players);
     redrawCanvas(players);
     UserInterface.updateCards(players);
+    isAuctioning = false;
   }
 
   void buyProperty(_) {
     UserInterface.buyPropertyOverlay.style.display = 'none';
-    Board.tiles[players[max(currentPlayerIndex - 1, 0)].location].property.buyProperty(players[max(currentPlayerIndex - 1, 0)]);
+    Board.tiles[players[max(currentPlayerIndex - 1, 0)].location].property?.buyProperty(players[max(currentPlayerIndex - 1, 0)]);
     redrawCanvas(players);
     UserInterface.updateCards(players);
   }
 
   Future<Null> declineProperty(_) async {
+    isAuctioning = true;
     UserInterface.buyPropertyOverlay.style.display = 'none';
     overlay.style.display = 'block';
     overlay.text = 'Time to get shwifty with this auction!';
@@ -210,38 +237,73 @@ class Banker {
 
   void mortgageProperty(_) {
     canMortgageProperty = true;
+    canPayMortgage = false;
+    canTradeMortgage = false;
+    canTradeProperty = false;
+
     overlay.style.display = 'block';
     overlay.text = 'Click on a property to mortgage it';
   }
 
   void payMortgage(_) {
+    canMortgageProperty = false;
     canPayMortgage = true;
+    canTradeMortgage = false;
+    canTradeProperty = false;
+
     overlay.style.display = 'block';
     overlay.text = 'Click on a mortgage to pay it';
   }
 
   void tradeMortgage(_) {
+    canMortgageProperty = false;
+    canPayMortgage = false;
     canTradeMortgage = true;
+    canTradeProperty = false;
+
     overlay.style.display = 'block';
     overlay.text = 'Click on two mortgages to trade them';
   }
 
   void tradeProperty(_) {
+    canMortgageProperty = false;
+    canPayMortgage = false;
+    canTradeMortgage = false;
     canTradeProperty = true;
+
     overlay.style.display = 'block';
     overlay.text = 'Click on two properties to trade them';
   }
 
-  void endAction(int position, [int position2]) {
+  void endAction(Tile tile, [Tile tile2]) {
     if (canMortgageProperty) {
-      Board.tiles[position].property.mortgage();
+      tile.property.mortgage();
     } else if (canPayMortgage) {
-      Board.tiles[position].property.payMortgage();
+      tile.property.payMortgage();
     } else if (canTradeMortgage) {
-      Board.tiles[position].property.tradeMortgage(Board.tiles[position2], false);
+      if (tile == tile2) return;
+      this.tile = tile;
+      this.tile2 = tile2;
+      UserInterface.payImmediatelyOverlay.style.display = 'block';
     } else if (canTradeProperty) {
-      Board.tiles[position].property.tradeProperty(Board.tiles[position2]);
+      tile.property.tradeProperty(tile2.property);
     }
+    UserInterface.updateCards(players);
+    redrawCanvas(players);
+  }
+
+  void payImmediately(_) {
+    tile.property.tradeMortgage(tile2.property, true);
+    UserInterface.payImmediatelyOverlay.style.display = 'none';
+    UserInterface.updateCards(players);
+    redrawCanvas(players);
+  }
+
+  void payLater(_) {
+    tile.property.tradeMortgage(tile2.property, false);
+    UserInterface.payImmediatelyOverlay.style.display = 'none';
+    UserInterface.updateCards(players);
+    redrawCanvas(players);
   }
 
   /// Updates the players based on the inputted [values] map of the dice rolls
@@ -258,7 +320,7 @@ class Banker {
     if (currentTile.isProperty) {
       Property currentProperty = currentTile.property;
       if (currentProperty.isOwned) {
-        currentTile.property.payRent(players[currentPlayerIndex]);
+        currentTile.property.payRent(players[currentPlayerIndex], sum);
       } else {
         UserInterface.buyPropertyOverlay.style.display = 'block';
         UserInterface.buyPropertyOverlay.children[0].text = 'Buy Property for \$${Board.tiles[players[currentPlayerIndex].location].property.price}';
@@ -284,10 +346,10 @@ class Banker {
   @visibleForTesting
   set endTime(DateTime endTime) => _endTime = endTime;
 
-  bool sellPropertyToPlayer(Property property) {}
-
+  /// If the current time has passed the end time or not
   bool get isWithinMaxTime => new DateTime.now().millisecondsSinceEpoch < _endTime.millisecondsSinceEpoch;
 
+  /// Calculates and returns the [Player] with the highest balance
   Player declareWinner() {
     Board.tiles.forEach((Tile tile) {
       if (tile.isProperty) {
@@ -309,7 +371,10 @@ class Banker {
     return players.where((player) => player.balance == maxBalance).toList()[0];
   }
 
+  /// Updates the visual game logic, and checks if we exceed the time limit
+  /// Alerts the winner if out of time
   void update() {
+    // Don't update if the game is over
     if (!shouldUpdate) return;
 
     if (!isWithinMaxTime) {
@@ -321,6 +386,7 @@ class Banker {
     dice.forEach((d) => d.update());
   }
 
+  /// Renders objects that need frequent animation
   void render(double delta) {
     dice.forEach((d) => d.render(delta));
   }
