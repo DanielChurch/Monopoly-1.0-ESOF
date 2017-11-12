@@ -46,6 +46,8 @@ class Banker {
   bool canTradeProperty = false;
   bool isAuctioning = false;
 
+  Tile tile, tile2;
+
   Banker(List<Player> this.players, DateTime this._endTime) {
     redrawCanvas(players);
     Dom.body(
@@ -54,8 +56,8 @@ class Banker {
           ..children[0].onClick.listen(buyProperty)
           ..children[1].onClick.listen(declineProperty),
         UserInterface.payImmediatelyOverlay
-          ..children[3].onClick.listen(payImmediately)
-          ..children[4].onClick.listen(payLater),
+          ..children[0].onClick.listen(payImmediately)
+          ..children[1].onClick.listen(payLater),
         tooltip = UserInterface.renderTooltip(),
         UserInterface.renderAllCards(players),
         UserInterface.renderDice()..onClick.listen(rollDice),
@@ -284,8 +286,10 @@ class Banker {
     } else if (canPayMortgage) {
       tile.property.payMortgage();
     } else if (canTradeMortgage) {
-
-      tile.property.tradeMortgage(tile2.property, false);
+      if (tile == tile2) return;
+      this.tile = tile;
+      this.tile2 = tile2;
+      UserInterface.payImmediatelyOverlay.style.display = 'block';
     } else if (canTradeProperty) {
       tile.property.tradeProperty(tile2.property);
     }
@@ -294,11 +298,17 @@ class Banker {
   }
 
   void payImmediately(_) {
-    
+    tile.property.tradeMortgage(tile2.property, true);
+    UserInterface.payImmediatelyOverlay.style.display = 'none';
+    UserInterface.updateCards(players);
+    redrawCanvas(players);
   }
 
   void payLater(_) {
-
+    tile.property.tradeMortgage(tile2.property, false);
+    UserInterface.payImmediatelyOverlay.style.display = 'none';
+    UserInterface.updateCards(players);
+    redrawCanvas(players);
   }
 
   /// Updates the players based on the inputted [values] map of the dice rolls

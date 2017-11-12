@@ -20,7 +20,7 @@ class Tile {
 
   static Map<TileType, ImageElement> preloadedImageMap = {
     TileType.property: Dom.img()..src = 'res/images/house.png',
-    TileType.freeParking: Dom.img()..src = 'res/images/freeparking.png',
+    TileType.freeParking: Dom.img()..src = 'res/images/freeparking1.png',
     TileType.go: Dom.img()..src = 'res/images/go.png',
     TileType.goToJail: Dom.img()..src = 'res/images/2.png',
     TileType.incomeTax: Dom.img()..src = 'res/images/3.png',
@@ -53,13 +53,13 @@ class Tile {
 
     switch(property?.color ?? Color.utility) {
       case Color.brown: color = 'brown'; break;
-      case Color.lightBlue: color = 'cyan'; break;
+      case Color.lightBlue: color = 'blue'; break;
       case Color.purple: color = 'purple'; break;
       case Color.orange: color = 'orange'; break;
       case Color.red: color = 'red'; break;
       case Color.yellow: color = 'yellow'; break;
       case Color.green: color = 'green'; break;
-      case Color.darkBlue: color = 'blue'; break;
+      case Color.darkBlue: color = 'navy'; break;
       case Color.utility: color = 'teal'; break;
       case Color.railroad: color = 'pink'; break;
     }

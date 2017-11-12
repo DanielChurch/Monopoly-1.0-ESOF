@@ -8,20 +8,8 @@ import 'player.dart';
 
 class UserInterface {
 
-  /* Functions added
-  Land on Property- (Buy, Decline)
-  Mortgaging- (Mortgaging_Property)
-  Trade- (Trade_Mortgage, Trade_Property)
-   */
-
-  /* to be added
-  Auction- (Bid_1, Bid_5, Bid_10, Bid_20, Bid_50, Bid_100, Bid_500)
-  Manage Property- (Buy_House,Buy_Hotel)
-  Selling- (Sell_House, Sell_Hotel, Sell_Property)
-   */
-
-  static String highlightColor = '';
-  static String defaultColor = '';
+  static String highlightColor = '#fff';
+  static String defaultColor = '#aaa';
 
   static Element get buyPropertyOverlay {
     Element propertyOverlay = querySelector('.propertyOverlay');
@@ -44,9 +32,7 @@ class UserInterface {
     Element propertyOverlay = querySelector('.payImmediatelyOverlay');
     if (propertyOverlay == null) {
       return Dom.div(
-        'Do you want to pay immediately?',
-        'Paying immediately will change you the full cost but',
-        'Choosing not to will still cost you 10%',
+        'Choose payment plan',
         _payImmediatelyButton,
         _doNotPayImmediatelyButton,
       )
@@ -60,32 +46,28 @@ class UserInterface {
     }
   }
 
-  static Element get _payImmediatelyButton {
+  static Element _renderButton(String text) {
     Element div;
-    return div = Dom.div('Pay Immediately')
-      ..onMouseEnter.listen((_) => div.style.background = highlightColor)
-      ..onMouseLeave.listen((_) => div.style.background = defaultColor);
+    return div = Dom.div(text)
+      ..onMouseEnter.listen((_) => div.style.color = highlightColor)
+      ..onMouseLeave.listen((_) => div.style.color = defaultColor)
+      ..style.color = defaultColor;
+  }
+
+  static Element get _payImmediatelyButton {
+    return _renderButton('Pay Immediately');
   }
 
   static Element get _doNotPayImmediatelyButton {
-    Element div;
-    return div = Dom.div('Pay Later')
-      ..onMouseEnter.listen((_) => div.style.background = highlightColor)
-      ..onMouseLeave.listen((_) => div.style.background = defaultColor);
+    return _renderButton('Pay Later');
   }
 
   static Element get _buyPropertyButton {
-    Element div;
-    return div = Dom.div('Buy Property')
-        ..onMouseEnter.listen((_) => div.style.background = highlightColor)
-        ..onMouseLeave.listen((_) => div.style.background = defaultColor);
+    return _renderButton('Buy Property');
   }
 
   static Element get _declinePropertyButton {
-    Element div;
-    return div = Dom.div('Decline Property')
-      ..onMouseEnter.listen((_) => div.style.background = highlightColor)
-      ..onMouseLeave.listen((_) => div.style.background = defaultColor);
+    return _renderButton('Decline Property');
   }
 
   static Element get otherButtonGroup {
