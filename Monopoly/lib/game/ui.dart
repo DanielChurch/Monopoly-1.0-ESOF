@@ -46,6 +46,23 @@ class UserInterface {
     }
   }
 
+  static Element get manageHousesOverlay {
+    Element propertyOverlay = querySelector('.manageHousesOverlay');
+    if (propertyOverlay == null) {
+      return Dom.div(
+        _buyHouseButton,
+        _sellHouseButton,
+      )
+        ..id = 'overlay'
+        ..className = 'manageHousesOverlay'
+        ..style.color = '#fff'
+        ..style.display = 'none'
+        ..style.zIndex = '50';
+    } else {
+      return propertyOverlay;
+    }
+  }
+
   static Element _renderButton(String text) {
     Element div;
     return div = Dom.div(text)
@@ -70,6 +87,14 @@ class UserInterface {
     return _renderButton('Decline Property');
   }
 
+  static Element get _buyHouseButton {
+    return _renderButton('Buy House');
+  }
+
+  static Element get _sellHouseButton {
+    return _renderButton('Sell House');
+  }
+
   static Element get otherButtonGroup {
     return Dom.div(
       finishAuctionButton,
@@ -77,6 +102,7 @@ class UserInterface {
       payMortgageButton,
       tradeMortgageButton,
       tradePropertyButton,
+      manageHousesButton,
     )
       ..className = 'cardBackground'
       ..style.top = '31vw'
@@ -140,6 +166,17 @@ class UserInterface {
     }
   }
 
+  static Element get manageHousesButton {
+    Element auctionButton = querySelector('#manageHousesButton');
+    if (auctionButton == null) {
+      return Dom.div("Manage Houses")
+        ..id = 'manageHousesButton'
+        ..className = 'genericButton';
+    } else {
+      return auctionButton;
+    }
+  }
+
   static Element renderOverlay() {
     Element overlay;
     overlay = Dom.div()
@@ -196,8 +233,8 @@ class UserInterface {
         players.map((player) => renderCard(players, player, index++)).toList()
     )
       ..className = 'cardBackground'
-      ..style.width = '${10.6 * (index > 2 ? 3 : index)}vw'
-      ..style.height = '${28.5 * (index / 3).ceil()}vh';
+      ..style.width = '${10.6 * 3}vw'
+      ..style.height = '${28.5 * 2}vh';
   }
 
   static Element renderCard(List<Player> players, Player player, int index) {
@@ -220,15 +257,14 @@ class UserInterface {
           ..style.backgroundPosition = 'center center',
         Dom.div(
           Dom.div('${player.name}'),
-          Dom.div('\$${player.balance}'),
-          Dom.input('\$${player.bid}')
+          Dom.div('${player.balance} Schmeckles'),
+          Dom.input('${player.bid} Schmeckles')
             ..style.background = '#222'
             ..style.textAlign = 'center'
             ..style.color = '#fff'
             ..style.border = 'inherit'
             ..style.fontSize = '1.2951057957681692732290708371665vh'
             ..style.height = '1.5698252069917203311867525298988vh',
-          Dom.div('Line1'),
         )
           ..id = 'properties'
           ..className = 'cardContainer ${player.id}'
@@ -240,7 +276,8 @@ class UserInterface {
       ..onMouseEnter.listen((_) {
         Banker.tooltip.style.visibility = 'visible';
         Banker.tooltip.children.where((child) => child.id == 'name').toList()[0].text = '${player.name}';
-        Banker.tooltip.children.where((child) => child.id == 'money').toList()[0].text = '\$${player.balance}';
+        Banker.tooltip.children.where((child) => child.id == 'money').toList()[0].text = '${player.balance} Schmeckles';
+        Banker.tooltip.children.where((child) => child.id == 'properties').toList()[0].text = '';
         player.tokenScale = 3;
         Banker.redrawCanvas(players);
       })
@@ -252,8 +289,8 @@ class UserInterface {
       ..id = 'selectedCardContainer'
       ..style.position = 'fixed'
       ..className = 'card  ${player.id} ${player.id == '0' ? 'selected' : ''}'
-      ..style.left = '${10.38 * (index % 3) + 65.64}vw' // 9.38
-      ..style.top = '${28 * (index ~/ 3) + 1.3 + 2.4}vh' // 23
+      ..style.left = '${10.38 * (index % 3) + 65.64}vw'
+      ..style.top = '${28 * (index ~/ 3) + 1.3 + 2.4}vh'
       ..style.height = '${280 / 1087 * 100}vh'
       ..style.width = '${205 * 100 / 2133}vw';
   }
@@ -263,8 +300,8 @@ class UserInterface {
       Element properties = element.querySelector('#properties');
       players.forEach((player) {
         if (properties.className.contains(player.id)) {
-          properties.children[1].text = '\$${player.balance}';
-          (properties.children[2] as InputElement).value = '\$${player.bid}';
+          properties.children[1].text = '${player.balance} Schmeckles';
+          (properties.children[2] as InputElement).value = '${player.bid} Schmeckles';
         }
       });
     });

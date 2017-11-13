@@ -88,9 +88,9 @@ void main() {
           Dom.div('Continue')
             ..className = 'continueButton'
             ..onClick.listen((_) {
-              if (taken.children.every((child) => !child.id.contains('Player Container'))) {
+              if (taken.children.where((child) => child.id.contains('Player Container')).length < 2) {
                 overlay
-                  ..text = 'Please select at least one player.'
+                  ..text = 'Please select at least two players.'
                   ..style.display = 'block';
               } else {
                 // Dispose of dropzones

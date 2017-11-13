@@ -25,5 +25,9 @@ void main() {
       int roll = dice.spin();
       expect(roll <= 6 && roll >= 1, isTrue);
     });
+
+    test('returns the value inputted if there is one', () {
+      expect(dice.spin(value: 3), 3);
+    });
   });
 }
