@@ -20,19 +20,20 @@ class Dice {
       : _position = new Vector3(x, 0.0, 0.0),
         _velocity = new Vector3(0.0, 0.0, 0.0),
         _rotation = new Vector3(0.0, 0.0, 0.0) {
-
     container = container ?? Dom.body();
 
     // Add the dom elements to the container
     container.append(this._cube =
-      Dom.div(
+    Dom.div(
         ['one', 'two', 'three', 'four', 'five', 'six'].map((className) =>
         Dom.figure(
             Dom.img()
               ..src = 'res/images/dice-$className.png'
               ..className = 'cube'
-        )..className = '$className').toList()
-      )..id = 'cube'
+        )
+          ..className = '$className').toList()
+    )
+      ..id = 'cube'
     );
   }
 
@@ -41,7 +42,8 @@ class Dice {
   ///   - [value] to guarantee rolling that value,
   ///   - [time] to specify how long it will spin for
   ///   - [upVelocity] to specify how far up it will launch
-  int spin({int value, Duration time = const Duration(milliseconds: 1100), double upVelocity = -0.91996320147194112235510579576817}) {
+  int spin({int value, Duration time = const Duration(
+      milliseconds: 1100), double upVelocity = -0.91996320147194112235510579576817}) {
     // Make random _rotation to make the dice spin
     if (time.inMilliseconds != 0) {
       _rotation.x = random.nextDouble() * 100000;
@@ -107,7 +109,7 @@ class Dice {
 
   /// Renders the dice with it's current transform (translation, scale)
   void render(num delta) =>
-    _cube.style.transform = '''
+      _cube.style.transform = '''
        translateX(${_position.x}vh)
        translateY(${_position.y}vh)
        translateZ(${_position.z}vh)
