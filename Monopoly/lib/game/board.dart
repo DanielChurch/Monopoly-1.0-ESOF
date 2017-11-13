@@ -5,7 +5,7 @@ import 'property.dart';
 
 class Board {
 
-  static List<Tile> _tiles = [
+  static final List<Tile> _tiles = [
     new Tile(type: TileType.go),
     new Tile(property: new Property(60, [2, 10, 30, 90, 160, 250], Color.brown)),
     new Tile(type: TileType.freeParking),

@@ -19,7 +19,7 @@ main() {
 
     group('isWithinMaxTime works as expected', () {
       setUp(() {
-        banker.endTime = new DateTime.now().add(new Duration(milliseconds: 50));
+        banker.endTime = new DateTime.now().add(new Duration(milliseconds: 5));
       });
 
       test('when the current time is before the end time', () {
@@ -27,7 +27,7 @@ main() {
       });
 
       test('when the current time is after the end time', () async {
-        await new Future.delayed(new Duration(milliseconds: 50));
+        await new Future.delayed(new Duration(milliseconds: 5));
         expect(banker.isWithinMaxTime, isFalse);
       });
     });
@@ -59,6 +59,14 @@ main() {
         expect(banker.currentPlayerIndex, 1);
         expect(banker.players[0].location, 3);
       });
+    });
+
+    test('declare winner calculates the player with the highest value', () {
+      banker.players[0].balance = 1500;
+      expect(banker.declareWinner(), banker.players[0]);
+
+      banker.players[1].balance = 1700;
+      expect(banker.declareWinner(), banker.players[1]);
     });
   });
 }

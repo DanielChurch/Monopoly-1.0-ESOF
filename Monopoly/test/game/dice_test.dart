@@ -1,5 +1,3 @@
-
-@TestOn('chrome')
 import 'dart:html';
 
 import 'package:test/test.dart';
@@ -24,6 +22,10 @@ void main() {
     test('spin generaets a random number between 1 and 6', () {
       int roll = dice.spin();
       expect(roll <= 6 && roll >= 1, isTrue);
+    });
+
+    test('returns the value inputted if there is one', () {
+      expect(dice.spin(value: 3), 3);
     });
   });
 }

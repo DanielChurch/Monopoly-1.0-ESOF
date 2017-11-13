@@ -14,9 +14,6 @@ import 'property.dart';
 import 'tile.dart';
 import 'ui.dart';
 
-// baseWidth 2133
-// baseHeight 1087
-
 class Banker {
 
   static List<Dice> dice = [];
@@ -39,6 +36,7 @@ class Banker {
   bool canTradeProperty = false;
   bool isAuctioning = false;
   bool isRolling = false;
+  bool isManagingHouses = false;
 
   // Temporary tiles to store for when the user is picking them for trade
   Tile tile, tile2;
@@ -51,8 +49,11 @@ class Banker {
           ..children[0].onClick.listen(buyProperty)
           ..children[1].onClick.listen(declineProperty),
         UserInterface.payImmediatelyOverlay
-          ..children[0].onClick.listen(payImmediately)
-          ..children[1].onClick.listen(payLater),
+          ..children[0].onClick.listen(payMortgageImmediately)
+          ..children[1].onClick.listen(payMortgageLater),
+        UserInterface.manageHousesOverlay
+          ..children[0].onClick.listen((_) => buyHouse(tile))
+          ..children[1].onClick.listen((_) => sellHouse(tile)),
         tooltip = UserInterface.renderTooltip(),
         UserInterface.renderAllCards(players),
         UserInterface.renderDice()..onClick.listen(rollDice),
@@ -64,6 +65,7 @@ class Banker {
     UserInterface.payMortgageButton.onClick.listen(payMortgage);
     UserInterface.tradeMortgageButton.onClick.listen(tradeMortgage);
     UserInterface.tradePropertyButton.onClick.listen(tradeProperty);
+    UserInterface.manageHousesButton.onClick.listen(manageHouses);
   }
 
   void setCanvasListeners() {
@@ -74,12 +76,12 @@ class Banker {
       if (!Board.tiles.where((tile) {
         if (x > (tile.x ?? 0) && y > (tile.y ?? 0) && x < (tile.x ?? 0) + Tile.tileScale && y < (tile.y ?? 0) + Tile.tileScale && tile.isProperty) {
           Banker.tooltip.style.visibility = 'visible';
-          if (canMortgageProperty || canPayMortgage || canTradeMortgage || canTradeProperty) {
+          if (canMortgageProperty || canPayMortgage || canTradeMortgage || canTradeProperty || isManagingHouses) {
             g.canvas.style.cursor = 'crosshair';
           }
-          Banker.tooltip.children.where((child) => child.id == 'name').toList()[0].text = 'Property';
-          Banker.tooltip.children.where((child) => child.id == 'money').toList()[0].text = '\$${tile.property.price}';
-          Banker.tooltip.children.where((child) => child.id == 'properties').toList()[0].text = 'Owned by ${tile?.property?.owner?.name ?? 'nobody'}';
+          Banker.tooltip.children.where((child) => child.id == 'name').toList()[0].text = 'Cost: ${tile.property.price} Schmeckles';
+          Banker.tooltip.children.where((child) => child.id == 'money').toList()[0].text = 'Rent: ${tile.property.rent}';
+          Banker.tooltip.children.where((child) => child.id == 'properties').toList()[0].text = 'Houses: ${tile.property.numHouses}';
           return true;
         }
         return false;
@@ -179,8 +181,7 @@ class Banker {
     if (values == null) {
       values = {};
       dice.forEach((dice) {
-        int val = Modes.quickroll ? dice.spin(
-            upVelocity: 0.0, time: new Duration()) : dice.spin();
+        int val = Modes.quickroll ? dice.spin(upVelocity: 0.0, time: new Duration()) : dice.spin();
         values[val] ??= 0;
         values[val]++;
       });
@@ -200,114 +201,167 @@ class Banker {
     return values;
   }
 
+  /// Auction Button callback
+  /// Ends the auction gives the player with the highest bid the property if valid
   void endAuction(_) {
+    if (!isAuctioning) {
+      overlayText = 'An auction is not in progress';
+      return;
+    }
+
     querySelectorAll('#selectedCardContainer').forEach((Element element) {
       Element properties = element.querySelector('#properties');
       players.forEach((player) {
         if (properties.className.contains(player.id)) {
-          player.bid = int.parse((properties.children[2] as InputElement).value.replaceAll('\$', ''));
+          player.bid = int.parse((properties.children[2] as InputElement).value.replaceAll(' Schmeckles', ''));
         }
       });
     });
 
-    Board.tiles[players[max(currentPlayerIndex - 1, 0)].location].property?.auction(players);
+    if (Board.tiles[players[max(currentPlayerIndex - 1, 0)].location].property?.auction(players) != true) {
+      overlayText = 'Bid too high';
+      return;
+    }
     redrawCanvas(players);
     UserInterface.updateCards(players);
     isAuctioning = false;
   }
 
-  void buyProperty(_) {
+  /// Callback for buy property button (accept)
+  Future<Null> buyProperty(_) async {
     UserInterface.buyPropertyOverlay.style.display = 'none';
-    Board.tiles[players[max(currentPlayerIndex - 1, 0)].location].property?.buyProperty(players[max(currentPlayerIndex - 1, 0)]);
+    if (!Board.tiles[players[max(currentPlayerIndex - 1, 0)].location].property?.buyProperty(players[max(currentPlayerIndex - 1, 0)])) {
+      overlayText = 'Insufficient Funds';
+
+      await new Future.delayed(new Duration(seconds: 2));
+
+      declineProperty(null);
+    }
     redrawCanvas(players);
     UserInterface.updateCards(players);
   }
 
+  /// Callback for auction property button (decline)
   Future<Null> declineProperty(_) async {
     isAuctioning = true;
     UserInterface.buyPropertyOverlay.style.display = 'none';
-    overlay.style.display = 'block';
-    overlay.text = 'Time to get shwifty with this auction!';
+    overlayText = 'Time to get schwifty with this auction!';
 
     await new Future.delayed(new Duration(seconds: 2));
-
-    for (int i = 5; i > 0; i--) {
-      overlay.text = '$i';
-      await new Future.delayed(new Duration(milliseconds: 500));
-    }
 
     overlay.style.display = 'none';
   }
 
+  /// Callback for mortgage property button
   void mortgageProperty(_) {
-    canMortgageProperty = true;
-    canPayMortgage = false;
-    canTradeMortgage = false;
-    canTradeProperty = false;
-
-    overlay.style.display = 'block';
-    overlay.text = 'Click on a property to mortgage it';
+    setButtonFlags(canMortgageProperty: true);
+    overlayText = 'Click on a property to mortgage it';
   }
 
+  /// Callback for pay mortgage button
   void payMortgage(_) {
-    canMortgageProperty = false;
-    canPayMortgage = true;
-    canTradeMortgage = false;
-    canTradeProperty = false;
-
-    overlay.style.display = 'block';
-    overlay.text = 'Click on a mortgage to pay it';
+    setButtonFlags(canPayMortgage: true);
+    overlayText = 'Click on a mortgage to pay it';
   }
 
+  /// Callback for trade mortgage button
   void tradeMortgage(_) {
-    canMortgageProperty = false;
-    canPayMortgage = false;
-    canTradeMortgage = true;
-    canTradeProperty = false;
-
-    overlay.style.display = 'block';
-    overlay.text = 'Click on two mortgages to trade them';
+    setButtonFlags(canTradeMortgage: true);
+    overlayText = 'Click on two mortgages to trade them';
   }
 
+  /// Callback for trade property button
   void tradeProperty(_) {
-    canMortgageProperty = false;
-    canPayMortgage = false;
-    canTradeMortgage = false;
-    canTradeProperty = true;
-
-    overlay.style.display = 'block';
-    overlay.text = 'Click on two properties to trade them';
+    setButtonFlags(canTradeProperty: true);
+    overlayText = 'Click on two properties to trade them';
   }
 
+  /// Callback for manage houses button
+  void manageHouses(_) {
+    setButtonFlags(isManagingHouses: true);
+    overlayText = 'Pick a property to manage a house on';
+  }
+
+  /// Sets button flags, defaults all to false
+  void setButtonFlags({
+    bool canMortgageProperty = false,
+    bool canPayMortgage = false,
+    bool canTradeMortgage = false,
+    bool canTradeProperty = false,
+    bool isManagingHouses = false,
+  }) {
+    this.canMortgageProperty = canMortgageProperty ;
+    this.canPayMortgage = canPayMortgage ;
+    this.canTradeMortgage = canTradeMortgage ;
+    this.canTradeProperty = canTradeProperty;
+    this.isManagingHouses = isManagingHouses;
+  }
+
+  /// Callback for end auction button
   void endAction(Tile tile, [Tile tile2]) {
     if (canMortgageProperty) {
-      tile.property.mortgage();
+      if (!tile.property.mortgage()) {
+        overlayText = 'Mortgage Failed';
+      }
     } else if (canPayMortgage) {
-      tile.property.payMortgage();
+      if (!tile.property.payMortgage()) {
+        overlayText = 'Mortgage Payment Failed';
+      }
+    } else if (isManagingHouses) {
+      UserInterface.manageHousesOverlay.style.display = 'block';
+      this.tile = tile;
     } else if (canTradeMortgage) {
       if (tile == tile2) return;
       this.tile = tile;
       this.tile2 = tile2;
       UserInterface.payImmediatelyOverlay.style.display = 'block';
     } else if (canTradeProperty) {
-      tile.property.tradeProperty(tile2.property);
+      if (!tile.property.tradeProperty(tile2.property)) {
+        overlayText = 'Failed to trade properties';
+      }
     }
     UserInterface.updateCards(players);
     redrawCanvas(players);
   }
 
-  void payImmediately(_) {
-    tile.property.tradeMortgage(tile2.property, true);
+  /// Callback for pay mortgage now button
+  void payMortgageImmediately(_) {
+    if (tile.property.tradeMortgage(tile2.property, true)) {
+      overlayText = 'Fail to trade mortgage';
+    }
     UserInterface.payImmediatelyOverlay.style.display = 'none';
     UserInterface.updateCards(players);
     redrawCanvas(players);
   }
 
-  void payLater(_) {
-    tile.property.tradeMortgage(tile2.property, false);
+  /// Callback for pay mortgage later button
+  void payMortgageLater(_) {
+    if (tile.property.tradeMortgage(tile2.property, false)) {
+      overlayText = 'Fail to trade mortgage';
+    }
     UserInterface.payImmediatelyOverlay.style.display = 'none';
     UserInterface.updateCards(players);
     redrawCanvas(players);
+  }
+
+  /// Callback for buy house button
+  void buyHouse(Tile tile) {
+    if (!tile.property.buyHouse()) {
+      overlayText = 'The property must be owned to buy';
+    }
+    UserInterface.updateCards(players);
+    redrawCanvas(players);
+    UserInterface.manageHousesOverlay.style.display = 'none';
+  }
+
+  /// Callback for sell house button
+  void sellHouse(Tile tile) {
+    if (!tile.property.sellHouse()) {
+      overlayText = 'The property must be owned to sell';
+    }
+    UserInterface.updateCards(players);
+    redrawCanvas(players);
+    UserInterface.manageHousesOverlay.style.display = 'none';
   }
 
   /// Updates the players based on the inputted [values] map of the dice rolls
@@ -327,7 +381,7 @@ class Banker {
         currentTile.property.payRent(players[currentPlayerIndex], sum);
       } else {
         UserInterface.buyPropertyOverlay.style.display = 'block';
-        UserInterface.buyPropertyOverlay.children[0].text = 'Buy Property for \$${Board.tiles[players[currentPlayerIndex].location].property.price}';
+        UserInterface.buyPropertyOverlay.children[0].text = 'Buy Property for ${Board.tiles[players[currentPlayerIndex].location].property.price} Schmeckles';
       }
     }
 
@@ -358,7 +412,7 @@ class Banker {
     Board.tiles.forEach((Tile tile) {
       if (tile.isProperty) {
         players.forEach((player) {
-          if (tile.property.owner.id == player.id) {
+          if (tile.property.owner == player) {
             player.balance += tile.property.price;
           }
         });
@@ -373,6 +427,12 @@ class Banker {
     });
 
     return players.where((player) => player.balance == maxBalance).toList()[0];
+  }
+
+  /// Sets the overlay text and displays the overlay
+  set overlayText(String text) {
+    overlay.text = text;
+    overlay.style.display = 'block';
   }
 
   /// Updates the visual game logic, and checks if we exceed the time limit

@@ -134,18 +134,22 @@ canvas {
   float: left;
   gbackground-color: green;
 }
+
 .gman-slider-value {
   float: right;
   gbackground-color: blue;
 }
+
 .gman-slider-upper {
   gbackground-color: yellow;
   height: 1.5em;
 }
+
 .gman-slider-outer {
   gbackground-color: purple;
   height: 2.5em;
 }
+
 .gman-slider-slider {
   font-size: x-small;
   gbackground-color: red;
@@ -219,7 +223,7 @@ body.iframe {
     color: #fff;
     width: 95%;
     margin: auto;
-    margin-top: 1.84vh;
+    margin-top: 1.02vh;
     text-align: center;
     height: 4.6vh;
     line-height: 4.6vh;

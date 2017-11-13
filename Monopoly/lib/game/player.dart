@@ -1,33 +1,31 @@
 import 'dart:html';
 
-import 'package:monopoly/game/property.dart';
-import 'package:monopoly/game/tile.dart';
 import 'package:monopoly/graphics/dom.dart';
 import 'package:monopoly/graphics/graphics.dart';
 
 import 'board.dart';
+import 'tile.dart';
 
 class Player {
 
   static const int baseBalance = 1300;
 
-  int _location;
-  int balance;
-
-  bool _isInJail = false;
-
   String id;
   String name;
+
+  int balance;
+  int bid = 0;
+  int tokenScale = 1;
+
   ImageElement token;
 
-  int bid = 0;
-
-  int tokenScale = 1;
+  int _location;
 
   Player(String this.id, String this.name) : _location = 0, token = Dom.img()..src = 'res/images/$id.png', balance = baseBalance;
 
   int get location => _location;
 
+  /// Moves the player the by [amount]
   void updateLocation(int amount) {
     print(_location);
     _location += amount;
@@ -39,19 +37,8 @@ class Player {
     _location %= Board.tiles.length;
   }
 
+  /// Makes the player pay and subtracts the the [amount] from the [balance]
   void pay(int amount) => balance -= amount;
-
-  void buyProperty(Property purchase) {
-    throw new UnimplementedError();
-  }
-
-  void mortgageProperty(Property propertyToMortgage) {
-    throw new UnimplementedError();
-  }
-
-  void upgradeProperty(Property propertyToUpgrade) {
-    throw new UnimplementedError();
-  }
 
   /// Render the [Player] on the board
   void render(Graphics g, int x, int y) {

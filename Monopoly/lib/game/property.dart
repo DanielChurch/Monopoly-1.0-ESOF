@@ -2,22 +2,22 @@ import 'board.dart';
 import 'color.dart';
 import 'player.dart';
 
+export 'color.dart';
+
 class Property {
 
   static int housesLeft = 32;
   static int hotelsLeft = 12;
   static const int maxHouses = 4;
 
-  List _rent;
-  bool _isMortgaged = false;
-
   Player owner;
-
-  int _price;
   Color color;
-
   int numHouses = 0;
   bool isHotel = false;
+
+  List _rent;
+  bool _isMortgaged = false;
+  int _price;
 
   Property(int this._price, List this._rent, Color this.color);
 
@@ -27,32 +27,45 @@ class Property {
   num get price => isMortgaged ? _price * 1.1 : _price;
 
   /// Sells the property from the [Banker] to the given [player]
-  void buyProperty(Player player) {
+  bool buyProperty(Player player) {
     if (player.balance - price >= 0) {
       owner = player;
       player.pay(price);
+      return true;
     }
+    return false;
   }
 
   /// Sells the property from the current [owner] to the given [player]
-  void sellProperty(Player player) {
+  bool sellProperty(Player player) {
+    if (!isOwned) return false;
+
     if (player.balance - price >= 0 && isOwned) {
       owner.balance += price;
       owner = player;
       player.pay(price);
+      return true;
     }
+    return false;
   }
 
-  void tradeProperty(Property other) {
+  /// Trades this property with the [other] property as long as there are not
+  /// houses or hotels on either
+  bool tradeProperty(Property other) {
+    if (!isOwned || !other.isOwned) return false;
+
     if (numHouses == 0 && !isHotel && other.numHouses == 0 && !other.isHotel) {
       Player newOwner = other.owner;
       other.owner = owner;
       owner = newOwner;
+      return true;
     }
+    return false;
   }
 
+  /// Makes the [player] pay rent depending on what they land on
   void payRent(Player player, int diceRoll) {
-    if (isMortgaged) return;
+    if (isMortgaged || !isOwned) return;
 
     int price;
     if (isHotel) {
@@ -89,6 +102,7 @@ class Property {
     player.pay(price);
   }
 
+  /// Returns the price of a house based on color and [isBuying]
   int housePrice(bool isBuying) {
     int price;
     switch(color) {
@@ -107,43 +121,73 @@ class Property {
     return isBuying ? price : price ~/ 2;
   }
 
-  void buyHouse() {
-    if (numHouses < maxHouses && owner.balance - housePrice(true) > 0 && owner == owner && !isHotel) {
+  /// Buys a house for this property, subtracting the cost from the owner
+  /// If there are 5 houses, it turns into a hotel
+  bool buyHouse() {
+    if (!isOwned) return false;
+
+    if (numHouses < maxHouses && owner.balance - housePrice(true) > 0 && !isHotel) {
       numHouses++;
       owner.pay(housePrice(true));
       housesLeft--;
-    } else if (numHouses == maxHouses && owner.balance - housePrice(true) > 0 && owner == owner && !isHotel) {
+      return true;
+    } else if (numHouses == maxHouses && owner.balance - housePrice(true) > 0 && !isHotel) {
       numHouses = 0;
       owner.pay(housePrice(true));
       isHotel = true;
+      return true;
     }
+    return false;
   }
 
-  void sellHouse() {
+  /// Sells a house and gives the owner money for selling it
+  /// If it is a hotel, we sell the whole thing for the price of a single house
+  bool sellHouse() {
+    if (!isOwned) return false;
+
     if (numHouses > 0) {
       numHouses--;
       owner.balance += housePrice(false);
+      return true;
     } else if (isHotel) {
       isHotel = false;
       owner.balance += housePrice(false);
+      return true;
     }
+    return false;
   }
 
-  void mortgage() {
+  /// Mortgages the property giving the player some temporary money
+  bool mortgage() {
+    if (!isOwned) return false;
+
     if (numHouses == 0 && !isHotel && !_isMortgaged && isOwned) {
       owner.balance += price ~/ 2;
       _isMortgaged = true;
+      return true;
     }
+    return false;
   }
 
-  void payMortgage() {
+  /// Pays off the mortgage and subtracts the cost from the owner
+  bool payMortgage() {
+    if (!isOwned) return false;
+
     if (owner.balance - price > 0 && isMortgaged) {
       owner.pay(price.toInt());
       _isMortgaged = false;
+      return true;
     }
+    return false;
   }
 
-  void tradeMortgage(Property other, bool payImmediately) {
+  /// Trades mortgaged properties between two people
+  /// There is an option to pay immediately or later
+  /// If immediately, you pay the full price to un mortgage it
+  /// Otherwise, you have to pay a small fee of .1 * price
+  bool tradeMortgage(Property other, bool payImmediately) {
+    if (!isOwned || !other.isOwned) return false;
+
     void switchPlayers() {
       Player newOwner = other.owner;
       other.owner = owner;
@@ -155,6 +199,7 @@ class Property {
 
         payMortgage();
         other.payMortgage();
+        return true;
       } else if (!payImmediately) {
         // Switch to false to get base price
         _isMortgaged = false;
@@ -164,6 +209,7 @@ class Property {
           switchPlayers();
           owner.pay((other.price * 0.1).toInt());
           other.owner.pay((price * 0.1).toInt());
+          return true;
         }
 
         // Set back to true
@@ -171,9 +217,11 @@ class Property {
         other._isMortgaged = true;
       }
     }
+    return false;
   }
 
-  void auction(List<Player> players) {
+  /// Sells the property to the [Player] with the highest bid, for that bid
+  bool auction(List<Player> players) {
     int max = 0;
     Player winner;
 
@@ -184,8 +232,14 @@ class Property {
       }
     });
 
+    if (winner.balance < max) {
+      return false;
+    }
+
     owner = winner;
     owner.pay(max);
+
+    return true;
   }
 
 }
