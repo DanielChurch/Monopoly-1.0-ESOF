@@ -205,8 +205,7 @@ class Banker {
   /// Ends the auction gives the player with the highest bid the property if valid
   void endAuction(_) {
     if (!isAuctioning) {
-      overlay.text = 'An auction is not in progress';
-      overlay.style.display = 'block';
+      overlayText = 'An auction is not in progress';
       return;
     }
 
@@ -220,8 +219,7 @@ class Banker {
     });
 
     if (Board.tiles[players[max(currentPlayerIndex - 1, 0)].location].property?.auction(players) != true) {
-      overlay.text = 'Bid too high';
-      overlay.style.display = 'block';
+      overlayText = 'Bid too high';
       return;
     }
     redrawCanvas(players);
@@ -229,11 +227,11 @@ class Banker {
     isAuctioning = false;
   }
 
+  /// Callback for buy property button (accept)
   Future<Null> buyProperty(_) async {
     UserInterface.buyPropertyOverlay.style.display = 'none';
     if (!Board.tiles[players[max(currentPlayerIndex - 1, 0)].location].property?.buyProperty(players[max(currentPlayerIndex - 1, 0)])) {
-      overlay.text = 'Insufficient Funds';
-      overlay.style.display = 'block';
+      overlayText = 'Insufficient Funds';
 
       await new Future.delayed(new Duration(seconds: 2));
 
@@ -243,67 +241,71 @@ class Banker {
     UserInterface.updateCards(players);
   }
 
+  /// Callback for auction property button (decline)
   Future<Null> declineProperty(_) async {
     isAuctioning = true;
     UserInterface.buyPropertyOverlay.style.display = 'none';
-    overlay.style.display = 'block';
-    overlay.text = 'Time to get schwifty with this auction!';
+    overlayText = 'Time to get schwifty with this auction!';
 
     await new Future.delayed(new Duration(seconds: 2));
 
     overlay.style.display = 'none';
   }
 
+  /// Callback for mortgage property button
   void mortgageProperty(_) {
-    canMortgageProperty = true;
-    canPayMortgage = false;
-    canTradeMortgage = false;
-    canTradeProperty = false;
-
-    overlay.style.display = 'block';
-    overlay.text = 'Click on a property to mortgage it';
+    setButtonFlags(canMortgageProperty: true);
+    overlayText = 'Click on a property to mortgage it';
   }
 
+  /// Callback for pay mortgage button
   void payMortgage(_) {
-    canMortgageProperty = false;
-    canPayMortgage = true;
-    canTradeMortgage = false;
-    canTradeProperty = false;
-
-    overlay.style.display = 'block';
-    overlay.text = 'Click on a mortgage to pay it';
+    setButtonFlags(canPayMortgage: true);
+    overlayText = 'Click on a mortgage to pay it';
   }
 
+  /// Callback for trade mortgage button
   void tradeMortgage(_) {
-    canMortgageProperty = false;
-    canPayMortgage = false;
-    canTradeMortgage = true;
-    canTradeProperty = false;
-
-    overlay.style.display = 'block';
-    overlay.text = 'Click on two mortgages to trade them';
+    setButtonFlags(canTradeMortgage: true);
+    overlayText = 'Click on two mortgages to trade them';
   }
 
+  /// Callback for trade property button
   void tradeProperty(_) {
-    canMortgageProperty = false;
-    canPayMortgage = false;
-    canTradeMortgage = false;
-    canTradeProperty = true;
-
-    overlay.style.display = 'block';
-    overlay.text = 'Click on two properties to trade them';
+    setButtonFlags(canTradeProperty: true);
+    overlayText = 'Click on two properties to trade them';
   }
 
+  /// Callback for manage houses button
+  void manageHouses(_) {
+    setButtonFlags(isManagingHouses: true);
+    overlayText = 'Pick a property to manage a house on';
+  }
+
+  /// Sets button flags, defaults all to false
+  void setButtonFlags({
+    bool canMortgageProperty = false,
+    bool canPayMortgage = false,
+    bool canTradeMortgage = false,
+    bool canTradeProperty = false,
+    bool isManagingHouses = false,
+  }) {
+    this.canMortgageProperty = canMortgageProperty ;
+    this.canPayMortgage = canPayMortgage ;
+    this.canTradeMortgage = canTradeMortgage ;
+    this.canTradeProperty = canTradeProperty;
+    this.isManagingHouses = isManagingHouses;
+  }
+
+  /// Callback for end auction button
   void endAction(Tile tile, [Tile tile2]) {
     if (canMortgageProperty) {
       if (!tile.property.mortgage()) {
-        overlay.text = 'Mortgage Failed';
-        overlay.style.display = 'block';
+        overlayText = 'Mortgage Failed';
       }
     } else if (canPayMortgage) {
       if (!tile.property.payMortgage()) {
-        overlay.text = 'Mortgage Payment Failed';
-        overlay.style.display = 'block';
+        overlayText = 'Mortgage Payment Failed';
       }
     } else if (isManagingHouses) {
       UserInterface.manageHousesOverlay.style.display = 'block';
@@ -315,54 +317,47 @@ class Banker {
       UserInterface.payImmediatelyOverlay.style.display = 'block';
     } else if (canTradeProperty) {
       if (!tile.property.tradeProperty(tile2.property)) {
-        overlay.text = 'Failed to trade properties';
-        overlay.style.display = 'block';
+        overlayText = 'Failed to trade properties';
       }
     }
     UserInterface.updateCards(players);
     redrawCanvas(players);
   }
 
+  /// Callback for pay mortgage now button
   void payMortgageImmediately(_) {
     if (tile.property.tradeMortgage(tile2.property, true)) {
-      overlay.text = 'Fail to trade mortgage';
-      overlay.style.display = 'block';
+      overlayText = 'Fail to trade mortgage';
     }
     UserInterface.payImmediatelyOverlay.style.display = 'none';
     UserInterface.updateCards(players);
     redrawCanvas(players);
   }
 
+  /// Callback for pay mortgage later button
   void payMortgageLater(_) {
     if (tile.property.tradeMortgage(tile2.property, false)) {
-      overlay.text = 'Fail to trade mortgage';
-      overlay.style.display = 'block';
+      overlayText = 'Fail to trade mortgage';
     }
     UserInterface.payImmediatelyOverlay.style.display = 'none';
     UserInterface.updateCards(players);
     redrawCanvas(players);
   }
 
-  void manageHouses(_) {
-    overlay.style.display = 'block';
-    overlay.text = 'Pick a property to manage a house on';
-    isManagingHouses = true;
-  }
-
+  /// Callback for buy house button
   void buyHouse(Tile tile) {
     if (!tile.property.buyHouse()) {
-      overlay.text = 'The property must be owned to buy';
-      overlay.style.display = 'block';
+      overlayText = 'The property must be owned to buy';
     }
     UserInterface.updateCards(players);
     redrawCanvas(players);
     UserInterface.manageHousesOverlay.style.display = 'none';
   }
 
+  /// Callback for sell house button
   void sellHouse(Tile tile) {
     if (!tile.property.sellHouse()) {
-      overlay.text = 'The property must be owned to sell';
-      overlay.style.display = 'block';
+      overlayText = 'The property must be owned to sell';
     }
     UserInterface.updateCards(players);
     redrawCanvas(players);
@@ -432,6 +427,12 @@ class Banker {
     });
 
     return players.where((player) => player.balance == maxBalance).toList()[0];
+  }
+
+  /// Sets the overlay text and displays the overlay
+  set overlayText(String text) {
+    overlay.text = text;
+    overlay.style.display = 'block';
   }
 
   /// Updates the visual game logic, and checks if we exceed the time limit

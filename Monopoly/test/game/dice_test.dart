@@ -1,5 +1,3 @@
-
-@TestOn('chrome')
 import 'dart:html';
 
 import 'package:test/test.dart';
