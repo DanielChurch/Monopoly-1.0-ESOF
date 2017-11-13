@@ -1,0 +1,24 @@
+Participation:
+Daniel Church - 50% - 50 hours
+ - Large amount of code
+   - Most of property.dart
+   - Everything else except board.dart
+ - Large amount of unit tests
+ - pair programming with Will
+ - image searching
+Will Brensdal - 25% - 25 hours
+ - Sequence Diagrams
+ - UML Update
+ - System Test Cases
+ - board.dart
+ - found images
+ - pair programming with Dan
+Dylan Wickham - 12.5% 5 hour
+ - Original UML
+ - Sequence Diagram help
+ - A few unit test cases
+Dieter Grosswiler - 12.5% 5 hour
+ - Found images
+ - Design schema
+ - helped with properties.dart
+ - helped with board.dart
