@@ -89,6 +89,7 @@ hr {
     border: 0.14064697609001406469760900140647vw solid black;
     background-color: #bbb;
     text-align: left;
+    cursor: pointer;
 }
 
 .chip div {
