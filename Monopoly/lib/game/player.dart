@@ -27,7 +27,6 @@ class Player {
 
   /// Moves the player the by [amount]
   void updateLocation(int amount) {
-    print(_location);
     _location += amount;
 
     if (location > Board.tiles.length) {

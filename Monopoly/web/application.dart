@@ -21,8 +21,6 @@ void main() {
         ..onClick.listen((_) => overlay.style.display = 'none')
   )..style.background = '#222';
 
-  print('window.innerWidth ${window.innerWidth}, window.innerHeight ${window.innerHeight}');
-
   var taken = Dom.div('Taken', Dom.hr())..className = 'left roster';
   var available = Dom.div('Available', Dom.hr())..className = 'right roster';
 
