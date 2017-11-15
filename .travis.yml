@@ -6,7 +6,7 @@ before_install:
 #  - brew update
 #  - brew install lcov
 script:
-   - pub run test -p chrome
+   - pub run test
 #  - pub get --packages-dir
 #  - pub run dart_dev coverage
 #  - bash <(curl -s https://codecov.io/bash)
