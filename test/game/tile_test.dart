@@ -1,5 +1,6 @@
 import 'package:monopoly/game/property.dart';
 import 'package:monopoly/game/tile.dart';
+import 'package:monopoly/graphics/graphics.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -34,7 +35,7 @@ void main() {
 
     group('graphics', () {
       test('render', () {
-
+        tile.render(new Graphics.blank(), 0, 0, 0.0);
       });
     });
 
