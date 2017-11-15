@@ -30,7 +30,11 @@ void main() {
     });
 
     test("type returns the tile's _type", () {
-
+      expect(tile.type, TileType.property);
+      tile.type = TileType.railroad;
+      expect(tile.type, TileType.railroad);
+      tile.type = TileType.utility;
+      expect(tile.type, TileType.utility);
     });
 
     group('graphics', () {
