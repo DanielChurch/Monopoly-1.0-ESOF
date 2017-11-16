@@ -209,6 +209,10 @@ class Property {
           switchPlayers();
           owner.pay((other.price * 0.1).toInt());
           other.owner.pay((price * 0.1).toInt());
+
+          _isMortgaged = true;
+          other._isMortgaged = true;
+          
           return true;
         }
 

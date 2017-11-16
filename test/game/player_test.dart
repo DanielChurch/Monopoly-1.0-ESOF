@@ -1,4 +1,5 @@
 import 'package:monopoly/game/player.dart';
+import 'package:monopoly/graphics/graphics.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -29,6 +30,11 @@ void main() {
       expect(player.balance, Player.baseBalance);
       player.pay(200);
       expect(player.balance, 1100);
+    });
+
+    test('render', () {
+      // Render for codecov
+      player.render(new Graphics.blank(), 0, 0);
     });
   });
 }

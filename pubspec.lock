@@ -103,6 +103,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.14.1"
+  dart_codecov_generator:
+    description:
+      ref: HEAD
+      resolved-ref: "6afd6c1600fee7ad3e55d67af8a28b7a42bff88e"
+      url: "https://github.com/codecov/dart.git"
+    source: git
+    version: "0.4.0"
   dart_dev:
     description:
       name: dart_dev
@@ -258,7 +265,7 @@ packages:
       name: path
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.4.2"
+    version: "1.5.0"
   petitparser:
     description:
       name: petitparser
@@ -354,7 +361,7 @@ packages:
       name: stack_trace
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.9.0"
+    version: "1.9.1"
   stream_channel:
     description:
       name: stream_channel
@@ -378,7 +385,7 @@ packages:
       name: test
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.12.27"
+    version: "0.12.28"
   tuple:
     description:
       name: tuple

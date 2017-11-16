@@ -1,0 +1,13 @@
+os: osx
+language: dart
+dart:
+  - stable
+before_install:
+  - brew update
+  - brew install lcov
+  - brew tap dart-lang/dart
+  - brew install dart --with-content-shell --with-dartium
+script:
+  - pub get --packages-dir
+  - pub run dart_dev coverage
+  - bash <(curl -s https://codecov.io/bash)

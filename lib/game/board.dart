@@ -1,3 +1,5 @@
+import 'package:meta/meta.dart';
+
 import 'color.dart';
 import 'tile.dart';
 import 'tile_type.dart';
@@ -5,7 +7,7 @@ import 'property.dart';
 
 class Board {
 
-  static final List<Tile> _tiles = [
+  static List<Tile> _tiles = [
     new Tile(type: TileType.go),
     new Tile(property: new Property(60, [2, 10, 30, 90, 160, 250], Color.brown)),
     new Tile(type: TileType.freeParking),
@@ -49,6 +51,9 @@ class Board {
     new Tile(type: TileType.freeParking),
     new Tile(property: new Property(400, [50, 200, 600, 1400, 1700, 2000], Color.darkBlue))
   ];
+
+  @visibleForTesting
+  static set tiles(List<Tile> tiles) => _tiles = tiles;
 
   static get tiles => _tiles;
 
