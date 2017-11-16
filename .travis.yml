@@ -7,5 +7,5 @@ before_install:
   - brew install lcov
 script:
   - pub get --packages-dir
-  - pub run dart_codecov_generator --report-on=bin/ --no-html --verbose test/env_test.dart
+  - pub run dart_codecov_generator --report-on=test/ --no-html --verbose test/env_test.dart
   - bash <(curl -s https://codecov.io/bash)
