@@ -5,7 +5,9 @@ dart:
 before_install:
   - brew update
   - brew install lcov
+  - brew tap dart-lang/dart
+  - brew install dart --with-content-shell --with-dartium
 script:
   - pub get --packages-dir
-  - pub run dart_codecov_generator --report-on=bin/ --no-html --verbose test/env_test.dart
+  - ddev coverage
   - bash <(curl -s https://codecov.io/bash)
