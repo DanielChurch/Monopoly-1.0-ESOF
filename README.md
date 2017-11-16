@@ -1,4 +1,7 @@
 # Monopoly
+[![Build Status](https://travis-ci.org/DanielChurch/Monopoly-1.0-ESOF.svg?branch=ci)](https://travis-ci.org/DanielChurch/Monopoly-1.0-ESOF)
+[![codecov](https://codecov.io/gh/DanielChurch/Monopoly-1.0-ESOF/branch/master/graph/badge.svg)](https://codecov.io/gh/DanielChurch/Monopoly-1.0-ESOF)
+
 [Check it out on github.io!](https://danielchurch.github.io/dart/Monopoly/build/web/)
 ## Requirements
  - Install Dart version 1.24.2 or greater
