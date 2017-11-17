@@ -45,7 +45,8 @@ void main() {
                     ..style.backgroundPosition = 'center center'
                     ..style.width = '100%'
                     ..style.borderRadius = '0'
-                    ..style.position = 'absolute',
+                    ..style.position = 'absolute'
+                    ..style.height = '100%',
                   Dom.input('${color.split('#')[1]}')
                     ..id = 'Player'
                     ..style.opacity = '0.8'
@@ -113,7 +114,7 @@ void main() {
 
 void run(List<Element> players) {
   Dom.body().children.clear();
-  
+
   // Canvas
   Dom.body(
     Dom.div(

@@ -4,7 +4,9 @@
 // Dart Artifacts
 .pub/*
 build/*
-packages/*
+*/packages/*
+**/packages/
+*/packages/
 .packages
 .DS_Store
 coverage/*
