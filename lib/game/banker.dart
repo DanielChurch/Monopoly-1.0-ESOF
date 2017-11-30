@@ -230,7 +230,7 @@ class Banker {
   /// Callback for buy property button (accept)
   Future<Null> buyProperty(_) async {
     UserInterface.buyPropertyOverlay.style.display = 'none';
-    if (!Board.tiles[players[max(currentPlayerIndex - 1, 0)].location].property?.buyProperty(players[max(currentPlayerIndex - 1, 0)])) {
+    if (Board.tiles[players[max(currentPlayerIndex - 1, 0)].location].property?.buyProperty(players[max(currentPlayerIndex - 1, 0)]) != true) {
       overlayText = 'Insufficient Funds';
 
       await new Future.delayed(new Duration(seconds: 2));

@@ -105,7 +105,7 @@ class UserInterface {
       manageHousesButton,
     )
       ..className = 'cardBackground'
-      ..style.top = '31vw'
+      ..style.top = '35vw' // 31vw
       ..style.width = '${10.6 * 3}vw'
       ..style.height = '${36}vh';
 
@@ -264,7 +264,8 @@ class UserInterface {
             ..style.color = '#fff'
             ..style.border = 'inherit'
             ..style.fontSize = '1.2951057957681692732290708371665vh'
-            ..style.height = '1.5698252069917203311867525298988vh',
+            ..style.height = '1.5698252069917203311867525298988vh'
+            ..style.width = '8vw',
         )
           ..id = 'properties'
           ..className = 'cardContainer ${player.id}'
