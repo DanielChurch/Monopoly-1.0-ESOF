@@ -1,3 +1,4 @@
+
 # Monopoly
 [![Build Status](https://travis-ci.org/DanielChurch/Monopoly-1.0-ESOF.svg?branch=ci)](https://travis-ci.org/DanielChurch/Monopoly-1.0-ESOF)
 [![codecov](https://codecov.io/gh/DanielChurch/Monopoly-1.0-ESOF/branch/master/graph/badge.svg)](https://codecov.io/gh/DanielChurch/Monopoly-1.0-ESOF)
@@ -23,3 +24,12 @@
      - Use the `dartdevc` compiler for quickest results
        - `pub serve test --web-compiler=dartdevc`
    - Run the tests `pub run test -p chrome --pub-serve=8080`
+   
+   ## Strengths
+   Excellent GUI with Rick and Morty Theme  
+   Has REST API defined  
+  
+   ## Missing
+   Still runs entirely on client  
+   Needs WebSockets to be able to support multiple clients being updated by the server
+   
