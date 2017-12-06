@@ -18,8 +18,10 @@ import 'property.dart';
 import 'tile.dart';
 import 'ui.dart';
 
-@Api(path: '/api/banker')
-class Banker {
+part 'bankerApi.g.dart';
+
+@Api(path: '/api/BankerApi')
+class BankerApi {
 
   static List<Dice> dice = [];
   static SpanElement tooltip;
@@ -46,7 +48,7 @@ class Banker {
   // Temporary tiles to store for when the user is picking them for trade
   Tile tile, tile2;
 
-  Banker(List<Player> this.players, DateTime this._endTime) {
+  BankerApi(List<Player> this.players, DateTime this._endTime) {
     redrawCanvas(players);
     Dom.body(
         overlay = UserInterface.renderOverlay(),
@@ -80,18 +82,18 @@ class Banker {
 
       if (!Board.tiles.where((tile) {
         if (x > (tile.x ?? 0) && y > (tile.y ?? 0) && x < (tile.x ?? 0) + Tile.tileScale && y < (tile.y ?? 0) + Tile.tileScale && tile.isProperty) {
-          Banker.tooltip.style.visibility = 'visible';
+          BankerApi.tooltip.style.visibility = 'visible';
           if (canMortgageProperty || canPayMortgage || canTradeMortgage || canTradeProperty || isManagingHouses) {
             g.canvas.style.cursor = 'crosshair';
           }
-          Banker.tooltip.children.where((child) => child.id == 'name').toList()[0].text = 'Cost: ${tile.property.price} Schmeckles';
-          Banker.tooltip.children.where((child) => child.id == 'money').toList()[0].text = 'Rent: ${tile.property.rent}';
-          Banker.tooltip.children.where((child) => child.id == 'properties').toList()[0].text = 'Houses: ${tile.property.numHouses}';
+          BankerApi.tooltip.children.where((child) => child.id == 'name').toList()[0].text = 'Cost: ${tile.property.price} Schmeckles';
+          BankerApi.tooltip.children.where((child) => child.id == 'money').toList()[0].text = 'Rent: ${tile.property.rent}';
+          BankerApi.tooltip.children.where((child) => child.id == 'properties').toList()[0].text = 'Houses: ${tile.property.numHouses}';
           return true;
         }
         return false;
       }).toList().isNotEmpty) {
-        Banker.tooltip.style.visibility = 'hidden';
+        BankerApi.tooltip.style.visibility = 'hidden';
         g.canvas.style.cursor = 'default';
       }
     });

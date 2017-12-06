@@ -108,7 +108,7 @@ packages:
       name: dart_dev
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.8.1"
+    version: "1.8.2"
   dart_style:
     description:
       name: dart_style
@@ -121,6 +121,12 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.13.0+3"
+  dice:
+    description:
+      name: dice
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.7.0"
   dnd:
     description:
       name: dnd
@@ -169,18 +175,36 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.1.1"
+  http_server:
+    description:
+      name: http_server
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.9.6"
+  intl:
+    description:
+      name: intl
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.15.2"
   io:
     description:
       name: io
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.3.0"
+    version: "0.3.1"
   isolate:
     description:
       name: isolate
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.1.0"
+  jaguar:
+    description:
+      name: jaguar
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.6.19"
   js:
     description:
       name: js
@@ -229,6 +253,18 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.9.4"
+  multi_server_socket:
+    description:
+      name: multi_server_socket
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.0"
+  mustache:
+    description:
+      name: mustache
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.2.5+1"
   mustache4dart:
     description:
       name: mustache4dart
@@ -258,7 +294,7 @@ packages:
       name: path
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.5.0"
+    version: "1.5.1"
   petitparser:
     description:
       name: petitparser
@@ -306,7 +342,7 @@ packages:
       name: rxdart
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.12.0"
+    version: "0.14.0+2"
   shelf:
     description:
       name: shelf
@@ -378,7 +414,7 @@ packages:
       name: test
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.12.28"
+    version: "0.12.29"
   tuple:
     description:
       name: tuple
@@ -452,4 +488,4 @@ packages:
     source: hosted
     version: "2.1.13"
 sdks:
-  dart: ">=1.23.0 <2.0.0"
+  dart: ">=1.24.0 <2.0.0"
